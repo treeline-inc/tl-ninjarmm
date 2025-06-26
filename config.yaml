@@ -1,0 +1,12 @@
+# Configuration for the OpenAPI generation tool
+additionalProperties:
+  generateSourceCodeOnly: true
+  packageName: "tl_ninjarmm"
+globalProperties:
+  apiDocs: false
+  modelDocs: false
+  apiTests: false
+  modelTests: false
+inputSpec: openapi_spec.json
+outputDir: src
+generatorName: python
