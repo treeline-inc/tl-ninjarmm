@@ -1,0 +1,66 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+	"name": "ninjarmm-dev-env",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"features": {
+		"ghcr.io/devcontainers/features/python:1": {
+			"installTools": true,
+			"version": "3.11"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"installYarnUsingApt": true,
+			"version": "lts",
+			"pnpmVersion": "latest",
+			"nvmVersion": "latest"
+		},
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"installZsh": true,
+			"configureZshAsDefaultShell": true,
+			"installOhMyZsh": true,
+			"installOhMyZshConfig": true,
+			"upgradePackages": true,
+			"username": "automatic",
+			"userUid": "automatic",
+			"userGid": "automatic"
+		},
+		"ghcr.io/guiyomh/features/vim:0": {},
+		"ghcr.io/va-h/devcontainers-features/uv:1": {
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/java:1": {
+			"version": "lts",
+			"installMaven": true,
+			"installGradle": true
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Configure tool-specific properties.
+	"runArgs": ["--env-file",".devcontainer/.env.dev"],
+	"containerEnv": {
+		"HISTFILE": "/persistent-cache/.zsh_history",
+		"_ZO_DATA_DIR": "/persistent-cache/.zoxide",
+	},
+	"postCreateCommand": "npm install -g @openapitools/openapi-generator-cli@2.17.0 @withgraphite/graphite-cli@stable",
+	"postStartCommand": "./.devcontainer/postStart.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+			],
+			"settings": {}
+		}
+	},
+	"mounts": [
+		"source=ninjarmm-dev-env-cache,target=/persistent-cache,type=volume"
+	]
+
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
