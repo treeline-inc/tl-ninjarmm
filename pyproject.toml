@@ -7,7 +7,11 @@ authors = [
     { name = "Treeline Engineering", email = "engineering@treeline.ai" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pydantic>=2.11.7",
+    "python-dateutil>=2.9.0.post0",
+    "urllib3>=2.5.0",
+]
 
 [project.scripts]
 tl-ninjarmm = "tl_ninjarmm:main"
