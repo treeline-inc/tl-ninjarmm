@@ -1,0 +1,10 @@
+# Use cleaner theme to avoid terminal issues
+ZSH_THEME="agnoster"
+
+# Wrapper function for 'gt' to suppress warnings
+function gt {
+    NODE_OPTIONS=--no-warnings command gt "$@"
+}
+
+# Activate zoxide
+eval "$(zoxide init --cmd cd zsh)"
