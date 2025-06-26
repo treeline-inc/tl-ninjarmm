@@ -11,3 +11,8 @@ uv init --package --no-readme
 ```
 wget -O openapi_spec.json https://app.ninjarmm.com/apidocs/NinjaRMM-API-v2.json
 ```
+3. Run the following command to generate the library:
+```
+# from the devcontainer
+openapi-generator-cli generate -i openapi_spec.json -g python -c config.yaml -o src --skip-validate-spec
+```
