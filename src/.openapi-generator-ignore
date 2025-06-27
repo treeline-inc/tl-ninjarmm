@@ -21,3 +21,7 @@
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+# Don't update api_client.py and configuration.py
+tl_ninjarmm/api_client.py
+tl_ninjarmm/configuration.py

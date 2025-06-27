@@ -24,7 +24,10 @@ import tempfile
 
 from urllib.parse import quote
 from typing import Tuple, Optional, List, Dict, Union
+
+from oauthlib.oauth2 import BackendApplicationClient
 from pydantic import SecretStr
+from requests_oauthlib import OAuth2Session
 
 from tl_ninjarmm.configuration import Configuration
 from tl_ninjarmm.api_response import ApiResponse, T as ApiResponseT
@@ -36,6 +39,25 @@ from tl_ninjarmm.exceptions import (
 )
 
 RequestSerialized = Tuple[str, str, Dict[str, str], Optional[str], List[str]]
+
+
+class RequestsResponseAdapter:
+    """Adapter to convert requests response to urllib3 response format."""
+
+    def __init__(self, requests_response):
+        self.response = requests_response
+        self.status = requests_response.status_code
+        self.reason = requests_response.reason
+        self.data = requests_response.content
+        self.headers = requests_response.headers
+
+    def getheaders(self):
+        """Returns a dictionary of the response headers."""
+        return self.headers
+
+    def getheader(self, name, default=None):
+        """Returns a given response header."""
+        return self.headers.get(name, default)
 
 
 class ApiClient:
@@ -57,7 +79,6 @@ class ApiClient:
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         "int": int,
-        "long": int,  # TODO remove as only py3 is supported?
         "float": float,
         "str": str,
         "bool": bool,
@@ -76,6 +97,35 @@ class ApiClient:
             configuration = Configuration.get_default()
         self.configuration = configuration
 
+        # Initialize OAuth2 session with automatic token refresh
+        if configuration.client_id and configuration.client_secret:
+            self.token_url = f"{configuration.host}/ws/oauth/token"
+            self.oauth_client = BackendApplicationClient(
+                client_id=configuration.client_id,
+                scope=configuration.token_scope
+                if configuration.token_scope is not None
+                else "monitoring",
+            )
+
+            # Initialize OAuth2Session with automatic refresh capabilities
+            self.oauth_session = OAuth2Session(
+                client=self.oauth_client,
+                auto_refresh_url=self.token_url,
+                auto_refresh_kwargs={
+                    "client_id": configuration.client_id,
+                    "client_secret": configuration.client_secret,
+                },
+                token_updater=self._token_updater,
+            )
+
+            # Fetch initial token
+            self.token = self.oauth_session.fetch_token(
+                token_url=self.token_url,
+                client_id=configuration.client_id,
+                client_secret=configuration.client_secret,
+            )
+            self.configuration.access_token = self.token["access_token"]
+
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
         if header_name is not None:
@@ -84,6 +134,18 @@ class ApiClient:
         # Set default User-Agent.
         self.user_agent = "OpenAPI-Generator/1.0.0/python"
         self.client_side_validation = configuration.client_side_validation
+
+    def _token_updater(self, token):
+        """Callback function to update the token when it's refreshed automatically.
+
+        :param token: The new token dictionary from OAuth2Session
+        """
+        self.token = token
+        if token and isinstance(token, dict) and "access_token" in token:
+            self.configuration.access_token = token["access_token"]
+        else:
+            # Handle invalid token data
+            self.configuration.access_token = None
 
     def __enter__(self):
         return self
@@ -165,7 +227,7 @@ class ApiClient:
         :return: tuple of form (path, http_method, query_params, header_params,
             body, post_params, files)
         """
-
+        # Check if access token needs to be refreshed using OAuth2
         config = self.configuration
 
         # header parameters
@@ -249,20 +311,35 @@ class ApiClient:
         """
 
         try:
-            # perform request and return response
-            response_data = self.rest_client.request(
-                method,
-                url,
-                headers=header_params,
-                body=body,
-                post_params=post_params,
-                _request_timeout=_request_timeout,
-            )
+            # If we have OAuth2 session, use it for automatic token refresh
+            if hasattr(self, "oauth_session") and self.oauth_session:
+                # Use OAuth2Session for requests to enable automatic token refresh
+                response = self.oauth_session.request(
+                    method=method,
+                    url=url,
+                    headers=header_params,
+                    data=body,
+                    json=body if isinstance(body, dict) else None,
+                    timeout=_request_timeout,
+                )
+
+                # Convert requests response to our RESTResponse format using adapter
+                adapter = RequestsResponseAdapter(response)
+                return rest.RESTResponse(adapter)
+            else:
+                # Fall back to original rest_client for non-OAuth2 requests
+                response_data = self.rest_client.request(
+                    method,
+                    url,
+                    headers=header_params,
+                    body=body,
+                    post_params=post_params,
+                    _request_timeout=_request_timeout,
+                )
+                return response_data
 
         except ApiException as e:
             raise e
-
-        return response_data
 
     def response_deserialize(
         self,
