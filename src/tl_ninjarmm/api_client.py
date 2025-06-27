@@ -21,10 +21,14 @@ import mimetypes
 import os
 import re
 import tempfile
+import time
 
 from urllib.parse import quote
 from typing import Tuple, Optional, List, Dict, Union
+
+from oauthlib.oauth2 import BackendApplicationClient
 from pydantic import SecretStr
+from requests_oauthlib import OAuth2Session
 
 from tl_ninjarmm.configuration import Configuration
 from tl_ninjarmm.api_response import ApiResponse, T as ApiResponseT
@@ -57,7 +61,6 @@ class ApiClient:
     PRIMITIVE_TYPES = (float, bool, bytes, str, int)
     NATIVE_TYPES_MAPPING = {
         "int": int,
-        "long": int,  # TODO remove as only py3 is supported?
         "float": float,
         "str": str,
         "bool": bool,
@@ -67,6 +70,7 @@ class ApiClient:
         "object": object,
     }
     _pool = None
+    _TOKEN_SKEW = 60  # Refresh token 60 seconds before expiry
 
     def __init__(
         self, configuration=None, header_name=None, header_value=None, cookie=None
@@ -76,6 +80,21 @@ class ApiClient:
             configuration = Configuration.get_default()
         self.configuration = configuration
 
+        # Initialize OAuth2 session for token fetching (but not for requests)
+        if configuration.client_id and configuration.client_secret:
+            self.token_url = f"{configuration.host}/ws/oauth/token"
+            self.oauth_session = OAuth2Session(
+                client=BackendApplicationClient(
+                    client_id=configuration.client_id,
+                    scope=configuration.token_scope
+                    if configuration.token_scope is not None
+                    else "monitoring",
+                )
+            )
+            self._token = None
+        else:
+            raise ValueError("Client ID and client secret are required")
+
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
         if header_name is not None:
@@ -84,6 +103,38 @@ class ApiClient:
         # Set default User-Agent.
         self.user_agent = "OpenAPI-Generator/1.0.0/python"
         self.client_side_validation = configuration.client_side_validation
+
+    def _needs_refresh(self) -> bool:
+        return (
+            self._token is None
+            or time.time() > self._token.get("expires_at", 0) - self._TOKEN_SKEW
+        )
+
+    def _refresh_token_if_needed(self) -> None:
+        """
+        Refresh OAuth2 token if needed (lazy loading with expiry check).
+        """
+        if (
+            not self.configuration.client_id
+            or not self.oauth_session
+            or not self.token_url
+        ):
+            return
+
+        if not self._needs_refresh():
+            return
+
+        self._token = self.oauth_session.fetch_token(
+            token_url=self.token_url,
+            client_id=self.configuration.client_id,
+            client_secret=self.configuration.client_secret,
+            scope=self.configuration.token_scope or "monitoring",
+        )
+        self.configuration.access_token = (
+            self._token.get("access_token")
+            if self._token and isinstance(self._token, dict)
+            else None
+        )
 
     def __enter__(self):
         return self
@@ -165,7 +216,8 @@ class ApiClient:
         :return: tuple of form (path, http_method, query_params, header_params,
             body, post_params, files)
         """
-
+        # Check if access token needs to be refreshed using OAuth2
+        self._refresh_token_if_needed()
         config = self.configuration
 
         # header parameters
@@ -249,7 +301,7 @@ class ApiClient:
         """
 
         try:
-            # perform request and return response
+            # Use single transport (rest_client) for all requests
             response_data = self.rest_client.request(
                 method,
                 url,
@@ -258,11 +310,10 @@ class ApiClient:
                 post_params=post_params,
                 _request_timeout=_request_timeout,
             )
+            return response_data
 
         except ApiException as e:
             raise e
-
-        return response_data
 
     def response_deserialize(
         self,
