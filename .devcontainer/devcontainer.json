@@ -34,7 +34,11 @@
 			"version": "lts",
 			"installMaven": true,
 			"installGradle": true
-		}
+		},
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {
+			"jqVersion": "none",
+        	"yqVersion": "latest"
+		},
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

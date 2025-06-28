@@ -121,7 +121,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Job]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -197,7 +199,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Job]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -273,7 +277,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Job]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -485,7 +491,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "ActivitiesResponse",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -635,7 +643,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "ActivitiesResponse",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -785,7 +795,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "ActivitiesResponse",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -961,7 +973,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Alert]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1035,7 +1049,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Alert]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1109,7 +1125,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Alert]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1233,7 +1251,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AutomationScript]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1295,7 +1315,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AutomationScript]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1357,7 +1379,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AutomationScript]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1471,7 +1495,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AttributePublicApiDTO]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1535,7 +1561,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AttributePublicApiDTO]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1599,7 +1627,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[AttributePublicApiDTO]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1723,7 +1753,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeWithDetailedReferences]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1797,7 +1829,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeWithDetailedReferences]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1871,7 +1905,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeWithDetailedReferences]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -1999,7 +2035,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Device]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2069,7 +2107,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Device]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2139,7 +2179,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Device]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2255,7 +2297,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2313,7 +2357,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2371,7 +2417,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2475,7 +2523,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Group]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2533,7 +2583,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Group]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2591,7 +2643,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Group]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2709,7 +2763,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[LocationWithOrganizationRef]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2781,7 +2837,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[LocationWithOrganizationRef]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2853,7 +2911,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[LocationWithOrganizationRef]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -2965,7 +3025,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeRole]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3023,7 +3085,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeRole]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3081,7 +3145,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NodeRole]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3185,7 +3251,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3243,7 +3311,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3301,7 +3371,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[NotificationChannel]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3425,7 +3497,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Organization]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3503,7 +3577,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Organization]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3581,7 +3657,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Organization]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3717,7 +3795,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[OrganizationDetailed]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3795,7 +3875,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[OrganizationDetailed]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3873,7 +3955,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[OrganizationDetailed]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -3989,7 +4073,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Policy]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4047,7 +4133,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Policy]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4105,7 +4193,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[Policy]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4209,7 +4299,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[ScheduledTask]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4267,7 +4359,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[ScheduledTask]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4325,7 +4419,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[ScheduledTask]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4429,7 +4525,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[SoftwareProduct]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4487,7 +4585,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[SoftwareProduct]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4545,7 +4645,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[SoftwareProduct]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4661,7 +4763,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[User]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4731,7 +4835,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[User]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4801,7 +4907,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "List[User]",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -4928,7 +5036,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "DeviceSearchResults",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -5001,7 +5111,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "DeviceSearchResults",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
@@ -5074,7 +5186,9 @@ class SystemApi:
             _host_index=_host_index,
         )
 
-        _response_types_map: Dict[str, Optional[str]] = {}
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "DeviceSearchResults",
+        }
         response_data = self.api_client.call_api(
             *_param, _request_timeout=_request_timeout
         )
