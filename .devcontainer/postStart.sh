@@ -21,6 +21,12 @@ rm -rf ~/.fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
 
+# Install pre-commmit
+uv tool install pre-commit
+
+# Install pre-commit hooks
+pre-commit install --install-hooks
+
 # To make it easy to use an external terminal to connect to the container
 printenv > .devcontainer/container.env
 
