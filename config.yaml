@@ -7,6 +7,6 @@ globalProperties:
   modelDocs: false
   apiTests: false
   modelTests: false
-inputSpec: openapi_spec.json
+inputSpec: openapi_spec.yaml
 outputDir: src
 generatorName: python

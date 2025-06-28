@@ -19,9 +19,7 @@ tl_ninjarmm/api/system_api.py
 tl_ninjarmm/api/ticketing_api.py
 tl_ninjarmm/api/vulnerability_management_api.py
 tl_ninjarmm/api/webhooks_api.py
-tl_ninjarmm/api_client.py
 tl_ninjarmm/api_response.py
-tl_ninjarmm/configuration.py
 tl_ninjarmm/exceptions.py
 tl_ninjarmm/models/__init__.py
 tl_ninjarmm/models/activities_response.py
