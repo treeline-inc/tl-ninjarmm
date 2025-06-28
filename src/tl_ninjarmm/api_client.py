@@ -73,27 +73,27 @@ class ApiClient:
     _TOKEN_SKEW = 60  # Refresh token 60 seconds before expiry
 
     def __init__(
-        self, configuration=None, header_name=None, header_value=None, cookie=None
+        self,
+        configuration: Configuration,
+        header_name: str | None = None,
+        header_value: str | None = None,
+        cookie: str | None = None,
     ) -> None:
-        # use default configuration if none is provided
-        if configuration is None:
-            configuration = Configuration.get_default()
-        self.configuration = configuration
+        if not (configuration.client_id and configuration.client_secret):
+            raise ValueError("Client ID and client secret are required")
+        self.configuration: Configuration = configuration
 
         # Initialize OAuth2 session for token fetching (but not for requests)
-        if configuration.client_id and configuration.client_secret:
-            self.token_url = f"{configuration.host}/ws/oauth/token"
-            self.oauth_session = OAuth2Session(
-                client=BackendApplicationClient(
-                    client_id=configuration.client_id,
-                    scope=configuration.token_scope
-                    if configuration.token_scope is not None
-                    else "monitoring",
-                )
+        self.token_url = f"{configuration.host}/ws/oauth/token"
+        self.oauth_session = OAuth2Session(
+            client=BackendApplicationClient(
+                client_id=configuration.client_id,
+                scope=configuration.token_scope
+                if configuration.token_scope is not None
+                else "monitoring",
             )
-            self._token = None
-        else:
-            raise ValueError("Client ID and client secret are required")
+        )
+        self._token = None
 
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
@@ -114,13 +114,6 @@ class ApiClient:
         """
         Refresh OAuth2 token if needed (lazy loading with expiry check).
         """
-        if (
-            not self.configuration.client_id
-            or not self.oauth_session
-            or not self.token_url
-        ):
-            return
-
         if not self._needs_refresh():
             return
 
@@ -167,7 +160,9 @@ class ApiClient:
         :return: The ApiClient object.
         """
         if cls._default is None:
-            cls._default = ApiClient()
+            raise RuntimeError(
+                "No default ApiClient has been set. Use set_default() first."
+            )
         return cls._default
 
     @classmethod
@@ -218,7 +213,6 @@ class ApiClient:
         """
         # Check if access token needs to be refreshed using OAuth2
         self._refresh_token_if_needed()
-        config = self.configuration
 
         # header parameters
         header_params = header_params or {}
@@ -238,7 +232,8 @@ class ApiClient:
             for k, v in path_params:
                 # specified safe chars, encode everything
                 resource_path = resource_path.replace(
-                    "{%s}" % k, quote(str(v), safe=config.safe_chars_for_path_param)
+                    "{%s}" % k,
+                    quote(str(v), safe=self.configuration.safe_chars_for_path_param),
                 )
 
         # post parameters

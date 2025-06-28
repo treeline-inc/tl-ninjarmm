@@ -10,6 +10,11 @@ import time
 from tl_ninjarmm.configuration import Configuration
 from tl_ninjarmm.api_client import ApiClient
 from tl_ninjarmm.api.system_api import SystemApi
+from tl_ninjarmm.models.device import Device
+from tl_ninjarmm.models.node_role import NodeRole
+from tl_ninjarmm.models.organization_detailed import OrganizationDetailed
+from tl_ninjarmm.models.policy import Policy
+from tl_ninjarmm.models.user import User
 
 
 @pytest.mark.integration
@@ -96,3 +101,42 @@ class TestRealOAuth2Flow:
         # Verify token didn't change (no refresh needed)
         assert client._token is not None
         assert client.configuration.access_token == initial_token
+
+    def test_multiple_distinct_api_calls_with_correct_output_types(
+        self, real_credentials
+    ):
+        """Test that multiple distinct API calls with the same token have correct output types."""
+        config = Configuration(
+            host="https://app.ninjarmm.com",
+            client_id=real_credentials["client_id"],
+            client_secret=real_credentials["client_secret"],
+            token_scope="monitoring",
+        )
+
+        client = ApiClient(configuration=config)
+        system_api = SystemApi(api_client=client)
+
+        organizations_detailed = system_api.get_organizations_detailed()
+        assert len(organizations_detailed) > 0
+        assert isinstance(organizations_detailed, list)
+        assert isinstance(organizations_detailed[0], OrganizationDetailed)
+
+        users = system_api.get_users()
+        assert len(users) > 0
+        assert isinstance(users, list)
+        assert isinstance(users[0], User)
+
+        devices = system_api.get_devices_detailed()
+        assert len(devices) > 0
+        assert isinstance(devices, list)
+        assert isinstance(devices[0], Device)
+
+        policies = system_api.get_policies()
+        assert len(policies) > 0
+        assert isinstance(policies, list)
+        assert isinstance(policies[0], Policy)
+
+        roles = system_api.get_node_roles()
+        assert len(roles) > 0
+        assert isinstance(roles, list)
+        assert isinstance(roles[0], NodeRole)
