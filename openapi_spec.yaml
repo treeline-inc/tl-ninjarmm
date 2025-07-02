@@ -69,7 +69,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id001
           description: default response
           content:
             application/json:
@@ -77,6 +77,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CustomFieldPolicyConditionResponse'
+        '200': *id001
     post:
       tags:
       - management
@@ -96,12 +97,13 @@ paths:
             schema:
               $ref: '#/components/schemas/CustomFieldsPolicyConditionCreateRequest'
       responses:
-        default:
+        default: &id002
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomFieldPolicyConditionResponse'
+        '200': *id002
   /v2/policies/{policy_id}/condition/windows-event:
     get:
       tags:
@@ -117,7 +119,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id003
           description: default response
           content:
             application/json:
@@ -125,6 +127,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WindowsEventPolicyConditionResponse'
+        '200': *id003
     post:
       tags:
       - management
@@ -144,18 +147,20 @@ paths:
             schema:
               $ref: '#/components/schemas/WindowsEventPolicyConditionCreateRequest'
       responses:
-        default:
+        default: &id004
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WindowsEventPolicyConditionResponse'
+        '200': *id004
   /v2/policies/{policy_id}/condition/{condition_id}:
     delete:
       tags:
       - management
       summary: Delete policy condition
-      description: Deletes specified policy condition from specified agent policy
+      description: Deletes specified policy condition from specified agent 
+        policy
       operationId: deletePolicyCondition
       parameters:
       - name: policy_id
@@ -171,10 +176,11 @@ paths:
           type: string
           format: uuid
       responses:
-        default:
+        default: &id005
           description: default response
           content:
             '*/*': {}
+        '200': *id005
   /v2/policies/{policy_id}/condition/custom-fields/{condition_id}:
     get:
       tags:
@@ -196,12 +202,13 @@ paths:
           type: string
           format: uuid
       responses:
-        default:
+        default: &id006
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomFieldPolicyConditionResponse'
+        '200': *id006
   /v2/policies/{policy_id}/condition/windows-event/{condition_id}:
     get:
       tags:
@@ -223,18 +230,20 @@ paths:
           type: string
           format: uuid
       responses:
-        default:
+        default: &id007
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WindowsEventPolicyConditionResponse'
+        '200': *id007
   /v2/webhook:
     put:
       tags:
       - webhooks
       summary: Update API Webhook configuration
-      description: Creates or updates Webhook configuration for current application/client
+      description: Creates or updates Webhook configuration for current 
+        application/client
       operationId: configureWebhook
       requestBody:
         content:
@@ -272,7 +281,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id008
           description: default response
           content:
             application/json:
@@ -280,6 +289,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Organization'
+        '200': *id008
     post:
       tags:
       - management
@@ -301,12 +311,13 @@ paths:
             schema:
               $ref: '#/components/schemas/OrganizationWithLocationsAndPolicyAssignmentsModel'
       responses:
-        default:
+        default: &id009
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrganizationDetailed'
+        '200': *id009
   /v2/webhook/{id}:
     delete:
       tags:
@@ -349,10 +360,11 @@ paths:
             schema:
               $ref: '#/components/schemas/DeviceIDList'
       responses:
-        default:
+        default: &id010
           description: default response
           content:
             '*/*': {}
+        '200': *id010
   /v2/alert/{uid}:
     delete:
       tags:
@@ -368,10 +380,11 @@ paths:
           type: string
           format: uuid
       responses:
-        default:
+        default: &id011
           description: default response
           content:
             '*/*': {}
+        '200': *id011
   /v2/alert/{uid}/reset:
     post:
       tags:
@@ -392,10 +405,11 @@ paths:
             schema:
               type: object
       responses:
-        default:
+        default: &id012
           description: default response
           content:
             '*/*': {}
+        '200': *id012
   /v2/attachments/temp/upload:
     post:
       tags:
@@ -807,8 +821,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a map of content ids and their corresponding signed
-            urls
+          description: Returns a map of content ids and their corresponding 
+            signed urls
           content:
             application/json:
               schema:
@@ -921,7 +935,8 @@ paths:
       tags:
       - Organization Documents
       summary: Create organization document
-      description: Creates an organization document and returns the document created
+      description: Creates an organization document and returns the document 
+        created
       operationId: createOrganizationDocument
       parameters:
       - name: organizationId
@@ -983,8 +998,8 @@ paths:
           type: string
       responses:
         "200":
-          description: Returns a list of all organization documents with field values
-            grouped by organization identifier
+          description: Returns a list of all organization documents with field 
+            values grouped by organization identifier
           content:
             application/json:
               schema:
@@ -995,7 +1010,8 @@ paths:
       tags:
       - Organization Documents
       summary: Create organization documents
-      description: Creates organization documents and returns the documents created
+      description: Creates organization documents and returns the documents 
+        created
       operationId: createOrganizationDocuments
       requestBody:
         content:
@@ -1006,8 +1022,8 @@ paths:
                 $ref: '#/components/schemas/ClientDocumentWithAttributeValuesBulkCreatePublicApiRequest'
       responses:
         "200":
-          description: Returns a list of created organization documents with field
-            values
+          description: Returns a list of created organization documents with 
+            field values
           content:
             application/json:
               schema:
@@ -1018,7 +1034,8 @@ paths:
       tags:
       - Organization Documents
       summary: Update organization documents
-      description: Updates organization documents and returns the documents updated
+      description: Updates organization documents and returns the documents 
+        updated
       operationId: updateOrganizationDocuments
       requestBody:
         content:
@@ -1029,8 +1046,8 @@ paths:
                 $ref: '#/components/schemas/ClientDocumentWithAttributeValuesBulkUpdatePublicApiRequest'
       responses:
         "200":
-          description: Returns a list of updated organization documents with field
-            values
+          description: Returns a list of updated organization documents with 
+            field values
           content:
             application/json:
               schema:
@@ -1070,8 +1087,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a map of content ids and their corresponding signed
-            urls
+          description: Returns a map of content ids and their corresponding 
+            signed urls
           content:
             application/json:
               schema:
@@ -1093,7 +1110,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a list of organization documents with field values
+          description: Returns a list of organization documents with field 
+            values
           content:
             application/json:
               schema:
@@ -1151,7 +1169,8 @@ paths:
       tags:
       - Organization Documents
       summary: Update organization document
-      description: Updates an organization document and returns the updated version
+      description: Updates an organization document and returns the updated 
+        version
       operationId: updateOrganizationDocument
       parameters:
       - name: organizationId
@@ -1378,8 +1397,8 @@ paths:
       tags:
       - Asset Tags
       summary: Batch tag assets
-      description: Update tags for the supplied assetIds. Tags will be added and removed
-        as specified
+      description: Update tags for the supplied assetIds. Tags will be added and
+        removed as specified
       operationId: batchUpdateTags
       parameters:
       - name: assetType
@@ -1390,17 +1409,18 @@ paths:
           enum:
           - device
       requestBody:
-        description: "Payload supplying the asset ids to modify, as well as tags to\
-          \ add/remove from those assets"
+        description: "Payload supplying the asset ids to modify, as well as tags to
+          add/remove from those assets"
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/ItamManageAssetRequestPublicApiDTO'
       responses:
-        default:
+        default: &id013
           description: default response
           content:
             application/json: {}
+        '200': *id013
   /v2/tag:
     get:
       tags:
@@ -1475,10 +1495,11 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id014
           description: default response
           content:
             application/json: {}
+        '200': *id014
   /v2/tag/delete:
     post:
       tags:
@@ -1496,32 +1517,34 @@ paths:
                 type: integer
                 format: int32
       responses:
-        default:
+        default: &id015
           description: default response
           content:
             application/json: {}
+        '200': *id015
   /v2/tag/merge:
     post:
       tags:
       - Asset Tags
       summary: Merge existing tags
-      description: Merges tags. Can merge into an existing or new tag depending on
-        the input parameters
+      description: Merges tags. Can merge into an existing or new tag depending 
+        on the input parameters
       operationId: mergeTags
       requestBody:
-        description: "Payload specifying the tags to merge, as well as whether they\
-          \ should be merge to a new or existing tag"
+        description: "Payload specifying the tags to merge, as well as whether they
+          should be merge to a new or existing tag"
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/MergeItamTagsPublicApiRequest'
       responses:
-        default:
+        default: &id016
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItamTagPublicApiDTO'
+        '200': *id016
   /v2/tag/{assetType}/{assetId}:
     put:
       tags:
@@ -1543,17 +1566,18 @@ paths:
           type: integer
           format: int32
       requestBody:
-        description: Array of Asset Tags to assign to the asset. Existing tags on
-          the asset will be removed.
+        description: Array of Asset Tags to assign to the asset. Existing tags 
+          on the asset will be removed.
         content:
           '*/*':
             schema:
               $ref: '#/components/schemas/ItamSetAssetTagsRequestPublicApiDTO'
       responses:
-        default:
+        default: &id017
           description: default response
           content:
             application/json: {}
+        '200': *id017
   /v2/knowledgebase/articles/archive:
     post:
       tags:
@@ -1762,8 +1786,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a map of content ids and their corresponding signed
-            urls
+          description: Returns a map of content ids and their corresponding 
+            signed urls
           content:
             application/json:
               schema:
@@ -1827,8 +1851,8 @@ paths:
       tags:
       - Knowledge Base Articles
       summary: Move knowledge base items
-      description: Move knowledge base folders and documents to another knowledge
-        base folder
+      description: Move knowledge base folders and documents to another 
+        knowledge base folder
       operationId: move
       requestBody:
         content:
@@ -1935,8 +1959,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a map of content ids and their corresponding signed
-            urls
+          description: Returns a map of content ids and their corresponding 
+            signed urls
           content:
             application/json:
               schema:
@@ -2217,8 +2241,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns a map of content ids and their corresponding signed
-            urls
+          description: Returns a map of content ids and their corresponding 
+            signed urls
           content:
             application/json:
               schema:
@@ -2228,7 +2252,8 @@ paths:
       tags:
       - Related Items
       summary: List host entity related items by scope
-      description: List related items for a specific host entity filterable by scope
+      description: List related items for a specific host entity filterable by 
+        scope
       operationId: getRelatedItemsForHostEntity
       parameters:
       - name: entityType
@@ -2260,8 +2285,8 @@ paths:
           - HOSTED_BY
       responses:
         "200":
-          description: Returns list of the related items for an entity filterable
-            by scope
+          description: Returns list of the related items for an entity 
+            filterable by scope
           content:
             application/json:
               schema:
@@ -2301,7 +2326,8 @@ paths:
           format: int32
       responses:
         "200":
-          description: Returns list of the related items for a specific related entity
+          description: Returns list of the related items for a specific related 
+            entity
           content:
             application/json:
               schema:
@@ -2365,7 +2391,8 @@ paths:
           - END_USER
       responses:
         "200":
-          description: Returns a list of relations and references for an entity type
+          description: Returns a list of relations and references for an entity 
+            type
           content:
             application/json:
               schema:
@@ -2407,7 +2434,8 @@ paths:
           type: string
       - name: include
         in: query
-        description: Which devices include (active|deleted|all) default value active.
+        description: Which devices include (active|deleted|all) default value 
+          active.
         schema:
           type: string
           default: active
@@ -2465,12 +2493,13 @@ paths:
               $ref: '#/components/schemas/NewTicket'
         required: true
       responses:
-        default:
+        default: &id018
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketDTO'
+        '200': *id018
   /v2/ticketing/ticket/{ticketId}/comment:
     post:
       tags:
@@ -2500,10 +2529,11 @@ paths:
                     format: binary
                     nullable: true
       responses:
-        default:
+        default: &id019
           description: default response
           content:
             application/json: {}
+        '200': *id019
   /v2/ticketing/ticket/{ticketId}:
     get:
       tags:
@@ -2519,12 +2549,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id020
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketDTO'
+        '200': *id020
     put:
       tags:
       - ticketing
@@ -2546,12 +2577,13 @@ paths:
               $ref: '#/components/schemas/UpdateTicket'
         required: true
       responses:
-        default:
+        default: &id021
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketDTO'
+        '200': *id021
   /v2/ticketing/ticket/{ticketId}/log-entry:
     get:
       tags:
@@ -2593,7 +2625,7 @@ paths:
           format: int32
           default: 500
       responses:
-        default:
+        default: &id022
           description: default response
           content:
             application/json:
@@ -2601,6 +2633,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TicketLogEntryPublicApiDTO'
+        '200': *id022
   /v2/vulnerability/scan-groups:
     get:
       tags:
@@ -2646,9 +2679,9 @@ paths:
       tags:
       - Vulnerability Management
       summary: Upload CSV
-      description: "Upload CSV to an existing scan group. The uploaded CSV must contain\
-        \ the columns defined in the \nscan group which map to the Ninja machine identifier\
-        \ (hostname, IP address, or MAC address) and the CVE ID."
+      description: "Upload CSV to an existing scan group. The uploaded CSV must contain
+        the columns defined in the \nscan group which map to the Ninja machine identifier
+        (hostname, IP address, or MAC address) and the CVE ID."
       operationId: updateScanGroup
       parameters:
       - name: scan-group-id
@@ -2697,10 +2730,11 @@ paths:
             schema:
               $ref: '#/components/schemas/MaintenanceSettings'
       responses:
-        default:
+        default: &id023
           description: default response
           content:
             '*/*': {}
+        '200': *id023
     delete:
       tags:
       - management
@@ -2716,10 +2750,11 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id024
           description: default response
           content:
             application/json: {}
+        '200': *id024
   /v2/device/{id}/windows-service/{serviceId}/control:
     post:
       tags:
@@ -2747,10 +2782,11 @@ paths:
             schema:
               $ref: '#/components/schemas/WindowsServiceControlRequest'
       responses:
-        default:
+        default: &id025
           description: default response
           content:
             '*/*': {}
+        '200': *id025
   /v2/device/{id}:
     get:
       tags:
@@ -2793,10 +2829,11 @@ paths:
             schema:
               $ref: '#/components/schemas/DeviceMutableProperties'
       responses:
-        default:
+        default: &id026
           description: default response
           content:
             '*/*': {}
+        '200': *id026
       security:
       - oauth2:
         - management
@@ -2826,7 +2863,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id027
           description: default response
           content:
             application/json:
@@ -2834,6 +2871,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Job'
+        '200': *id027
   /v2/device/{id}/activities:
     get:
       tags:
@@ -2851,15 +2889,15 @@ paths:
           format: int32
       - name: olderThan
         in: query
-        description: Return activities recorded that are newer than specified activity
-          ID
+        description: Return activities recorded that are newer than specified 
+          activity ID
         schema:
           type: integer
           format: int32
       - name: newerThan
         in: query
-        description: Return activities recorded that are older than specified activity
-          ID
+        description: Return activities recorded that are older than specified 
+          activity ID
         schema:
           type: integer
           format: int32
@@ -2898,18 +2936,20 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id028
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NodeActivitiesResponse'
+        '200': *id028
   /v2/device/{id}/alerts:
     get:
       tags:
       - devices
       summary: Device alerts (triggered conditions)
-      description: Returns list of active alerts (triggered conditions) for device
+      description: Returns list of active alerts (triggered conditions) for 
+        device
       operationId: getDeviceAlerts
       parameters:
       - name: id
@@ -2930,7 +2970,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id029
           description: default response
           content:
             application/json:
@@ -2938,6 +2978,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Alert'
+        '200': *id029
   /v2/device/{id}/disks:
     get:
       tags:
@@ -2954,7 +2995,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id030
           description: default response
           content:
             application/json:
@@ -2962,13 +3003,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/DiskDrive'
+        '200': *id030
   /v2/device/{id}/os-patch-installs:
     get:
       tags:
       - devices
       summary: OS Patch installation report for device
-      description: Returns patch installation history records (successful and failed)
-        for device
+      description: Returns patch installation history records (successful and 
+        failed) for device
       operationId: getDeviceInstalledOSPatches
       parameters:
       - name: id
@@ -2994,7 +3036,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id031
           description: default response
           content:
             application/json:
@@ -3002,13 +3044,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OSPatch'
+        '200': *id031
   /v2/device/{id}/software-patch-installs:
     get:
       tags:
       - devices
       summary: Software Patch history for device
-      description: Returns 3rd party software patch installation history records for
-        device (successful and failed)
+      description: Returns 3rd party software patch installation history records
+        for device (successful and failed)
       operationId: getDeviceInstalledSoftwarePatches
       parameters:
       - name: id
@@ -3049,7 +3092,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id032
           description: default response
           content:
             application/json:
@@ -3057,6 +3100,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SoftwarePatch'
+        '200': *id032
   /v2/device/{id}/last-logged-on-user:
     get:
       tags:
@@ -3073,12 +3117,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id033
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoggedOnUser'
+        '200': *id033
       security:
       - oauth2:
         - monitoring
@@ -3103,12 +3148,13 @@ paths:
         schema:
           type: boolean
       responses:
-        default:
+        default: &id034
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceLink'
+        '200': *id034
   /v2/device/{id}/network-interfaces:
     get:
       tags:
@@ -3125,7 +3171,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id035
           description: default response
           content:
             application/json:
@@ -3133,12 +3179,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NetworkInterface'
+        '200': *id035
   /v2/device/{id}/os-patches:
     get:
       tags:
       - devices
       summary: OS Patches
-      description: Returns list of pending/rejected/approved OS patches for device
+      description: Returns list of pending/rejected/approved OS patches for 
+        device
       operationId: getDevicePendingFailedRejectedOSPatches
       parameters:
       - name: id
@@ -3164,7 +3212,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id036
           description: default response
           content:
             application/json:
@@ -3172,13 +3220,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OSPatch'
+        '200': *id036
   /v2/device/{id}/software-patches:
     get:
       tags:
       - devices
       summary: "Pending, Failed and Rejected Software patches for device"
-      description: Returns list of 3rd party Software patches for a device (for which
-        there were no installation attempts)
+      description: Returns list of 3rd party Software patches for a device (for 
+        which there were no installation attempts)
       operationId: getDevicePendingFailedRejectedSoftwarePatches
       parameters:
       - name: id
@@ -3209,7 +3258,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id037
           description: default response
           content:
             application/json:
@@ -3217,6 +3266,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SoftwarePatch'
+        '200': *id037
   /v2/device/{id}/processors:
     get:
       tags:
@@ -3233,7 +3283,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id038
           description: default response
           content:
             application/json:
@@ -3241,6 +3291,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Processor'
+        '200': *id038
   /v2/device/{id}/windows-services:
     get:
       tags:
@@ -3276,7 +3327,7 @@ paths:
           - PAUSED
           - CONTINUE_PENDING
       responses:
-        default:
+        default: &id039
           description: default response
           content:
             application/json:
@@ -3284,6 +3335,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WindowsService'
+        '200': *id039
   /v2/device/{id}/software:
     get:
       tags:
@@ -3300,7 +3352,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id040
           description: default response
           content:
             application/json:
@@ -3308,6 +3360,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Application'
+        '200': *id040
   /v2/device/{id}/volumes:
     get:
       tags:
@@ -3329,7 +3382,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id041
           description: default response
           content:
             application/json:
@@ -3337,6 +3390,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Volume'
+        '200': *id041
   /v2/device/{id}/custom-fields:
     get:
       tags:
@@ -3358,7 +3412,7 @@ paths:
         schema:
           type: boolean
       responses:
-        default:
+        default: &id042
           description: default response
           content:
             application/json:
@@ -3366,6 +3420,7 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+        '200': *id042
     patch:
       tags:
       - devices
@@ -3388,10 +3443,11 @@ paths:
               additionalProperties:
                 type: object
       responses:
-        default:
+        default: &id043
           description: default response
           content:
             '*/*': {}
+        '200': *id043
   /v2/device/{id}/policy/overrides:
     get:
       tags:
@@ -3408,12 +3464,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id044
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PolicyOverrides'
+        '200': *id044
     delete:
       tags:
       - management
@@ -3429,10 +3486,11 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id045
           description: default response
           content:
             application/json: {}
+        '200': *id045
   /v2/device/{id}/reboot/{mode}:
     post:
       tags:
@@ -3463,10 +3521,11 @@ paths:
             schema:
               $ref: '#/components/schemas/RebootRequest'
       responses:
-        default:
+        default: &id046
           description: default response
           content:
             '*/*': {}
+        '200': *id046
   /v2/device/{id}/owner:
     delete:
       tags:
@@ -3483,10 +3542,11 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id047
           description: default response
           content:
             '*/*': {}
+        '200': *id047
       security:
       - oauth2:
         - management
@@ -3495,8 +3555,8 @@ paths:
       tags:
       - management
       summary: Device scripting options
-      description: "Returns scripting options (built-in actions, custom scripts) available\
-        \ for device"
+      description: "Returns scripting options (built-in actions, custom scripts) available
+        for device"
       operationId: requestScriptingOptions
       parameters:
       - name: id
@@ -3512,12 +3572,13 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id048
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceScriptingOptions'
+        '200': *id048
   /v2/device/{id}/script/run:
     post:
       tags:
@@ -3539,10 +3600,11 @@ paths:
             schema:
               $ref: '#/components/schemas/RunScriptRequest'
       responses:
-        default:
+        default: &id049
           description: default response
           content:
             '*/*': {}
+        '200': *id049
   /v2/device/{id}/owner/{ownerUid}:
     post:
       tags:
@@ -3566,10 +3628,11 @@ paths:
           type: string
           format: uuid
       responses:
-        default:
+        default: &id050
           description: default response
           content:
             '*/*': {}
+        '200': *id050
       security:
       - oauth2:
         - management
@@ -3600,10 +3663,11 @@ paths:
             schema:
               $ref: '#/components/schemas/WindowsServiceConfiguration'
       responses:
-        default:
+        default: &id051
           description: default response
           content:
             '*/*': {}
+        '200': *id051
   /v2/device/{id}/patch/os/apply:
     post:
       tags:
@@ -3700,7 +3764,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id052
           description: default response
           content:
             application/json:
@@ -3709,6 +3773,7 @@ paths:
                 items:
                   type: integer
                   format: int32
+        '200': *id052
   /v2/organization/{id}/locations:
     get:
       tags:
@@ -3725,7 +3790,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id053
           description: default response
           content:
             application/json:
@@ -3733,6 +3798,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Location'
+        '200': *id053
     post:
       tags:
       - management
@@ -3752,12 +3818,13 @@ paths:
             schema:
               $ref: '#/components/schemas/LocationModel'
       responses:
-        default:
+        default: &id054
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Location'
+        '200': *id054
   /v2/organization/{id}/end-users:
     get:
       tags:
@@ -3779,7 +3846,7 @@ paths:
           type: boolean
           default: false
       responses:
-        default:
+        default: &id055
           description: default response
           content:
             application/json:
@@ -3787,12 +3854,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '200': *id055
   /v2/organization/generate-installer:
     post:
       tags:
       - management
       summary: Generate installer
-      description: Generates and returns URL for installer with specified settings
+      description: Generates and returns URL for installer with specified 
+        settings
       operationId: getInstaller
       requestBody:
         content:
@@ -3817,18 +3886,20 @@ paths:
                   content:
                     nodeRoleId: "201"
       responses:
-        default:
+        default: &id056
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Link'
+        '200': *id056
   /v2/organization/{id}/location/{location_id}/installer/{installer_type}:
     get:
       tags:
       - management
       summary: Generate installer
-      description: Generates and returns URL for installer for specified organization/location
+      description: Generates and returns URL for installer for specified 
+        organization/location
       operationId: getInstallerForLocation
       parameters:
       - name: id
@@ -3859,12 +3930,13 @@ paths:
           - LINUX_ARM64_RPM
           - LINUX_ARMV7A_RPM
       responses:
-        default:
+        default: &id057
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Link'
+        '200': *id057
   /v2/organization/{id}/locations/{locationId}/backup/usage:
     get:
       tags:
@@ -3910,7 +3982,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id058
           description: default response
           content:
             application/json:
@@ -3918,6 +3990,7 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+        '200': *id058
     patch:
       tags:
       - organization
@@ -3939,10 +4012,11 @@ paths:
               additionalProperties:
                 type: object
       responses:
-        default:
+        default: &id059
           description: default response
           content:
             '*/*': {}
+        '200': *id059
   /v2/organization/{id}/location/{locationId}/custom-fields:
     get:
       tags:
@@ -3969,7 +4043,7 @@ paths:
         schema:
           type: boolean
       responses:
-        default:
+        default: &id060
           description: default response
           content:
             application/json:
@@ -3977,6 +4051,7 @@ paths:
                 type: object
                 additionalProperties:
                   type: object
+        '200': *id060
     patch:
       tags:
       - Location
@@ -4004,10 +4079,11 @@ paths:
               additionalProperties:
                 type: object
       responses:
-        default:
+        default: &id061
           description: default response
           content:
             '*/*': {}
+        '200': *id061
   /v2/organization/{id}:
     get:
       tags:
@@ -4024,12 +4100,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id062
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrganizationDetailed'
+        '200': *id062
     patch:
       tags:
       - management
@@ -4050,10 +4127,11 @@ paths:
             schema:
               $ref: '#/components/schemas/OrganizationModel'
       responses:
-        default:
+        default: &id063
           description: default response
           content:
             '*/*': {}
+        '200': *id063
   /v2/organization/{id}/devices:
     get:
       tags:
@@ -4082,7 +4160,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id064
           description: default response
           content:
             application/json:
@@ -4090,6 +4168,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NodeWithDetailedReferences'
+        '200': *id064
   /v2/organization/{id}/locations/backup/usage:
     get:
       tags:
@@ -4139,19 +4218,20 @@ paths:
             schema:
               $ref: '#/components/schemas/LocationModel'
       responses:
-        default:
+        default: &id065
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Location'
+        '200': *id065
   /v2/organization/{id}/policies:
     put:
       tags:
       - management
       summary: Change organization policy mappings
-      description: Update policy assignment for node role(s). Returns list of affected
-        device IDs
+      description: Update policy assignment for node role(s). Returns list of 
+        affected device IDs
       operationId: updateNodeRolePolicyAssignmentForOrganization
       parameters:
       - name: id
@@ -4168,7 +4248,7 @@ paths:
               items:
                 $ref: '#/components/schemas/NodeRolePolicyAssignment'
       responses:
-        default:
+        default: &id066
           description: default response
           content:
             '*/*':
@@ -4177,12 +4257,14 @@ paths:
                 items:
                   type: integer
                   format: int32
+        '200': *id066
   /v2/queries/antivirus-status:
     get:
       tags:
       - queries
       summary: Antivirus status report
-      description: Returns list of statues of antivirus software installed on devices
+      description: Returns list of statues of antivirus software installed on 
+        devices
       operationId: getAntivirusStatusReport
       parameters:
       - name: df
@@ -4217,12 +4299,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id067
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AntivirusStatusReport'
+        '200': *id067
   /v2/queries/antivirus-threats:
     get:
       tags:
@@ -4253,12 +4336,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id068
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AntivirusThreatsReport'
+        '200': *id068
   /v2/queries/computer-systems:
     get:
       tags:
@@ -4289,19 +4373,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id069
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ComputerSystemsReport'
+        '200': *id069
   /v2/queries/custom-fields-detailed:
     get:
       tags:
       - queries
       summary: Custom fields detailed report
-      description: Returns Custom Fields report with additional information about
-        each field
+      description: Returns Custom Fields report with additional information 
+        about each field
       operationId: getCustomFieldsDetailedReport
       parameters:
       - name: df
@@ -4335,17 +4420,18 @@ paths:
           type: string
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as plain
-          text without encryption
+        description: Flag to indicate if secure values should be returned as 
+          plain text without encryption
         schema:
           type: boolean
       responses:
-        default:
+        default: &id070
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NodeAttributesDetailedReport'
+        '200': *id070
   /v2/queries/custom-fields:
     get:
       tags:
@@ -4385,17 +4471,18 @@ paths:
           type: string
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as plain
-          text without encryption
+        description: Flag to indicate if secure values should be returned as 
+          plain text without encryption
         schema:
           type: boolean
       responses:
-        default:
+        default: &id071
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NodeAttributesReport'
+        '200': *id071
   /v2/queries/device-health:
     get:
       tags:
@@ -4426,12 +4513,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id072
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceHealthReport'
+        '200': *id072
   /v2/queries/backup/usage:
     get:
       tags:
@@ -4493,18 +4581,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id073
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DiskDriveReport'
+        '200': *id073
   /v2/queries/os-patch-installs:
     get:
       tags:
       - queries
       summary: OS Patch installation report
-      description: Returns patch installation history records (successful and failed)
+      description: Returns patch installation history records (successful and 
+        failed)
       operationId: getInstalledOSPatches
       parameters:
       - name: df
@@ -4539,19 +4629,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id074
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OSPatchReport'
+        '200': *id074
   /v2/queries/software-patch-installs:
     get:
       tags:
       - queries
       summary: Software Patch history report
-      description: Returns 3rd party software patch installation history records (successful
-        and failed)
+      description: Returns 3rd party software patch installation history records
+        (successful and failed)
       operationId: getInstalledSoftwarePatches
       parameters:
       - name: df
@@ -4601,12 +4692,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id075
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SoftwarePatchReport'
+        '200': *id075
   /v2/queries/logged-on-users:
     get:
       tags:
@@ -4635,12 +4727,13 @@ paths:
           format: int32
           default: 1000
       responses:
-        default:
+        default: &id076
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoggedOnUsersReport'
+        '200': *id076
   /v2/queries/network-interfaces:
     get:
       tags:
@@ -4666,12 +4759,13 @@ paths:
           description: Limit number of devices to return
           format: int32
       responses:
-        default:
+        default: &id077
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/NetworkInterfacesReport'
+        '200': *id077
   /v2/queries/operating-systems:
     get:
       tags:
@@ -4702,19 +4796,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id078
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperatingSystemsReport'
+        '200': *id078
   /v2/queries/os-patches:
     get:
       tags:
       - queries
       summary: "Pending, Failed and Rejected OS patches report"
-      description: Returns list of OS patches for which there were no installation
-        attempts
+      description: Returns list of OS patches for which there were no 
+        installation attempts
       operationId: getPendingFailedRejectedOSPatches
       parameters:
       - name: df
@@ -4754,19 +4849,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id079
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OSPatchReport'
+        '200': *id079
   /v2/queries/software-patches:
     get:
       tags:
       - queries
       summary: "Pending, Failed and Rejected Software patches report"
-      description: Returns list of 3rd party Software patches for which there were
-        no installation attempts
+      description: Returns list of 3rd party Software patches for which there 
+        were no installation attempts
       operationId: getPendingFailedRejectedSoftwarePatches
       parameters:
       - name: df
@@ -4811,12 +4907,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id080
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SoftwarePatchReport'
+        '200': *id080
   /v2/queries/policy-overrides:
     get:
       tags:
@@ -4845,12 +4942,13 @@ paths:
           format: int32
           default: 1000
       responses:
-        default:
+        default: &id081
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PolicyOverridesReport'
+        '200': *id081
   /v2/queries/processors:
     get:
       tags:
@@ -4881,12 +4979,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id082
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProcessorReport'
+        '200': *id082
   /v2/queries/raid-controllers:
     get:
       tags:
@@ -4917,12 +5016,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id083
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RAIDControllerReport'
+        '200': *id083
   /v2/queries/raid-drives:
     get:
       tags:
@@ -4953,19 +5053,20 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id084
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RAIDDriveReport'
+        '200': *id084
   /v2/queries/scoped-custom-fields-detailed:
     get:
       tags:
       - queries
       summary: Scoped custom fields detailed report
-      description: "Returns report for Custom Fields defined at different scopes (device,\
-        \ location, organization) with additional information about each field"
+      description: "Returns report for Custom Fields defined at different scopes (device,
+        location, organization) with additional information about each field"
       operationId: getScopedCustomFieldsDetailedReport
       parameters:
       - name: cursor
@@ -5000,24 +5101,25 @@ paths:
           default: all
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as plain
-          text without encryption
+        description: Flag to indicate if secure values should be returned as 
+          plain text without encryption
         schema:
           type: boolean
       responses:
-        default:
+        default: &id085
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScopedAttributesDetailedReport'
+        '200': *id085
   /v2/queries/scoped-custom-fields:
     get:
       tags:
       - queries
       summary: Scoped custom fields report
-      description: "Returns report for Custom Fields defined at different scopes (device,\
-        \ location, organization)"
+      description: "Returns report for Custom Fields defined at different scopes (device,
+        location, organization)"
       operationId: getScopedCustomFieldsReport
       parameters:
       - name: cursor
@@ -5052,17 +5154,18 @@ paths:
           default: all
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as plain
-          text without encryption
+        description: Flag to indicate if secure values should be returned as 
+          plain text without encryption
         schema:
           type: boolean
       responses:
-        default:
+        default: &id086
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScopedAttributesReport'
+        '200': *id086
   /v2/queries/software:
     get:
       tags:
@@ -5098,12 +5201,13 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id087
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SoftwareReport'
+        '200': *id087
   /v2/queries/volumes:
     get:
       tags:
@@ -5139,12 +5243,13 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id088
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/VolumesReport'
+        '200': *id088
   /v2/queries/windows-services:
     get:
       tags:
@@ -5192,12 +5297,13 @@ paths:
           format: int32
           default: 1000
       responses:
-        default:
+        default: &id089
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/WindowsServiceReport'
+        '200': *id089
   /v2/policies:
     get:
       tags:
@@ -5206,7 +5312,7 @@ paths:
       description: Returns list of policies
       operationId: getPolicies
       responses:
-        default:
+        default: &id090
           description: default response
           content:
             application/json:
@@ -5214,6 +5320,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Policy'
+        '200': *id090
     post:
       tags:
       - management
@@ -5242,12 +5349,13 @@ paths:
             schema:
               $ref: '#/components/schemas/PolicyInfo'
       responses:
-        default:
+        default: &id091
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Policy'
+        '200': *id091
   /v2/jobs:
     get:
       tags:
@@ -5277,7 +5385,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id092
           description: default response
           content:
             application/json:
@@ -5285,6 +5393,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Job'
+        '200': *id092
   /v2/activities:
     get:
       tags:
@@ -5316,15 +5425,15 @@ paths:
           type: string
       - name: olderThan
         in: query
-        description: Return activities recorded that are newer than specified activity
-          ID
+        description: Return activities recorded that are newer than specified 
+          activity ID
         schema:
           type: integer
           format: int64
       - name: newerThan
         in: query
-        description: Return activities recorded that are older than specified activity
-          ID
+        description: Return activities recorded that are older than specified 
+          activity ID
         schema:
           type: integer
           format: int64
@@ -5374,16 +5483,18 @@ paths:
           type: string
       - name: sourceConfigUid
         in: query
-        description: Allows users to make a request directed to a specific script
+        description: Allows users to make a request directed to a specific 
+          script
         schema:
           type: string
       responses:
-        default:
+        default: &id093
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ActivitiesResponse'
+        '200': *id093
   /v2/alerts:
     get:
       tags:
@@ -5413,7 +5524,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id094
           description: default response
           content:
             application/json:
@@ -5421,6 +5532,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Alert'
+        '200': *id094
   /v2/automation/scripts:
     get:
       tags:
@@ -5435,7 +5547,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id095
           description: default response
           content:
             application/json:
@@ -5443,6 +5555,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AutomationScript'
+        '200': *id095
   /v2/device-custom-fields:
     get:
       tags:
@@ -5459,7 +5572,7 @@ paths:
           enum:
           - "all,node,location,organization"
       responses:
-        default:
+        default: &id096
           description: default response
           content:
             application/json:
@@ -5467,6 +5580,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AttributePublicApiDTO'
+        '200': *id096
   /v2/devices:
     get:
       tags:
@@ -5493,7 +5607,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id097
           description: default response
           content:
             application/json:
@@ -5501,6 +5615,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NodeWithDetailedReferences'
+        '200': *id097
   /v2/devices-detailed:
     get:
       tags:
@@ -5527,7 +5642,7 @@ paths:
           description: Last Node ID from previous page
           format: int32
       responses:
-        default:
+        default: &id098
           description: default response
           content:
             application/json:
@@ -5535,6 +5650,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Device'
+        '200': *id098
   /v2/notification-channels/enabled:
     get:
       tags:
@@ -5543,7 +5659,7 @@ paths:
       description: Returns list of enabled notification channels
       operationId: getEnabledNotificationChannels
       responses:
-        default:
+        default: &id099
           description: default response
           content:
             application/json:
@@ -5551,6 +5667,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NotificationChannel'
+        '200': *id099
   /v2/groups:
     get:
       tags:
@@ -5559,7 +5676,7 @@ paths:
       description: Returns list of groups
       operationId: getGroups
       responses:
-        default:
+        default: &id100
           description: default response
           content:
             application/json:
@@ -5567,6 +5684,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Group'
+        '200': *id100
   /v2/locations:
     get:
       tags:
@@ -5588,7 +5706,7 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id101
           description: default response
           content:
             application/json:
@@ -5596,6 +5714,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/LocationWithOrganizationRef'
+        '200': *id101
   /v2/roles:
     get:
       tags:
@@ -5604,7 +5723,7 @@ paths:
       description: Returns list of device roles
       operationId: getNodeRoles
       responses:
-        default:
+        default: &id102
           description: default response
           content:
             application/json:
@@ -5612,6 +5731,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NodeRole'
+        '200': *id102
   /v2/notification-channels:
     get:
       tags:
@@ -5620,7 +5740,7 @@ paths:
       description: Returns list of notification channels
       operationId: getNotificationChannels
       responses:
-        default:
+        default: &id103
           description: default response
           content:
             application/json:
@@ -5628,12 +5748,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NotificationChannel'
+        '200': *id103
   /v2/organizations-detailed:
     get:
       tags:
       - system
       summary: List organizations (Detailed)
-      description: Returns list of organizations with locations and policy mappings
+      description: Returns list of organizations with locations and policy 
+        mappings
       operationId: getOrganizationsDetailed
       parameters:
       - name: pageSize
@@ -5654,7 +5776,7 @@ paths:
         schema:
           type: string
       responses:
-        default:
+        default: &id104
           description: default response
           content:
             application/json:
@@ -5662,6 +5784,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganizationDetailed'
+        '200': *id104
   /v2/tasks:
     get:
       tags:
@@ -5670,7 +5793,7 @@ paths:
       description: Returns list of registered scheduled tasks
       operationId: getScheduledTasks
       responses:
-        default:
+        default: &id105
           description: default response
           content:
             application/json:
@@ -5678,6 +5801,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ScheduledTask'
+        '200': *id105
   /v2/software-products:
     get:
       tags:
@@ -5686,7 +5810,7 @@ paths:
       description: Returns available software products (3rd party patching)
       operationId: getSoftwareProducts
       responses:
-        default:
+        default: &id106
           description: default response
           content:
             application/json:
@@ -5694,6 +5818,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SoftwareProduct'
+        '200': *id106
   /v2/users:
     get:
       tags:
@@ -5717,7 +5842,7 @@ paths:
           type: boolean
           default: false
       responses:
-        default:
+        default: &id107
           description: default response
           content:
             application/json:
@@ -5725,6 +5850,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '200': *id107
   /v2/devices/search:
     get:
       tags:
@@ -5745,12 +5871,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id108
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceSearchResults'
+        '200': *id108
   /v2/backup/jobs:
     get:
       tags:
@@ -5786,7 +5913,8 @@ paths:
           type: string
       - name: include
         in: query
-        description: Which devices include (active|deleted|all) default value active
+        description: Which devices include (active|deleted|all) default value 
+          active
         schema:
           type: string
           default: active
@@ -5819,7 +5947,7 @@ paths:
       description: Returns list of the ticket attributes
       operationId: getTicketAttributes
       responses:
-        default:
+        default: &id109
           description: default response
           content:
             application/json:
@@ -5827,6 +5955,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TicketingAttributePublicApiDTO'
+        '200': *id109
   /v2/ticketing/contact/contacts:
     get:
       tags:
@@ -5835,7 +5964,7 @@ paths:
       description: Returns list of contacts
       operationId: getContacts
       responses:
-        default:
+        default: &id110
           description: default response
           content:
             application/json:
@@ -5843,6 +5972,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ContactResponseDTO'
+        '200': *id110
   /v2/ticketing/ticket-form/{id}:
     get:
       tags:
@@ -5858,12 +5988,13 @@ paths:
           type: integer
           format: int32
       responses:
-        default:
+        default: &id111
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketFormPublicApiDTO'
+        '200': *id111
   /v2/ticketing/ticket-form:
     get:
       tags:
@@ -5872,7 +6003,7 @@ paths:
       description: Returns list of ticket forms with their fields
       operationId: getTicketForms
       responses:
-        default:
+        default: &id112
           description: default response
           content:
             application/json:
@@ -5880,6 +6011,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TicketFormPublicApiDTO'
+        '200': *id112
   /v2/ticketing/statuses:
     get:
       tags:
@@ -5888,7 +6020,7 @@ paths:
       description: 'Get list of ticket status '
       operationId: getAllStatuses
       responses:
-        default:
+        default: &id113
           description: default response
           content:
             application/json:
@@ -5896,6 +6028,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TicketStatusPublicApiDTO'
+        '200': *id113
   /v2/ticketing/trigger/boards:
     get:
       tags:
@@ -5904,7 +6037,7 @@ paths:
       description: Returns list of ticketing boards
       operationId: getBoards
       responses:
-        default:
+        default: &id114
           description: default response
           content:
             application/json:
@@ -5912,13 +6045,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/TicketingBoardPublicApiDTO'
+        '200': *id114
   /v2/ticketing/trigger/board/{boardId}/run:
     post:
       tags:
       - ticketing
       summary: List of tickets for board
-      description: Run a board. Returns list of tickets matching the board condition
-        and filters. Allows pagination
+      description: Run a board. Returns list of tickets matching the board 
+        condition and filters. Allows pagination
       operationId: getTicketsByBoard
       parameters:
       - name: boardId
@@ -5933,12 +6067,13 @@ paths:
             schema:
               $ref: '#/components/schemas/TicketBoardScrollingRequestDTO'
       responses:
-        default:
+        default: &id115
           description: default response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketDashboardPublicApiDTO'
+        '200': *id115
   /v2/ticketing/app-user-contact:
     get:
       tags:
@@ -7633,8 +7768,8 @@ components:
           description: Description of the template
         allowMultiple:
           type: boolean
-          description: Indicates if multiple instances of the document template is
-            allowed
+          description: Indicates if multiple instances of the document template 
+            is allowed
         mandatory:
           type: boolean
           description: Indicates if the document template is mandatory
@@ -7653,7 +7788,8 @@ components:
             $ref: '#/components/schemas/DocumentItemPublicApiDTO'
         availableToAllTechnicians:
           type: boolean
-          description: Indicates if the document template is available to all technicians
+          description: Indicates if the document template is available to all 
+            technicians
         allowedTechnicianRoles:
           type: array
           description: List of allowed technician role ids
@@ -7796,7 +7932,8 @@ components:
           description: Description of the template
         allowMultiple:
           type: boolean
-          description: States if multiple instances of the document template is allowed
+          description: States if multiple instances of the document template is 
+            allowed
         mandatory:
           type: boolean
           description: Indicates if the document template is mandatory
@@ -7807,7 +7944,8 @@ components:
             $ref: '#/components/schemas/NewDocumentItemPublicApiRequest'
         availableToAllTechnicians:
           type: boolean
-          description: States if the document template is available to all technicians
+          description: States if the document template is available to all 
+            technicians
         allowedTechnicianRoles:
           type: array
           description: List of allowed technician role ids
@@ -7925,7 +8063,8 @@ components:
             $ref: '#/components/schemas/UpdateDocumentItemPublicApiRequest'
         availableToAllTechnicians:
           type: boolean
-          description: States if the document template is available to all technicians
+          description: States if the document template is available to all 
+            technicians
         allowedTechnicianRoles:
           type: array
           description: List of allowed technician role ids
@@ -7939,12 +8078,12 @@ components:
         assetIds:
           uniqueItems: true
           type: array
-          description: Array of asset IDs to perform bulk operations on (provide the
-            type of asset with the URL)
+          description: Array of asset IDs to perform bulk operations on (provide
+            the type of asset with the URL)
           items:
             type: integer
-            description: Array of asset IDs to perform bulk operations on (provide
-              the type of asset with the URL)
+            description: Array of asset IDs to perform bulk operations on 
+              (provide the type of asset with the URL)
             format: int32
         tagIdsToAdd:
           uniqueItems: true
@@ -8069,15 +8208,15 @@ components:
             format: int32
         mergeMethod:
           type: string
-          description: Method to use - merge into an existing tag or create a new
-            one
+          description: Method to use - merge into an existing tag or create a 
+            new one
           enum:
           - MERGE_INTO_EXISTING_TAG
           - MERGE_INTO_NEW_TAG
         mergeIntoTagId:
           type: integer
-          description: "If merging into an existing tag, you must provide the target\
-            \ tag id here"
+          description: "If merging into an existing tag, you must provide the target
+            tag id here"
           format: int32
           nullable: true
         name:
@@ -8090,8 +8229,8 @@ components:
           maxLength: 250
           minLength: 0
           type: string
-          description: "If creating a new tag, you can supply the new tag description\
-            \ here"
+          description: "If creating a new tag, you can supply the new tag description
+            here"
           nullable: true
     ItamSetAssetTagsRequestPublicApiDTO:
       type: object
@@ -8099,14 +8238,14 @@ components:
         tagIds:
           uniqueItems: true
           type: array
-          description: "Array of tag IDS to assign to asset from URL. The tags on\
-            \ the asset will be set to exactly these tags, removing existing tags\
-            \ if necessary"
+          description: "Array of tag IDS to assign to asset from URL. The tags on
+            the asset will be set to exactly these tags, removing existing tags if
+            necessary"
           items:
             type: integer
-            description: "Array of tag IDS to assign to asset from URL. The tags on\
-              \ the asset will be set to exactly these tags, removing existing tags\
-              \ if necessary"
+            description: "Array of tag IDS to assign to asset from URL. The tags on
+              the asset will be set to exactly these tags, removing existing tags
+              if necessary"
             format: int32
     UpdateItamTagRequest:
       type: object
@@ -8256,19 +8395,20 @@ components:
           description: Indicates if this item is archived
         name:
           type: string
-          description: Article name (In the case of uploaded articles this will be
-            the file name)
+          description: Article name (In the case of uploaded articles this will 
+            be the file name)
         fileSize:
           type: string
-          description: Article file size (Only for uploaded knowledge base articles)
+          description: Article file size (Only for uploaded knowledge base 
+            articles)
         fileExtension:
           type: string
-          description: Article file extension (For native kb articles the extension
-            will be 'ninja')
+          description: Article file extension (For native kb articles the 
+            extension will be 'ninja')
         fileUploadStatus:
           type: string
-          description: Article file upload status (Only for uploaded knowledge base
-            articles)
+          description: Article file upload status (Only for uploaded knowledge 
+            base articles)
           enum:
           - PROCESSING
           - SUCCESS
@@ -8344,8 +8484,8 @@ components:
           format: int32
         destinationOrganizationId:
           type: integer
-          description: Destination client. Use when the root folder of the client
-            does not exist.
+          description: Destination client. Use when the root folder of the 
+            client does not exist.
           format: int32
     KnowledgeBaseArticleBulkUpdatePublicApiRequest:
       type: object
@@ -8415,7 +8555,8 @@ components:
           - SECURE
         value:
           type: object
-          description: Related item value (Attachment meta data / Secure information)
+          description: Related item value (Attachment meta data / Secure 
+            information)
         createTime:
           type: number
           description: Creation time
@@ -8430,7 +8571,8 @@ components:
           format: int32
         updatedByAppUserId:
           type: integer
-          description: The identifier of the last user to update the related item
+          description: The identifier of the last user to update the related 
+            item
           format: int32
     NewRelatedItemEntityRequest:
       type: object
@@ -9149,13 +9291,13 @@ components:
           format: int64
         lastSuccessfulBackupJob:
           type: number
-          description: Last successful job. This is provided when the 'includeLastBackupJobTimes'
-            query parameter is set to 'true'
+          description: Last successful job. This is provided when the 
+            'includeLastBackupJobTimes' query parameter is set to 'true'
           format: double
         lastFailedBackupJob:
           type: number
-          description: Last failed job. This is provided when the 'includeLastBackupJobTimes'
-            query parameter is set to 'true'
+          description: Last failed job. This is provided when the 
+            'includeLastBackupJobTimes' query parameter is set to 'true'
           format: double
         revisionsTotalSize:
           type: integer
@@ -9376,13 +9518,13 @@ components:
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location Policy
-            Mapping
+          description: Node Role policy ID based on organization and location 
+            Policy Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location policy
-            mapping)
+          description: Assigned policy ID (overrides organization and location 
+            policy mapping)
           format: int32
         approvalStatus:
           type: string
@@ -9749,7 +9891,8 @@ components:
             type: object
             description: Custom Fields
           description: Custom Fields
-      description: Assigned policy (overrides organization and location policy mapping)
+      description: Assigned policy (overrides organization and location policy 
+        mapping)
     Processor:
       type: object
       properties:
@@ -9950,8 +10093,8 @@ components:
           - UNKNOWN
         encryptionMethod:
           type: string
-          description: Indicated the encryption algorithm and key size used on the
-            volume
+          description: Indicated the encryption algorithm and key size used on 
+            the volume
           enum:
           - NONE
           - AES_128_WITH_DIFFUSER
@@ -9973,8 +10116,8 @@ components:
           - PENDING
         lockStatus:
           type: string
-          description: Indicates whether the contents of the volume are accessible
-            from Windows
+          description: Indicates whether the contents of the volume are 
+            accessible from Windows
           enum:
           - UNKNOWN
           - UNLOCKED
@@ -10264,13 +10407,13 @@ components:
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location Policy
-            Mapping
+          description: Node Role policy ID based on organization and location 
+            Policy Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location policy
-            mapping)
+          description: Assigned policy ID (overrides organization and location 
+            policy mapping)
           format: int32
         approvalStatus:
           type: string
@@ -11646,8 +11789,8 @@ components:
           format: int32
         policyId:
           type: integer
-          description: "Assigned policy ID (overrides organization policy mapping,\
-            \ or reverts to organization policy if Null)"
+          description: "Assigned policy ID (overrides organization policy mapping,
+            or reverts to organization policy if Null)"
           format: int32
         organizationId:
           type: integer
@@ -11667,7 +11810,8 @@ components:
           description: List of features that will be disabled during maintenance
           items:
             type: string
-            description: List of features that will be disabled during maintenance
+            description: List of features that will be disabled during 
+              maintenance
             enum:
             - ALERTS
             - PATCHING
@@ -11744,12 +11888,12 @@ components:
           description: Custom Fields
         roles:
           type: array
-          description: A list of role names assigned to the user. This is provided
-            when the 'includeRoles' query parameter is set to 'true'
+          description: A list of role names assigned to the user. This is 
+            provided when the 'includeRoles' query parameter is set to 'true'
           items:
             type: string
-            description: A list of role names assigned to the user. This is provided
-              when the 'includeRoles' query parameter is set to 'true'
+            description: A list of role names assigned to the user. This is 
+              provided when the 'includeRoles' query parameter is set to 'true'
     Link:
       type: object
       properties:
@@ -11792,9 +11936,9 @@ components:
       properties:
         nodeRoleId:
           type: string
-          description: "Identifier for the nodeRole target of this installer. Acceptable\
-            \ values include integers, 'auto', or an empty string. If the value is\
-            \ omitted, or an empty string, it defaults to 'auto'."
+          description: "Identifier for the nodeRole target of this installer. Acceptable
+            values include integers, 'auto', or an empty string. If the value is omitted,
+            or an empty string, it defaults to 'auto'."
           default: auto
       description: content
     LocationBackupUsageSummary:
@@ -13315,12 +13459,13 @@ components:
           format: double
         deviceCount:
           type: integer
-          description: Estimated/Last known device count.  Can be `null` if group
-            membership has not been evaluated recently
+          description: Estimated/Last known device count.  Can be `null` if 
+            group membership has not been evaluated recently
           format: int32
         lastEvaluated:
           type: number
-          description: Last evaluation time of group membership for nodes (search)
+          description: Last evaluation time of group membership for nodes 
+            (search)
           format: double
         tags:
           type: array
@@ -13477,13 +13622,13 @@ components:
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location Policy
-            Mapping
+          description: Node Role policy ID based on organization and location 
+            Policy Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location policy
-            mapping)
+          description: Assigned policy ID (overrides organization and location 
+            policy mapping)
           format: int32
         approvalStatus:
           type: string

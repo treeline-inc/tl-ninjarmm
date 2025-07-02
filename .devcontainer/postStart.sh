@@ -41,4 +41,7 @@ else
   echo "Warning: Graphite configuration setup failed (exit code: $graphite_setup_result). Continuing with other tasks."
 fi
 
+# Install ruamel.yaml
+pip install ruamel.yaml
+
 echo "Post-start setup complete!"

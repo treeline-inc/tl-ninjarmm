@@ -17,7 +17,6 @@ import pprint
 import re  # noqa: F401
 import json
 
-from importlib import import_module
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -33,21 +32,7 @@ from tl_ninjarmm.models.maintenance import Maintenance
 from tl_ninjarmm.models.node_references import NodeReferences
 from tl_ninjarmm.models.note import Note
 from typing import Set
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from tl_ninjarmm.models.agent_device import AgentDevice
-    from tl_ninjarmm.models.cloud_monitor_dns import CloudMonitorDNS
-    from tl_ninjarmm.models.cloud_monitor_email_server import CloudMonitorEmailServer
-    from tl_ninjarmm.models.cloud_monitor_http import CloudMonitorHTTP
-    from tl_ninjarmm.models.cloud_monitor_ping import CloudMonitorPing
-    from tl_ninjarmm.models.cloud_monitor_port_scan import CloudMonitorPortScan
-    from tl_ninjarmm.models.mdm_device import MdmDevice
-    from tl_ninjarmm.models.nms_server import NMSServer
-    from tl_ninjarmm.models.nms_target import NMSTarget
-    from tl_ninjarmm.models.vm_guest import VMGuest
-    from tl_ninjarmm.models.vm_host import VMHost
+from typing_extensions import Self
 
 
 class Device(BaseModel):
@@ -220,33 +205,6 @@ class Device(BaseModel):
         protected_namespaces=(),
     )
 
-    # JSON field name that stores the object type
-    __discriminator_property_name: ClassVar[str] = "deviceType"
-
-    # discriminator mappings
-    __discriminator_value_class_map: ClassVar[Dict[str, str]] = {
-        "AgentDevice": "AgentDevice",
-        "CloudMonitorDNS": "CloudMonitorDNS",
-        "CloudMonitorEmailServer": "CloudMonitorEmailServer",
-        "CloudMonitorHTTP": "CloudMonitorHTTP",
-        "CloudMonitorPing": "CloudMonitorPing",
-        "CloudMonitorPortScan": "CloudMonitorPortScan",
-        "MdmDevice": "MdmDevice",
-        "NMSServer": "NMSServer",
-        "NMSTarget": "NMSTarget",
-        "VMGuest": "VMGuest",
-        "VMHost": "VMHost",
-    }
-
-    @classmethod
-    def get_discriminator_value(cls, obj: Dict[str, Any]) -> Optional[str]:
-        """Returns the discriminator value (object type) of the data"""
-        discriminator_value = obj[cls.__discriminator_property_name]
-        if discriminator_value:
-            return cls.__discriminator_value_class_map.get(discriminator_value)
-        else:
-            return None
-
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
         return pprint.pformat(self.model_dump(by_alias=True))
@@ -257,23 +215,7 @@ class Device(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(
-        cls, json_str: str
-    ) -> Optional[
-        Union[
-            AgentDevice,
-            CloudMonitorDNS,
-            CloudMonitorEmailServer,
-            CloudMonitorHTTP,
-            CloudMonitorPing,
-            CloudMonitorPortScan,
-            MdmDevice,
-            NMSServer,
-            NMSTarget,
-            VMGuest,
-            VMHost,
-        ]
-    ]:
+    def from_json(cls, json_str: str) -> Optional[Self]:
         """Create an instance of Device from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
@@ -310,72 +252,49 @@ class Device(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(
-        cls, obj: Dict[str, Any]
-    ) -> Optional[
-        Union[
-            AgentDevice,
-            CloudMonitorDNS,
-            CloudMonitorEmailServer,
-            CloudMonitorHTTP,
-            CloudMonitorPing,
-            CloudMonitorPortScan,
-            MdmDevice,
-            NMSServer,
-            NMSTarget,
-            VMGuest,
-            VMHost,
-        ]
-    ]:
+    def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
         """Create an instance of Device from a dict"""
-        # look up the object type based on discriminator mapping
-        object_type = cls.get_discriminator_value(obj)
-        if object_type == "AgentDevice":
-            return import_module(
-                "tl_ninjarmm.models.agent_device"
-            ).AgentDevice.from_dict(obj)
-        if object_type == "CloudMonitorDNS":
-            return import_module(
-                "tl_ninjarmm.models.cloud_monitor_dns"
-            ).CloudMonitorDNS.from_dict(obj)
-        if object_type == "CloudMonitorEmailServer":
-            return import_module(
-                "tl_ninjarmm.models.cloud_monitor_email_server"
-            ).CloudMonitorEmailServer.from_dict(obj)
-        if object_type == "CloudMonitorHTTP":
-            return import_module(
-                "tl_ninjarmm.models.cloud_monitor_http"
-            ).CloudMonitorHTTP.from_dict(obj)
-        if object_type == "CloudMonitorPing":
-            return import_module(
-                "tl_ninjarmm.models.cloud_monitor_ping"
-            ).CloudMonitorPing.from_dict(obj)
-        if object_type == "CloudMonitorPortScan":
-            return import_module(
-                "tl_ninjarmm.models.cloud_monitor_port_scan"
-            ).CloudMonitorPortScan.from_dict(obj)
-        if object_type == "MdmDevice":
-            return import_module("tl_ninjarmm.models.mdm_device").MdmDevice.from_dict(
-                obj
-            )
-        if object_type == "NMSServer":
-            return import_module("tl_ninjarmm.models.nms_server").NMSServer.from_dict(
-                obj
-            )
-        if object_type == "NMSTarget":
-            return import_module("tl_ninjarmm.models.nms_target").NMSTarget.from_dict(
-                obj
-            )
-        if object_type == "VMGuest":
-            return import_module("tl_ninjarmm.models.vm_guest").VMGuest.from_dict(obj)
-        if object_type == "VMHost":
-            return import_module("tl_ninjarmm.models.vm_host").VMHost.from_dict(obj)
+        if obj is None:
+            return None
 
-        raise ValueError(
-            "Device failed to lookup discriminator value from "
-            + json.dumps(obj)
-            + ". Discriminator property name: "
-            + cls.__discriminator_property_name
-            + ", mapping: "
-            + json.dumps(cls.__discriminator_value_class_map)
+        if not isinstance(obj, dict):
+            return cls.model_validate(obj)
+
+        _obj = cls.model_validate(
+            {
+                "id": obj.get("id"),
+                "parentDeviceId": obj.get("parentDeviceId"),
+                "organizationId": obj.get("organizationId"),
+                "locationId": obj.get("locationId"),
+                "nodeClass": obj.get("nodeClass"),
+                "nodeRoleId": obj.get("nodeRoleId"),
+                "rolePolicyId": obj.get("rolePolicyId"),
+                "policyId": obj.get("policyId"),
+                "approvalStatus": obj.get("approvalStatus"),
+                "offline": obj.get("offline"),
+                "displayName": obj.get("displayName"),
+                "systemName": obj.get("systemName"),
+                "dnsName": obj.get("dnsName"),
+                "netbiosName": obj.get("netbiosName"),
+                "created": obj.get("created"),
+                "lastContact": obj.get("lastContact"),
+                "lastUpdate": obj.get("lastUpdate"),
+                "userData": obj.get("userData"),
+                "tags": obj.get("tags"),
+                "fields": obj.get("fields"),
+                "maintenance": Maintenance.from_dict(obj["maintenance"])
+                if obj.get("maintenance") is not None
+                else None,
+                "references": NodeReferences.from_dict(obj["references"])
+                if obj.get("references") is not None
+                else None,
+                "ipAddresses": obj.get("ipAddresses"),
+                "macAddresses": obj.get("macAddresses"),
+                "publicIP": obj.get("publicIP"),
+                "notes": [Note.from_dict(_item) for _item in obj["notes"]]
+                if obj.get("notes") is not None
+                else None,
+                "deviceType": obj.get("deviceType"),
+            }
         )
+        return _obj
