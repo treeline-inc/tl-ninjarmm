@@ -155,6 +155,9 @@ class Configuration:
           The dict value is an API key prefix when generating the auth data.
         :param username: Username for HTTP basic authentication.
         :param password: Password for HTTP basic authentication.
+        :param client_id: Client ID for OAuth2 authentication.
+        :param client_secret: Client secret for OAuth2 authentication.
+        :param token_scope: Token scope for OAuth2 authentication.
         :param access_token: Access token.
         :param server_index: Index to servers configuration.
         :param server_variables: Mapping with string values to replace variables in
@@ -203,6 +206,9 @@ class Configuration:
         api_key_prefix: Optional[Dict[str, str]] = None,
         username: Optional[str] = None,
         password: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        token_scope: str | list[object] | tuple[object] | set[object] | None = None,
         access_token: Optional[str] = None,
         server_index: Optional[int] = None,
         server_variables: Optional[ServerVariablesT] = None,
@@ -252,6 +258,15 @@ class Configuration:
         """
         self.password = password
         """Password for HTTP basic authentication
+        """
+        self.client_id = client_id
+        """Client ID for OAuth2 authentication
+        """
+        self.client_secret = client_secret
+        """Client secret for OAuth2 authentication
+        """
+        self.token_scope = token_scope
+        """Token scope for OAuth2 authentication
         """
         self.access_token = access_token
         """Access token
