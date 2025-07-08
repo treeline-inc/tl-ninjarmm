@@ -67,8 +67,18 @@ pytest
 ```
 
 ## Generating the library
+
+### From the Current YAML
 Run the following command to generate the library:
 ```
 # from the devcontainer
-openapi-generator-cli generate -i openapi_spec.yaml -g python -c config.yaml -o src --skip-validate-spec
+./scripts/generate_python_sdk.sh
+```
+
+### From a New Download 
+From the export dropdown in the top right at [this page](https://app.ninjarmm.com/apidocs-beta/core-resources), download the bundled references version.
+Then, from that version, run the following from the repo root to generate the library:
+```
+# from the devcontainer
+./scripts/generate_python_sdk.sh
 ```

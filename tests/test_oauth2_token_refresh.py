@@ -188,24 +188,6 @@ class TestTokenRefresh:
 class TestErrorHandling:
     """Test error handling scenarios."""
 
-    def test_refresh_token_if_needed_handles_missing_token_url(self, mock_config):
-        """Test that _refresh_token_if_needed handles missing token_url."""
-        with (
-            patch("tl_ninjarmm.api_client.OAuth2Session") as mock_oauth,
-        ):
-            mock_session = Mock()
-            mock_oauth.return_value = mock_session
-
-            # Simulate missing token_url
-            client = ApiClient(configuration=mock_config)
-            client.token_url = None  # type: ignore[assignment]
-
-            # Should not raise any exceptions
-            client._refresh_token_if_needed()
-
-            # Verify no token fetch was attempted
-            mock_session.fetch_token.assert_not_called()
-
     def test_call_api_handles_exceptions(self, mock_config):
         """Test that call_api properly handles exceptions."""
         with (

@@ -21,10 +21,8 @@ rm -rf ~/.fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --all
 
-# Install pre-commmit
 uv tool install pre-commit
 
-# Install pre-commit hooks
 pre-commit install --install-hooks
 
 # To make it easy to use an external terminal to connect to the container
@@ -40,5 +38,8 @@ if [ "$graphite_setup_result" -eq 0 ]; then
 else
   echo "Warning: Graphite configuration setup failed (exit code: $graphite_setup_result). Continuing with other tasks."
 fi
+
+# Used for parsing the openapi_spec.yaml file
+pip install ruamel.yaml
 
 echo "Post-start setup complete!"
