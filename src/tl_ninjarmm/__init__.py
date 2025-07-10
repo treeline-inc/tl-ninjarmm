@@ -40,9 +40,11 @@ __all__ = [
     "AttributePublicApiDTO",
     "AutomationScript",
     "BackupUsage",
+    "Contact",
     "Device",
     "DeviceSearchMatch",
     "DeviceSearchResults",
+    "EndUser",
     "EndUserCustomization",
     "FeatureSettings",
     "Group",
@@ -60,10 +62,13 @@ __all__ = [
     "OrganizationDetailed",
     "OrganizationSettings",
     "Policy",
+    "RoleMember",
     "ScheduledTask",
     "ScriptVariable",
     "SoftwareProduct",
+    "Technician",
     "User",
+    "UserRole",
     "WarrantyDates",
 ]
 
@@ -108,6 +113,7 @@ from tl_ninjarmm.models.attribute_public_api_dto import (
 )
 from tl_ninjarmm.models.automation_script import AutomationScript as AutomationScript
 from tl_ninjarmm.models.backup_usage import BackupUsage as BackupUsage
+from tl_ninjarmm.models.contact import Contact as Contact
 from tl_ninjarmm.models.device import Device as Device
 from tl_ninjarmm.models.device_search_match import (
     DeviceSearchMatch as DeviceSearchMatch,
@@ -115,6 +121,7 @@ from tl_ninjarmm.models.device_search_match import (
 from tl_ninjarmm.models.device_search_results import (
     DeviceSearchResults as DeviceSearchResults,
 )
+from tl_ninjarmm.models.end_user import EndUser as EndUser
 from tl_ninjarmm.models.end_user_customization import (
     EndUserCustomization as EndUserCustomization,
 )
@@ -146,8 +153,11 @@ from tl_ninjarmm.models.organization_settings import (
     OrganizationSettings as OrganizationSettings,
 )
 from tl_ninjarmm.models.policy import Policy as Policy
+from tl_ninjarmm.models.role_member import RoleMember as RoleMember
 from tl_ninjarmm.models.scheduled_task import ScheduledTask as ScheduledTask
 from tl_ninjarmm.models.script_variable import ScriptVariable as ScriptVariable
 from tl_ninjarmm.models.software_product import SoftwareProduct as SoftwareProduct
+from tl_ninjarmm.models.technician import Technician as Technician
 from tl_ninjarmm.models.user import User as User
+from tl_ninjarmm.models.user_role import UserRole as UserRole
 from tl_ninjarmm.models.warranty_dates import WarrantyDates as WarrantyDates

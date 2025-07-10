@@ -16,9 +16,11 @@ tl_ninjarmm/models/attribute_content_value.py
 tl_ninjarmm/models/attribute_public_api_dto.py
 tl_ninjarmm/models/automation_script.py
 tl_ninjarmm/models/backup_usage.py
+tl_ninjarmm/models/contact.py
 tl_ninjarmm/models/device.py
 tl_ninjarmm/models/device_search_match.py
 tl_ninjarmm/models/device_search_results.py
+tl_ninjarmm/models/end_user.py
 tl_ninjarmm/models/end_user_customization.py
 tl_ninjarmm/models/feature_settings.py
 tl_ninjarmm/models/group.py
@@ -36,9 +38,12 @@ tl_ninjarmm/models/organization.py
 tl_ninjarmm/models/organization_detailed.py
 tl_ninjarmm/models/organization_settings.py
 tl_ninjarmm/models/policy.py
+tl_ninjarmm/models/role_member.py
 tl_ninjarmm/models/scheduled_task.py
 tl_ninjarmm/models/script_variable.py
 tl_ninjarmm/models/software_product.py
+tl_ninjarmm/models/technician.py
 tl_ninjarmm/models/user.py
+tl_ninjarmm/models/user_role.py
 tl_ninjarmm/models/warranty_dates.py
 tl_ninjarmm/rest.py

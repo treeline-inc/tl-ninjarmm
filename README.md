@@ -76,8 +76,10 @@ Run the following command to generate the library:
 ```
 
 ### From a New Download 
-From the export dropdown in the top right at [this page](https://app.ninjarmm.com/apidocs-beta/core-resources), download the bundled references version.
-Then, from that version, run the following from the repo root to generate the library:
+From the export dropdown in the top right at [this page](https://app.ninjarmm.com/apidocs-beta/core-resources),
+download the bundled references version. Then, copy that file and overwrite
+`openapi_spec.yaml` at the root of the repo. Finally, run the library generation
+script:
 ```
 # from the devcontainer
 ./scripts/generate_python_sdk.sh

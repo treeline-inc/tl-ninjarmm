@@ -124,9 +124,9 @@ class AttributePublicApiDTO(BaseModel):
             return value
 
         for i in value:
-            if i not in set(["NODE", "LOCATION", "ORGANIZATION"]):
+            if i not in set(["NODE", "END_USER", "LOCATION", "ORGANIZATION"]):
                 raise ValueError(
-                    "each list item must be one of ('NODE', 'LOCATION', 'ORGANIZATION')"
+                    "each list item must be one of ('NODE', 'END_USER', 'LOCATION', 'ORGANIZATION')"
                 )
         return value
 

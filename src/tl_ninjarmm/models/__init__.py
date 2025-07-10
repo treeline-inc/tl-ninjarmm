@@ -34,9 +34,11 @@ from tl_ninjarmm.models.attribute_content_value import AttributeContentValue
 from tl_ninjarmm.models.attribute_public_api_dto import AttributePublicApiDTO
 from tl_ninjarmm.models.automation_script import AutomationScript
 from tl_ninjarmm.models.backup_usage import BackupUsage
+from tl_ninjarmm.models.contact import Contact
 from tl_ninjarmm.models.device import Device
 from tl_ninjarmm.models.device_search_match import DeviceSearchMatch
 from tl_ninjarmm.models.device_search_results import DeviceSearchResults
+from tl_ninjarmm.models.end_user import EndUser
 from tl_ninjarmm.models.end_user_customization import EndUserCustomization
 from tl_ninjarmm.models.feature_settings import FeatureSettings
 from tl_ninjarmm.models.group import Group
@@ -56,8 +58,11 @@ from tl_ninjarmm.models.organization import Organization
 from tl_ninjarmm.models.organization_detailed import OrganizationDetailed
 from tl_ninjarmm.models.organization_settings import OrganizationSettings
 from tl_ninjarmm.models.policy import Policy
+from tl_ninjarmm.models.role_member import RoleMember
 from tl_ninjarmm.models.scheduled_task import ScheduledTask
 from tl_ninjarmm.models.script_variable import ScriptVariable
 from tl_ninjarmm.models.software_product import SoftwareProduct
+from tl_ninjarmm.models.technician import Technician
 from tl_ninjarmm.models.user import User
+from tl_ninjarmm.models.user_role import UserRole
 from tl_ninjarmm.models.warranty_dates import WarrantyDates
