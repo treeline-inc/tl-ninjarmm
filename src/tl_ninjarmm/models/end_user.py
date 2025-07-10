@@ -31,51 +31,62 @@ from typing import Set
 from typing_extensions import Self
 
 
-class User(BaseModel):
+class EndUser(BaseModel):
     """
-    Assigned device owner
+    EndUser
     """  # noqa: E501
 
     id: Optional[StrictInt] = Field(default=None, description="User identifier")
     uid: Optional[StrictStr] = Field(
         default=None, description="User universally unique identifier"
     )
-    first_name: Optional[StrictStr] = Field(default=None, alias="firstName")
-    last_name: Optional[StrictStr] = Field(default=None, alias="lastName")
-    email: Optional[StrictStr] = None
-    phone: Optional[StrictStr] = None
-    enabled: Optional[StrictBool] = None
-    administrator: Optional[StrictBool] = None
-    permit_all_clients: Optional[StrictBool] = Field(
-        default=None, alias="permitAllClients"
+    enabled: Optional[StrictBool] = Field(
+        default=None, description="User access status"
     )
-    notify_all_clients: Optional[StrictBool] = Field(
-        default=None, alias="notifyAllClients"
+    first_name: Optional[StrictStr] = Field(
+        default=None, description="First name", alias="firstName"
     )
-    must_change_pw: Optional[StrictBool] = Field(default=None, alias="mustChangePw")
-    mfa_configured: Optional[StrictBool] = Field(default=None, alias="mfaConfigured")
-    user_type: Optional[StrictStr] = Field(default=None, alias="userType")
-    invitation_status: Optional[StrictStr] = Field(
-        default=None, alias="invitationStatus"
+    last_name: Optional[StrictStr] = Field(
+        default=None, description="Last name", alias="lastName"
     )
+    email: Optional[StrictStr] = Field(default=None, description="Email address")
+    phone: Optional[StrictStr] = Field(default=None, description="Phone number")
     organization_id: Optional[StrictInt] = Field(
         default=None,
         description="Identifier of organization for end-users",
         alias="organizationId",
     )
-    device_ids: Optional[List[StrictInt]] = Field(
+    full_portal_access: Optional[StrictBool] = Field(
+        default=None, description="Has full portal access", alias="fullPortalAccess"
+    )
+    must_change_pw: Optional[StrictBool] = Field(
         default=None,
-        description="Device IDs which end-user is authorized to access",
-        alias="deviceIds",
+        description="Must change password during next login",
+        alias="mustChangePw",
+    )
+    mfa_configured: Optional[StrictBool] = Field(
+        default=None,
+        description="At least one MFA method is configured",
+        alias="mfaConfigured",
+    )
+    scim_user: Optional[StrictBool] = Field(
+        default=None, description="User created by SCIM", alias="scimUser"
+    )
+    auth_type: Optional[StrictStr] = Field(
+        default=None, description="Authentication type, NATIVE or SSO", alias="authType"
+    )
+    invitation_status: Optional[StrictStr] = Field(
+        default=None, description="User invitation status", alias="invitationStatus"
     )
     assigned_device_ids: Optional[List[StrictInt]] = Field(
         default=None,
         description="Device IDs which user is assigned",
         alias="assignedDeviceIds",
     )
-    tags: Optional[List[StrictStr]] = Field(default=None, description="Tags")
-    fields: Optional[Dict[str, Dict[str, Any]]] = Field(
-        default=None, description="Custom Fields"
+    accessible_device_ids: Optional[List[StrictInt]] = Field(
+        default=None,
+        description="Device IDs which user has access to",
+        alias="accessibleDeviceIds",
     )
     roles: Optional[List[StrictStr]] = Field(
         default=None,
@@ -84,35 +95,22 @@ class User(BaseModel):
     __properties: ClassVar[List[str]] = [
         "id",
         "uid",
+        "enabled",
         "firstName",
         "lastName",
         "email",
         "phone",
-        "enabled",
-        "administrator",
-        "permitAllClients",
-        "notifyAllClients",
+        "organizationId",
+        "fullPortalAccess",
         "mustChangePw",
         "mfaConfigured",
-        "userType",
+        "scimUser",
+        "authType",
         "invitationStatus",
-        "organizationId",
-        "deviceIds",
         "assignedDeviceIds",
-        "tags",
-        "fields",
+        "accessibleDeviceIds",
         "roles",
     ]
-
-    @field_validator("user_type")
-    def user_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(["TECHNICIAN", "END_USER"]):
-            raise ValueError("must be one of enum values ('TECHNICIAN', 'END_USER')")
-        return value
 
     @field_validator("invitation_status")
     def invitation_status_validate_enum(cls, value):
@@ -143,7 +141,7 @@ class User(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of User from a JSON string"""
+        """Create an instance of EndUser from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -167,7 +165,7 @@ class User(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of User from a dict"""
+        """Create an instance of EndUser from a dict"""
         if obj is None:
             return None
 
@@ -178,23 +176,20 @@ class User(BaseModel):
             {
                 "id": obj.get("id"),
                 "uid": obj.get("uid"),
+                "enabled": obj.get("enabled"),
                 "firstName": obj.get("firstName"),
                 "lastName": obj.get("lastName"),
                 "email": obj.get("email"),
                 "phone": obj.get("phone"),
-                "enabled": obj.get("enabled"),
-                "administrator": obj.get("administrator"),
-                "permitAllClients": obj.get("permitAllClients"),
-                "notifyAllClients": obj.get("notifyAllClients"),
+                "organizationId": obj.get("organizationId"),
+                "fullPortalAccess": obj.get("fullPortalAccess"),
                 "mustChangePw": obj.get("mustChangePw"),
                 "mfaConfigured": obj.get("mfaConfigured"),
-                "userType": obj.get("userType"),
+                "scimUser": obj.get("scimUser"),
+                "authType": obj.get("authType"),
                 "invitationStatus": obj.get("invitationStatus"),
-                "organizationId": obj.get("organizationId"),
-                "deviceIds": obj.get("deviceIds"),
                 "assignedDeviceIds": obj.get("assignedDeviceIds"),
-                "tags": obj.get("tags"),
-                "fields": obj.get("fields"),
+                "accessibleDeviceIds": obj.get("accessibleDeviceIds"),
                 "roles": obj.get("roles"),
             }
         )

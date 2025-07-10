@@ -43,6 +43,10 @@ class Device(BaseModel):
     id: Optional[StrictInt] = Field(
         default=None, description="Node (Device) identifier"
     )
+    uid: Optional[StrictStr] = Field(default=None, description="Node (Device) UUID")
+    assigned_owner_uid: Optional[StrictStr] = Field(
+        default=None, description="Node (Device) Owner UUID", alias="assignedOwnerUid"
+    )
     parent_device_id: Optional[StrictInt] = Field(
         default=None, description="Parent Node identifier", alias="parentDeviceId"
     )
@@ -115,6 +119,8 @@ class Device(BaseModel):
     device_type: Optional[StrictStr] = Field(default=None, alias="deviceType")
     __properties: ClassVar[List[str]] = [
         "id",
+        "uid",
+        "assignedOwnerUid",
         "parentDeviceId",
         "organizationId",
         "locationId",
@@ -182,10 +188,12 @@ class Device(BaseModel):
                 "NMS_PHONE",
                 "NMS_VIRTUAL_MACHINE",
                 "NMS_NETWORK_MANAGEMENT_AGENT",
+                "UNMANAGED_DEVICE",
+                "MANAGED_DEVICE",
             ]
         ):
             raise ValueError(
-                "must be one of enum values ('WINDOWS_SERVER', 'WINDOWS_WORKSTATION', 'LINUX_WORKSTATION', 'MAC', 'ANDROID', 'APPLE_IOS', 'APPLE_IPADOS', 'VMWARE_VM_HOST', 'VMWARE_VM_GUEST', 'HYPERV_VMM_HOST', 'HYPERV_VMM_GUEST', 'LINUX_SERVER', 'MAC_SERVER', 'CLOUD_MONITOR_TARGET', 'NMS_SWITCH', 'NMS_ROUTER', 'NMS_FIREWALL', 'NMS_PRIVATE_NETWORK_GATEWAY', 'NMS_PRINTER', 'NMS_SCANNER', 'NMS_DIAL_MANAGER', 'NMS_WAP', 'NMS_IPSLA', 'NMS_COMPUTER', 'NMS_VM_HOST', 'NMS_APPLIANCE', 'NMS_OTHER', 'NMS_SERVER', 'NMS_PHONE', 'NMS_VIRTUAL_MACHINE', 'NMS_NETWORK_MANAGEMENT_AGENT')"
+                "must be one of enum values ('WINDOWS_SERVER', 'WINDOWS_WORKSTATION', 'LINUX_WORKSTATION', 'MAC', 'ANDROID', 'APPLE_IOS', 'APPLE_IPADOS', 'VMWARE_VM_HOST', 'VMWARE_VM_GUEST', 'HYPERV_VMM_HOST', 'HYPERV_VMM_GUEST', 'LINUX_SERVER', 'MAC_SERVER', 'CLOUD_MONITOR_TARGET', 'NMS_SWITCH', 'NMS_ROUTER', 'NMS_FIREWALL', 'NMS_PRIVATE_NETWORK_GATEWAY', 'NMS_PRINTER', 'NMS_SCANNER', 'NMS_DIAL_MANAGER', 'NMS_WAP', 'NMS_IPSLA', 'NMS_COMPUTER', 'NMS_VM_HOST', 'NMS_APPLIANCE', 'NMS_OTHER', 'NMS_SERVER', 'NMS_PHONE', 'NMS_VIRTUAL_MACHINE', 'NMS_NETWORK_MANAGEMENT_AGENT', 'UNMANAGED_DEVICE', 'MANAGED_DEVICE')"
             )
         return value
 
@@ -263,6 +271,8 @@ class Device(BaseModel):
         _obj = cls.model_validate(
             {
                 "id": obj.get("id"),
+                "uid": obj.get("uid"),
+                "assignedOwnerUid": obj.get("assignedOwnerUid"),
                 "parentDeviceId": obj.get("parentDeviceId"),
                 "organizationId": obj.get("organizationId"),
                 "locationId": obj.get("locationId"),

@@ -31,6 +31,8 @@ tags:
   description: ticketing
 - name: webhooks
   description: Webhook Endpoints
+- name: Users
+  description: Users
 - name: Related Items
   description: Related Items
 - name: Location
@@ -51,10 +53,138 @@ tags:
   description: Organization Checklists
 - name: Vulnerability Management
   description: Vulnerability Management
-- name: Asset Tags
-  description: Asset Tags
 paths:
-  /v2/policies/{policy_id}/condition/custom-fields:
+  /v2/contacts:
+    get:
+      tags:
+      - system
+      summary: Contact list
+      description: Get all contacts
+      operationId: getContacts
+      responses:
+        '200':
+          description: List of contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Contact'
+        '403':
+          description: Forbidden
+    post:
+      tags:
+      - management
+      summary: Create a contact
+      description: Create a new contact
+      operationId: createContact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateContactRequest'
+      responses:
+        '200':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  '/v2/contact/{id}':
+    get:
+      tags:
+      - system
+      summary: Contact details
+      description: Get a contact by their ID
+      operationId: getContactById
+      parameters:
+      - name: id
+        in: path
+        description: Contact identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Contact details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Contact not found
+    delete:
+      tags:
+      - management
+      summary: Delete a contact
+      description: Delete a contact by their ID
+      operationId: deleteContact
+      parameters:
+      - name: id
+        in: path
+        description: Contact identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: Contact deleted
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Contact not found
+    patch:
+      tags:
+      - management
+      summary: Update a contact
+      description: Update a contact by their ID
+      operationId: updateContact
+      parameters:
+      - name: id
+        in: path
+        description: Contact identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Contact request payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactPatchRequest'
+      responses:
+        '200':
+          description: Contact updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact'
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Contact not found
+  '/v2/policies/{policy_id}/condition/custom-fields':
     get:
       tags:
       - management
@@ -104,7 +234,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldPolicyConditionResponse'
         '200': *id002
-  /v2/policies/{policy_id}/condition/windows-event:
+  '/v2/policies/{policy_id}/condition/windows-event':
     get:
       tags:
       - management
@@ -154,7 +284,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/WindowsEventPolicyConditionResponse'
         '200': *id004
-  /v2/policies/{policy_id}/condition/{condition_id}:
+  '/v2/policies/{policy_id}/condition/{condition_id}':
     delete:
       tags:
       - management
@@ -181,7 +311,7 @@ paths:
           content:
             '*/*': {}
         '200': *id005
-  /v2/policies/{policy_id}/condition/custom-fields/{condition_id}:
+  '/v2/policies/{policy_id}/condition/custom-fields/{condition_id}':
     get:
       tags:
       - management
@@ -209,7 +339,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomFieldPolicyConditionResponse'
         '200': *id006
-  /v2/policies/{policy_id}/condition/windows-event/{condition_id}:
+  '/v2/policies/{policy_id}/condition/windows-event/{condition_id}':
     get:
       tags:
       - management
@@ -251,10 +381,23 @@ paths:
             schema:
               $ref: '#/components/schemas/WebhookConfiguration'
       responses:
-        "204":
+        '204':
           description: No Content
-        "403":
+        '403':
           description: Only system administrators can configure webhooks
+    delete:
+      tags:
+      - webhooks
+      summary: Remove Webhook API channel
+      description: Disables Webhook configuration for current application/client
+      operationId: disableWebhook
+      responses:
+        '204':
+          description: No Content
+        '403':
+          description: Different PSA is already configured
+        '500':
+          description: Failed to disable PSA
   /v2/organizations:
     get:
       tags:
@@ -294,8 +437,10 @@ paths:
       tags:
       - management
       summary: Create new organization
-      description: |-
-        Creates new organization with optional list of locations and policy mappings.
+      description: >-
+        Creates new organization with optional list of locations and policy
+        mappings.
+
         Template organization ID can be specified to copy various settings
       operationId: createOrganization
       parameters:
@@ -309,7 +454,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrganizationWithLocationsAndPolicyAssignmentsModel'
+              $ref: >-
+                #/components/schemas/OrganizationWithLocationsAndPolicyAssignmentsModel
       responses:
         default: &id009
           description: default response
@@ -318,26 +464,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganizationDetailed'
         '200': *id009
-  /v2/webhook/{id}:
-    delete:
-      tags:
-      - webhooks
-      summary: Remove Webhook API channel
-      description: Deletes Webhook
-      operationId: deleteWebhook
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        "204":
-          description: No Content
-        "500":
-          description: Failed to delete webhook
-  /v2/devices/approval/{mode}:
+  '/v2/devices/approval/{mode}':
     post:
       tags:
       - management
@@ -365,7 +492,7 @@ paths:
           content:
             '*/*': {}
         '200': *id010
-  /v2/alert/{uid}:
+  '/v2/alert/{uid}':
     delete:
       tags:
       - management
@@ -385,7 +512,7 @@ paths:
           content:
             '*/*': {}
         '200': *id011
-  /v2/alert/{uid}/reset:
+  '/v2/alert/{uid}/reset':
     post:
       tags:
       - management
@@ -433,6 +560,9 @@ paths:
           - ORGANIZATION
           - TRIGGER
           - TECHNICIAN
+          - FILE_TRANSFER_AUTOMATION
+          - END_USER
+          - EMAIL_TEMPLATE
       requestBody:
         content:
           multipart/form-data:
@@ -444,7 +574,7 @@ paths:
                   items:
                     $ref: '#/components/schemas/FormDataBodyPart'
       responses:
-        "200":
+        '200':
           description: Returns a list of uploaded attachments metadata
           content:
             application/json:
@@ -461,11 +591,11 @@ paths:
       operationId: archiveChecklistTemplate
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ArchiveChecklistTemplatesRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of archive checklist templates
           content:
             application/json:
@@ -498,7 +628,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns a list of checklist templates with given criteria
           content:
             application/json:
@@ -520,7 +650,7 @@ paths:
               items:
                 $ref: '#/components/schemas/UpdateChecklistTemplatePublicApiRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of updated checklist templates
           content:
             application/json:
@@ -542,7 +672,7 @@ paths:
               items:
                 $ref: '#/components/schemas/CreateChecklistTemplatePublicApiRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of created checklist templates
           content:
             application/json:
@@ -550,7 +680,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ChecklistTemplatePublicApiDTO'
-  /v2/checklist/template/{checklistTemplateId}:
+  '/v2/checklist/template/{checklistTemplateId}':
     delete:
       tags:
       - Checklist Templates
@@ -565,7 +695,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/checklist/templates/delete:
     post:
@@ -576,7 +706,7 @@ paths:
       operationId: deleteChecklistTemplates
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -584,7 +714,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/checklist/restore:
     post:
@@ -595,11 +725,11 @@ paths:
       operationId: restoreChecklistTemplate
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/RestoreChecklistTemplatesRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of restore checklist templates
           content:
             application/json:
@@ -616,11 +746,11 @@ paths:
       operationId: archiveOrganizationChecklists
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ArchiveClientChecklistRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of archive organization checklists
           content:
             application/json:
@@ -666,7 +796,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns a list of client checklists with given criteria
           content:
             application/json:
@@ -686,9 +816,10 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/UpdateClientChecklistAndTasksPublicApiRequest'
+                $ref: >-
+                  #/components/schemas/UpdateClientChecklistAndTasksPublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of updated organization checklists
           content:
             application/json:
@@ -708,9 +839,10 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/CreateClientChecklistAndTasksPublicApiRequest'
+                $ref: >-
+                  #/components/schemas/CreateClientChecklistAndTasksPublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of created organization checklists
           content:
             application/json:
@@ -718,7 +850,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ClientChecklistPublicApiDTO'
-  /v2/organization/{organizationId}/checklists-from-templates:
+  '/v2/organization/{organizationId}/checklists-from-templates':
     post:
       tags:
       - Organization Checklists
@@ -741,7 +873,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "200":
+        '200':
           description: Returns a list of created organization checklists
           content:
             application/json:
@@ -749,7 +881,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ClientChecklistPublicApiDTO'
-  /v2/organization/checklist/{checklistId}:
+  '/v2/organization/checklist/{checklistId}':
     get:
       tags:
       - Organization Checklists
@@ -764,7 +896,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a client checklist with given id
           content:
             application/json:
@@ -784,7 +916,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/organization/checklists/delete:
     post:
@@ -795,7 +927,7 @@ paths:
       operationId: deleteClientChecklists
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -803,9 +935,9 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/organization/checklist/{checklistId}/signed-urls:
+  '/v2/organization/checklist/{checklistId}/signed-urls':
     get:
       tags:
       - Organization Checklists
@@ -820,7 +952,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a map of content ids and their corresponding 
             signed urls
           content:
@@ -836,13 +968,14 @@ paths:
       operationId: promoteClientChecklists
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/PromoteClientChecklistWithNamePublicApiRequest'
+                $ref: >-
+                  #/components/schemas/PromoteClientChecklistWithNamePublicApiRequest
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/organization/checklists/promote:
     post:
@@ -853,7 +986,7 @@ paths:
       operationId: promoteClientChecklists_1
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -861,7 +994,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/organization/restore:
     post:
@@ -872,11 +1005,11 @@ paths:
       operationId: restoreOrganizationChecklists
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ArchiveClientChecklistRequest'
       responses:
-        "200":
+        '200':
           description: Returns a list of restore organization checklists
           content:
             application/json:
@@ -884,7 +1017,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ClientChecklistPublicApiDTO'
-  /v2/organization/document/{clientDocumentId}/archive:
+  '/v2/organization/document/{clientDocumentId}/archive':
     post:
       tags:
       - Organization Documents
@@ -899,12 +1032,13 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns the organization document archived
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
   /v2/organization/documents/archive:
     post:
       tags:
@@ -914,7 +1048,7 @@ paths:
       operationId: archiveMultiPageClientDocuments
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -922,15 +1056,16 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "200":
+        '200':
           description: Returns a list of archived organization documents
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
-  /v2/organization/{organizationId}/template/{documentTemplateId}/document:
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
+  '/v2/organization/{organizationId}/template/{documentTemplateId}/document':
     post:
       tags:
       - Organization Documents
@@ -957,14 +1092,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiRequest'
+              $ref: >-
+                #/components/schemas/ClientDocumentWithAttributeValuesPublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns the organization document created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
   /v2/organization/documents:
     get:
       tags:
@@ -997,15 +1134,17 @@ paths:
         schema:
           type: string
       responses:
-        "200":
-          description: Returns a list of all organization documents with field 
-            values grouped by organization identifier
+        '200':
+          description: >-
+            Returns a list of all organization documents with field values
+            grouped by organization identifier
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
     post:
       tags:
       - Organization Documents
@@ -1019,9 +1158,10 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/ClientDocumentWithAttributeValuesBulkCreatePublicApiRequest'
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithAttributeValuesBulkCreatePublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of created organization documents with 
             field values
           content:
@@ -1029,7 +1169,8 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
     patch:
       tags:
       - Organization Documents
@@ -1043,9 +1184,10 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/ClientDocumentWithAttributeValuesBulkUpdatePublicApiRequest'
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithAttributeValuesBulkUpdatePublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of updated organization documents with 
             field values
           content:
@@ -1053,8 +1195,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithUpdatedAttributeValuesPublicApiDTO'
-  /v2/organization/document/{clientDocumentId}:
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithUpdatedAttributeValuesPublicApiDTO
+  '/v2/organization/document/{clientDocumentId}':
     delete:
       tags:
       - Organization Documents
@@ -1069,9 +1212,9 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/organization/document/{clientDocumentId}/signed-urls:
+  '/v2/organization/document/{clientDocumentId}/signed-urls':
     get:
       tags:
       - Organization Documents
@@ -1086,14 +1229,14 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a map of content ids and their corresponding 
             signed urls
           content:
             application/json:
               schema:
                 type: string
-  /v2/organization/{organizationId}/documents:
+  '/v2/organization/{organizationId}/documents':
     get:
       tags:
       - Organization Documents
@@ -1109,7 +1252,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a list of organization documents with field 
             values
           content:
@@ -1117,8 +1260,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
-  /v2/organization/document/{clientDocumentId}/restore:
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
+  '/v2/organization/document/{clientDocumentId}/restore':
     post:
       tags:
       - Organization Documents
@@ -1133,12 +1277,13 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns the organization document restored
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
   /v2/organization/documents/restore:
     post:
       tags:
@@ -1148,7 +1293,7 @@ paths:
       operationId: restoreMultiPageClientDocuments
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1156,15 +1301,16 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "200":
+        '200':
           description: Returns a list of restored organization documents
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO'
-  /v2/organization/{organizationId}/document/{clientDocumentId}:
+                  $ref: >-
+                    #/components/schemas/ClientDocumentWithAttributeValuesPublicApiDTO
+  '/v2/organization/{organizationId}/document/{clientDocumentId}':
     post:
       tags:
       - Organization Documents
@@ -1191,15 +1337,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ClientDocumentWithAttributeValuesPublicApiRequest'
+              $ref: >-
+                #/components/schemas/ClientDocumentWithAttributeValuesPublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns the organization document updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentWithUpdatedAttributeValuesPublicApiDTO'
-  /v2/document-templates/{documentTemplateId}/archive:
+                $ref: >-
+                  #/components/schemas/ClientDocumentWithUpdatedAttributeValuesPublicApiDTO
+  '/v2/document-templates/{documentTemplateId}/archive':
     post:
       tags:
       - Document Templates
@@ -1214,7 +1362,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/document-templates/archive:
     post:
@@ -1225,7 +1373,7 @@ paths:
       operationId: archiveDocumentTemplates
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1233,7 +1381,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/document-templates:
     get:
@@ -1254,7 +1402,7 @@ paths:
           type: boolean
           default: false
       responses:
-        "200":
+        '200':
           description: Returns a list of all document templates with fields
           content:
             application/json:
@@ -1270,17 +1418,17 @@ paths:
       operationId: createDocumentTemplate
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/NewDocumentTemplatePublicApiRequest'
       responses:
-        "200":
+        '200':
           description: Returns the document template created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DocumentTemplatePublicApiDTO'
-  /v2/document-templates/{documentTemplateId}:
+  '/v2/document-templates/{documentTemplateId}':
     get:
       tags:
       - Document Templates
@@ -1301,7 +1449,7 @@ paths:
           type: boolean
           default: false
       responses:
-        "200":
+        '200':
           description: Returns a document template
           content:
             application/json:
@@ -1322,11 +1470,11 @@ paths:
           format: int32
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/UpdateDocumentTemplatePublicApiRequest'
       responses:
-        "200":
+        '200':
           description: Returns the document template updated
           content:
             application/json:
@@ -1346,9 +1494,9 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/document-templates/{documentTemplateId}/restore:
+  '/v2/document-templates/{documentTemplateId}/restore':
     post:
       tags:
       - Document Templates
@@ -1363,10 +1511,10 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns the document template restored
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentTemplatePublicApiDTO'
   /v2/document-templates/restore:
@@ -1378,7 +1526,7 @@ paths:
       operationId: restoreDocumentTemplates
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1386,19 +1534,20 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "200":
+        '200':
           description: Returns the document template restored
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentTemplatePublicApiDTO'
-  /v2/tag/{assetType}:
+  '/v2/tag/{assetType}':
     post:
       tags:
       - Asset Tags
       summary: Batch tag assets
-      description: Update tags for the supplied assetIds. Tags will be added and
-        removed as specified
+      description: >-
+        Update tags for the supplied assetIds. Tags will be added and removed as
+        specified
       operationId: batchUpdateTags
       parameters:
       - name: assetType
@@ -1409,10 +1558,11 @@ paths:
           enum:
           - device
       requestBody:
-        description: "Payload supplying the asset ids to modify, as well as tags to
-          add/remove from those assets"
+        description: >-
+          Payload supplying the asset ids to modify, as well as tags to
+          add/remove from those assets
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ItamManageAssetRequestPublicApiDTO'
       responses:
@@ -1429,7 +1579,7 @@ paths:
       description: Get a list of created Asset Tags
       operationId: getTags
       responses:
-        "200":
+        '200':
           description: Returns a list of tags
           content:
             application/json:
@@ -1444,17 +1594,17 @@ paths:
       requestBody:
         description: The Asset Tag to be created
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/CreateItamTagRequest'
       responses:
-        "200":
+        '200':
           description: The Asset Tag that was created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItamTagPublicApiDTO'
-  /v2/tag/{tagId}:
+  '/v2/tag/{tagId}':
     put:
       tags:
       - Asset Tags
@@ -1471,11 +1621,11 @@ paths:
       requestBody:
         description: Updated Asset Tag data
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/UpdateItamTagRequest'
       responses:
-        "200":
+        '200':
           description: The Asset Tag that was updated
           content:
             application/json:
@@ -1510,7 +1660,7 @@ paths:
       requestBody:
         description: Array of Asset Tag Ids to delete
         content:
-          '*/*':
+          application/json:
             schema:
               type: array
               items:
@@ -1527,14 +1677,16 @@ paths:
       tags:
       - Asset Tags
       summary: Merge existing tags
-      description: Merges tags. Can merge into an existing or new tag depending 
-        on the input parameters
+      description: >-
+        Merges tags. Can merge into an existing or new tag depending on the
+        input parameters
       operationId: mergeTags
       requestBody:
-        description: "Payload specifying the tags to merge, as well as whether they
-          should be merge to a new or existing tag"
+        description: >-
+          Payload specifying the tags to merge, as well as whether they should
+          be merge to a new or existing tag
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/MergeItamTagsPublicApiRequest'
       responses:
@@ -1545,7 +1697,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ItamTagPublicApiDTO'
         '200': *id016
-  /v2/tag/{assetType}/{assetId}:
+  '/v2/tag/{assetType}/{assetId}':
     put:
       tags:
       - Asset Tags
@@ -1566,10 +1718,11 @@ paths:
           type: integer
           format: int32
       requestBody:
-        description: Array of Asset Tags to assign to the asset. Existing tags 
-          on the asset will be removed.
+        description: >-
+          Array of Asset Tags to assign to the asset. Existing tags on the asset
+          will be removed.
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/ItamSetAssetTagsRequestPublicApiDTO'
       responses:
@@ -1587,7 +1740,7 @@ paths:
       operationId: archiveKnowledgeBaseArticles
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1595,7 +1748,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/folders/archive:
     post:
@@ -1606,7 +1759,7 @@ paths:
       operationId: archiveKnowledgeBaseFolders
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1614,7 +1767,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/articles:
     post:
@@ -1625,13 +1778,14 @@ paths:
       operationId: createKnowledgeBaseArticles
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/KnowledgeBaseArticleBulkCreatePublicApiRequest'
+                $ref: >-
+                  #/components/schemas/KnowledgeBaseArticleBulkCreatePublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of created knowledge base articles
           content:
             application/json:
@@ -1647,13 +1801,14 @@ paths:
       operationId: updateKnowledgeBaseArticles
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/KnowledgeBaseArticleBulkUpdatePublicApiRequest'
+                $ref: >-
+                  #/components/schemas/KnowledgeBaseArticleBulkUpdatePublicApiRequest
       responses:
-        "200":
+        '200':
           description: Returns a list of updated knowledge base articles
           content:
             application/json:
@@ -1670,7 +1825,7 @@ paths:
       operationId: deleteKnowledgeBaseArticles
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1678,7 +1833,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/folders/delete:
     post:
@@ -1689,7 +1844,7 @@ paths:
       operationId: deleteKnowledgeBaseFolders
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1697,9 +1852,9 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/knowledgebase/article/{articleId}/download:
+  '/v2/knowledgebase/article/{articleId}/download':
     get:
       tags:
       - Knowledge Base Articles
@@ -1714,7 +1869,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/organization/articles:
     get:
@@ -1737,7 +1892,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns a list of organization knowledge base articles
           content:
             application/json:
@@ -1762,7 +1917,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns a list of global knowledge base articles
           content:
             application/json:
@@ -1770,7 +1925,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/KnowledgeBaseArticlePublicApiDTO'
-  /v2/knowledgebase/article/{articleId}/signed-urls:
+  '/v2/knowledgebase/article/{articleId}/signed-urls':
     get:
       tags:
       - Knowledge Base Articles
@@ -1785,14 +1940,14 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a map of content ids and their corresponding 
             signed urls
           content:
             application/json:
               schema:
                 type: string
-  /v2/knowledgebase/folder/{folderId}:
+  '/v2/knowledgebase/folder/{folderId}':
     get:
       tags:
       - Knowledge Base Articles
@@ -1811,7 +1966,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns knowledge base folder and its content
           content:
             application/json:
@@ -1840,7 +1995,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns knowledge base folder and its content
           content:
             application/json:
@@ -1851,8 +2006,9 @@ paths:
       tags:
       - Knowledge Base Articles
       summary: Move knowledge base items
-      description: Move knowledge base folders and documents to another 
-        knowledge base folder
+      description: >-
+        Move knowledge base folders and documents to another knowledge base
+        folder
       operationId: move
       requestBody:
         content:
@@ -1860,7 +2016,7 @@ paths:
             schema:
               $ref: '#/components/schemas/MovePublicApiRequest'
       responses:
-        "204":
+        '204':
           description: No content
   /v2/knowledgebase/articles/restore:
     post:
@@ -1871,7 +2027,7 @@ paths:
       operationId: restoreKnowledgeBaseArticles
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1879,7 +2035,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/folders/restore:
     post:
@@ -1890,7 +2046,7 @@ paths:
       operationId: restoreKnowledgeBaseFolders
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               uniqueItems: true
               type: array
@@ -1898,7 +2054,7 @@ paths:
                 type: integer
                 format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/knowledgebase/articles/upload:
     post:
@@ -1926,7 +2082,7 @@ paths:
                   items:
                     $ref: '#/components/schemas/FormDataBodyPart'
       responses:
-        "200":
+        '200':
           description: Returns a list of created knowledge base articles
           content:
             application/json:
@@ -1934,7 +2090,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/KnowledgeBaseArticlePublicApiDTO'
-  /v2/custom-fields/entity-type/{entityType}/{entityId}/signed-urls:
+  '/v2/custom-fields/entity-type/{entityType}/{entityId}/signed-urls':
     get:
       tags:
       - Custom Fields
@@ -1949,6 +2105,7 @@ paths:
           type: string
           enum:
           - NODE
+          - END_USER
           - LOCATION
           - ORGANIZATION
       - name: entityId
@@ -1958,14 +2115,14 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a map of content ids and their corresponding 
             signed urls
           content:
             application/json:
               schema:
                 type: string
-  /v2/related-items/entity/{entityType}/{entityId}/attachment:
+  '/v2/related-items/entity/{entityType}/{entityId}/attachment':
     post:
       tags:
       - Related Items
@@ -2001,13 +2158,13 @@ paths:
                 file:
                   $ref: '#/components/schemas/FormDataBodyPart'
       responses:
-        "200":
+        '200':
           description: Returns the attachment related item created for an entity
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/entity/{entityType}/{entityId}/relation:
+  '/v2/related-items/entity/{entityType}/{entityId}/relation':
     post:
       tags:
       - Related Items
@@ -2036,17 +2193,17 @@ paths:
           format: int32
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/NewRelatedItemEntityRequest'
       responses:
-        "200":
+        '200':
           description: Returns the relation created for an entity
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/entity/{entityType}/{entityId}/relations:
+  '/v2/related-items/entity/{entityType}/{entityId}/relations':
     post:
       tags:
       - Related Items
@@ -2075,13 +2232,13 @@ paths:
           format: int32
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               type: array
               items:
                 $ref: '#/components/schemas/NewRelatedItemEntityRequest'
       responses:
-        "200":
+        '200':
           description: Returns list of relations created for an entity
           content:
             application/json:
@@ -2089,7 +2246,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/entity/{entityType}/{entityId}/secure:
+  '/v2/related-items/entity/{entityType}/{entityId}/secure':
     post:
       tags:
       - Related Items
@@ -2118,17 +2275,17 @@ paths:
           format: int32
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/NewRelatedItemSecureValueRequest'
       responses:
-        "200":
+        '200':
           description: Returns the secure related item created for an entity
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/{relatedItemId}:
+  '/v2/related-items/{relatedItemId}':
     delete:
       tags:
       - Related Items
@@ -2143,9 +2300,9 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/related-items/{entityType}/{entityId}:
+  '/v2/related-items/{entityType}/{entityId}':
     delete:
       tags:
       - Related Items
@@ -2177,9 +2334,9 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-  /v2/related-items/{relatedItemId}/attachment/download:
+  '/v2/related-items/{relatedItemId}/attachment/download':
     get:
       tags:
       - Knowledge Base Articles
@@ -2194,7 +2351,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
   /v2/related-items:
     get:
@@ -2204,7 +2361,7 @@ paths:
       description: List all related items
       operationId: getAllRelatedItems
       responses:
-        "200":
+        '200':
           description: Returns a list of all related items
           content:
             application/json:
@@ -2212,7 +2369,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/with-entity/{entityType}/{entityId}/attachments/signed-urls:
+  '/v2/related-items/with-entity/{entityType}/{entityId}/attachments/signed-urls':
     get:
       tags:
       - Knowledge Base Articles
@@ -2240,14 +2397,14 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a map of content ids and their corresponding 
             signed urls
           content:
             application/json:
               schema:
                 type: string
-  /v2/related-items/with-entity/{entityType}/{entityId}:
+  '/v2/related-items/with-entity/{entityType}/{entityId}':
     get:
       tags:
       - Related Items
@@ -2284,7 +2441,7 @@ paths:
           - HOSTING
           - HOSTED_BY
       responses:
-        "200":
+        '200':
           description: Returns list of the related items for an entity 
             filterable by scope
           content:
@@ -2293,7 +2450,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/with-related-entity/{relEntityType}/{relEntityId}:
+  '/v2/related-items/with-related-entity/{relEntityType}/{relEntityId}':
     get:
       tags:
       - Related Items
@@ -2325,7 +2482,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns list of the related items for a specific related 
             entity
           content:
@@ -2334,7 +2491,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/with-related-entity-type/{relatedEntityType}:
+  '/v2/related-items/with-related-entity-type/{relatedEntityType}':
     get:
       tags:
       - Related Items
@@ -2360,7 +2517,7 @@ paths:
           - CONTACT
           - KB_DOCUMENT
       responses:
-        "200":
+        '200':
           description: Returns list of references for a related entity type
           content:
             application/json:
@@ -2368,7 +2525,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
-  /v2/related-items/with-entity-type/{entityType}:
+  '/v2/related-items/with-entity-type/{entityType}':
     get:
       tags:
       - Related Items
@@ -2390,7 +2547,7 @@ paths:
           - KB_DOCUMENT
           - END_USER
       responses:
-        "200":
+        '200':
           description: Returns a list of relations and references for an entity 
             type
           content:
@@ -2399,6 +2556,71 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RelatedItemPublicApiDTO'
+  /v2/itam/unmanaged-device:
+    post:
+      tags:
+      - Unmanaged Devices
+      summary: Create an Unmanaged Device
+      description: Create an Unmanaged Device with the provided details
+      operationId: createUnmanagedDevicePublicApi
+      requestBody:
+        description: The Unmanaged Device to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUnmanagedDevicePublicApiRequest'
+      responses:
+        '200':
+          description: The id of the Unmanaged Device that was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUnmanagedDevicePublicApiResponseDTO'
+  '/v2/itam/unmanaged-device/{nodeId}':
+    put:
+      tags:
+      - Unmanaged Devices
+      summary: Update an Unmanaged Device
+      description: Update an Unmanaged Device with the provided details
+      operationId: updateUnmanagedDevicePublicApi
+      parameters:
+      - name: nodeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Details of the Unmanaged Device to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUnmanagedDevicePublicApiRequest'
+      responses:
+        '202':
+          description: The Unmanaged Device was successfully updated
+        '404':
+          description: An Unmanaged Device with the provided nodeId was not 
+            found
+    delete:
+      tags:
+      - Unmanaged Devices
+      summary: Delete an Unmanaged Device
+      description: Delete an Unmanaged Device with the provided id
+      operationId: deleteUnmanagedDevicePublicApi
+      parameters:
+      - name: nodeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The Unmanaged Device was successfully deleted
+        '404':
+          description: An Unmanaged Device with the provided nodeId was not 
+            found
   /v2/backup/integrity-check-jobs:
     get:
       tags:
@@ -2454,7 +2676,7 @@ paths:
           format: int32
           default: 10000
       responses:
-        "200":
+        '200':
           description: The integrity check job report.
           content:
             application/json:
@@ -2472,18 +2694,352 @@ paths:
             schema:
               $ref: '#/components/schemas/LockhartIntegrityCheckJobCreationRequest'
       responses:
-        "200":
-          description: "Returns SUCCESS if the job was saved correctly, FAILURE otherwise."
+        '200':
+          description: 'Returns SUCCESS if the job was saved correctly, FAILURE otherwise.'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LockhartIntegrityCheckJobCreationResponse'
+  /v2/tab:
+    post:
+      tags:
+      - Custom Tabs
+      summary: Create a new Custom Tab
+      description: Create a Custom Tab with the provided details
+      operationId: createCustomTabPublicApi
+      requestBody:
+        description: The Custom Tab to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCustomTabPublicApiRequest'
+      responses:
+        '200':
+          description: The Custom Tab that was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTabPublicApiDTO'
+  '/v2/tab/{tabId}':
+    get:
+      tags:
+      - Custom Tabs
+      summary: Retrieve a Custom Tab
+      description: >-
+        Gets a custom tab. NOTE: This will _not_ fetch tab extensions. You must
+        use the GET tab/{tabId}/role/{roleId} for that
+      operationId: getCustomTabPublicApi
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The Custom Tab that was requested
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomTabPublicApiDTO'
+        '404':
+          description: No custom tab could be found with that ID
+    delete:
+      tags:
+      - Custom Tabs
+      summary: Delete a Custom Tab
+      description: Delete a Custom Tab
+      operationId: deleteUnmanagedDevicePublicApi_1
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The Custom Tab was successfully deleted
+        '404':
+          description: The Custom Tab could not be found
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Update a Custom Tab
+      description: >-
+        Update a Custom Tab. This API can be used to either update existing
+        tabs, or create tab 'role extensions' for existing tabs
+      operationId: updateCustomTabPublicApi
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Details of the Custom Tab to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomTabPublicApiRequest'
+      responses:
+        '200':
+          description: The Custom Tab was successfully updated
+        '404':
+          description: The Custom Tab could not be found
+  '/v2/tab/{tabId}/end-user':
+    get:
+      tags:
+      - Custom Tabs
+      summary: Retrieve the requested tab along with any extensions for end-user
+        tabs
+      description: Retrieve the requested tab along with any extensions for 
+        end-user tabs
+      operationId: getTabHierarchyForEndUser
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The Custom Tabs and extensions as viewed by end-user tabs
+        '404':
+          description: The Custom Tab could not be found
+  '/v2/tab/{tabId}/organization':
+    get:
+      tags:
+      - Custom Tabs
+      summary: >-
+        Retrieve the requested tab along with any extensions for organization
+        and location tabs
+      description: >-
+        Retrieve the requested tab along with any extensions for organization
+        and location tabs
+      operationId: getTabHierarchyForOrganization
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: >-
+            The Custom Tabs and extensions as viewed by organization and
+            location tabs
+        '404':
+          description: The Custom Tab could not be found
+  '/v2/tab/{tabId}/role/{roleId}':
+    get:
+      tags:
+      - Custom Tabs
+      summary: >-
+        Retrieve the requested tab along with any extensions based on the
+        supplied roleId
+      description: >-
+        Retrieve the requested tab along with any extensions based on the
+        supplied roleId
+      operationId: getTabHierarchyForRole
+      parameters:
+      - name: tabId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: The Custom Tabs and extensions as viewed by the specified
+            role
+        '404':
+          description: The Custom Tab or Role could not be found
+  /v2/tab/summary/end-user:
+    get:
+      tags:
+      - Custom Tabs
+      summary: Retrieve all of the custom tabs available to end user views
+      description: Retrieve a summary of the tabs available to end user views
+      operationId: getTabSummaryForEndUser
+      responses:
+        '200':
+          description: >-
+            Returns a list of the available custom tabs available to end user
+            views
+  /v2/tab/summary/organization:
+    get:
+      tags:
+      - Custom Tabs
+      summary: Retrieve all of the custom tabs available to organizations and 
+        locations
+      description: Retrieve a summary of the tabs available to organizations and
+        locations
+      operationId: getTabSummaryForOrganization
+      responses:
+        '200':
+          description: >-
+            Returns a list of the available custom tabs available to
+            organizations and locations
+  '/v2/tab/summary/role/{roleId}':
+    get:
+      tags:
+      - Custom Tabs
+      summary: Retrieve all of the custom tabs that would appear for the given 
+        role
+      description: Retrieve a summary of the tabs available to a given role
+      operationId: getTabSummaryForRole
+      parameters:
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: >-
+            Returns a list of the available custom tabs for the specified role,
+            and the role hierarchy (used for sorting, if desired)
+        '404':
+          description: The RoleId could not be found
+  /v2/tab/rename:
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Rename a Custom Tab
+      description: Renames a Custom Tab
+      operationId: renameCustomTabPublicApi
+      requestBody:
+        description: Tab id and new name for the tab
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTabNamePublicApiRequest'
+      responses:
+        '200':
+          description: The Custom Tab was successfully rename
+        '404':
+          description: The Custom Tab could not be found
+  '/v2/tab/role/{roleId}/visibility':
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Set the tab visibility of the specified tab
+      description: >-
+        Using this API it is possible to configure tabs to be hidden for roles
+        and their children
+      operationId: updateCustomTabsDisplay
+      parameters:
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Payload specifying the tab visibility changes
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomTabsVisibilityPublicApiDTO'
+      responses:
+        '200':
+          description: >-
+            Returns a list of the affected tabs (as CustomTabLabelPublicApiDTO)
+            with updated visibility data
+  /v2/tab/end-user/order:
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Update the order of custom tabs for end-user tabs
+      description: >-
+        Update the order of custom tabs for end-user tabs. NOTE: All tabs
+        defined for end-users must be specified in the payload
+      operationId: updateEndUserCustomTabsOrder
+      requestBody:
+        description: Payload specifying the tab ordering
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomTabsOrderPublicApiDTO'
+      responses:
+        '200':
+          description: >-
+            Returns a list of the affected tabs (as CustomTabLabelPublicApiDTO)
+            with updated order data
+  /v2/tab/organization/order:
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Update the order of custom tabs for organizations and locations
+      description: >-
+        Update the order of custom tabs for organizations and locations. NOTE:
+        All tabs defined for organizations must be specified in the payload
+      operationId: updateOrganizationCustomTabsOrder
+      requestBody:
+        description: Payload specifying the tab ordering
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomTabsOrderPublicApiDTO'
+      responses:
+        '200':
+          description: >-
+            Returns a list of the affected tabs (as CustomTabLabelPublicApiDTO)
+            with updated order data
+  '/v2/tab/role/{roleId}/order':
+    patch:
+      tags:
+      - Custom Tabs
+      summary: Update the order of custom tabs for a specific role
+      description: >-
+        Update the order of custom tabs for a specific role. NOTE: Only tabs
+        created on this role can be ordered. All tabs defined on the role must
+        be specified in the payload
+      operationId: updateRoleCustomTabsOrder
+      parameters:
+      - name: roleId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Payload specifying the tab ordering
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CustomTabsOrderPublicApiDTO'
+      responses:
+        '200':
+          description: >-
+            Returns a list of the affected tabs (as CustomTabLabelPublicApiDTO)
+            with updated order data
   /v2/ticketing/ticket:
     post:
       tags:
       - ticketing
       summary: Create ticket
-      description: "Create a new ticket, does not accept files"
+      description: 'Create a new ticket, does not accept files'
       operationId: create
       requestBody:
         description: NewTicket object that needs to be added to the store
@@ -2500,12 +3056,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/TicketDTO'
         '200': *id018
-  /v2/ticketing/ticket/{ticketId}/comment:
+  '/v2/ticketing/ticket/{ticketId}/comment':
     post:
       tags:
       - ticketing
       summary: Add comment to ticket
-      description: "Add a new comment to a ticket, allows files"
+      description: 'Add a new comment to a ticket, allows files'
       operationId: createComment
       parameters:
       - name: ticketId
@@ -2534,7 +3090,7 @@ paths:
           content:
             application/json: {}
         '200': *id019
-  /v2/ticketing/ticket/{ticketId}:
+  '/v2/ticketing/ticket/{ticketId}':
     get:
       tags:
       - ticketing
@@ -2584,7 +3140,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TicketDTO'
         '200': *id021
-  /v2/ticketing/ticket/{ticketId}/log-entry:
+  '/v2/ticketing/ticket/{ticketId}/log-entry':
     get:
       tags:
       - ticketing
@@ -2642,7 +3198,7 @@ paths:
       description: Fetches all Scan Groups.
       operationId: fetchAllScanGroups
       responses:
-        "200":
+        '200':
           description: Scan Groups were found successfully.
           content:
             application/json:
@@ -2650,7 +3206,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PublicScanGroup'
-  /v2/vulnerability/scan-groups/{scan-group-id}:
+  '/v2/vulnerability/scan-groups/{scan-group-id}':
     get:
       tags:
       - Vulnerability Management
@@ -2666,22 +3222,25 @@ paths:
           type: integer
           format: int64
       responses:
-        "200":
+        '200':
           description: Scan Group was found successfully.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicScanGroup'
-        "404":
+        '404':
           description: The Scan group was not found by the given scan-group-id.
-  /v2/vulnerability/scan-groups/{scan-group-id}/upload:
+  '/v2/vulnerability/scan-groups/{scan-group-id}/upload':
     post:
       tags:
       - Vulnerability Management
       summary: Upload CSV
-      description: "Upload CSV to an existing scan group. The uploaded CSV must contain
-        the columns defined in the \nscan group which map to the Ninja machine identifier
-        (hostname, IP address, or MAC address) and the CVE ID."
+      description: >-
+        Upload CSV to an existing scan group. The uploaded CSV must contain the
+        columns defined in the 
+
+        scan group which map to the Ninja machine identifier (hostname, IP
+        address, or MAC address) and the CVE ID.
       operationId: updateScanGroup
       parameters:
       - name: scan-group-id
@@ -2701,15 +3260,15 @@ paths:
               csv:
                 contentType: text/csv
       responses:
-        "200":
+        '200':
           description: Upload was accepted and is being processed
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicScanGroup'
-        "404":
+        '404':
           description: Scan group was not found by the given scan-group-id
-  /v2/device/{id}/maintenance:
+  '/v2/device/{id}/maintenance':
     put:
       tags:
       - management
@@ -2755,7 +3314,7 @@ paths:
           content:
             application/json: {}
         '200': *id024
-  /v2/device/{id}/windows-service/{serviceId}/control:
+  '/v2/device/{id}/windows-service/{serviceId}/control':
     post:
       tags:
       - management
@@ -2787,7 +3346,7 @@ paths:
           content:
             '*/*': {}
         '200': *id025
-  /v2/device/{id}:
+  '/v2/device/{id}':
     get:
       tags:
       - devices
@@ -2803,7 +3362,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Device information
           content:
             application/json:
@@ -2813,7 +3372,7 @@ paths:
       tags:
       - management
       summary: Update device information
-      description: "Change device friendly name, user data, etc."
+      description: 'Change device friendly name, user data, etc.'
       operationId: updateDevice
       parameters:
       - name: id
@@ -2837,7 +3396,7 @@ paths:
       security:
       - oauth2:
         - management
-  /v2/device/{id}/jobs:
+  '/v2/device/{id}/jobs':
     get:
       tags:
       - devices
@@ -2872,7 +3431,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Job'
         '200': *id027
-  /v2/device/{id}/activities:
+  '/v2/device/{id}/activities':
     get:
       tags:
       - devices
@@ -2943,7 +3502,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/NodeActivitiesResponse'
         '200': *id028
-  /v2/device/{id}/alerts:
+  '/v2/device/{id}/alerts':
     get:
       tags:
       - devices
@@ -2979,7 +3538,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Alert'
         '200': *id029
-  /v2/device/{id}/disks:
+  '/v2/device/{id}/disks':
     get:
       tags:
       - devices
@@ -3004,13 +3563,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/DiskDrive'
         '200': *id030
-  /v2/device/{id}/os-patch-installs:
+  '/v2/device/{id}/os-patch-installs':
     get:
       tags:
       - devices
       summary: OS Patch installation report for device
-      description: Returns patch installation history records (successful and 
-        failed) for device
+      description: >-
+        Returns patch installation history records (successful and failed) for
+        device
       operationId: getDeviceInstalledOSPatches
       parameters:
       - name: id
@@ -3022,7 +3582,7 @@ paths:
           format: int32
       - name: status
         in: query
-        description: "Patch Status filter (FAILED, INSTALLED)"
+        description: 'Patch Status filter (FAILED, INSTALLED)'
         schema:
           type: string
       - name: installedBefore
@@ -3045,13 +3605,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/OSPatch'
         '200': *id031
-  /v2/device/{id}/software-patch-installs:
+  '/v2/device/{id}/software-patch-installs':
     get:
       tags:
       - devices
       summary: Software Patch history for device
-      description: Returns 3rd party software patch installation history records
-        for device (successful and failed)
+      description: >-
+        Returns 3rd party software patch installation history records for device
+        (successful and failed)
       operationId: getDeviceInstalledSoftwarePatches
       parameters:
       - name: id
@@ -3101,7 +3662,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/SoftwarePatch'
         '200': *id032
-  /v2/device/{id}/last-logged-on-user:
+  '/v2/device/{id}/last-logged-on-user':
     get:
       tags:
       - devices
@@ -3127,7 +3688,7 @@ paths:
       security:
       - oauth2:
         - monitoring
-  /v2/device/{id}/dashboard-url:
+  '/v2/device/{id}/dashboard-url':
     get:
       tags:
       - management
@@ -3155,7 +3716,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeviceLink'
         '200': *id034
-  /v2/device/{id}/network-interfaces:
+  '/v2/device/{id}/network-interfaces':
     get:
       tags:
       - devices
@@ -3180,7 +3741,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/NetworkInterface'
         '200': *id035
-  /v2/device/{id}/os-patches:
+  '/v2/device/{id}/os-patches':
     get:
       tags:
       - devices
@@ -3221,13 +3782,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/OSPatch'
         '200': *id036
-  /v2/device/{id}/software-patches:
+  '/v2/device/{id}/software-patches':
     get:
       tags:
       - devices
-      summary: "Pending, Failed and Rejected Software patches for device"
-      description: Returns list of 3rd party Software patches for a device (for 
-        which there were no installation attempts)
+      summary: 'Pending, Failed and Rejected Software patches for device'
+      description: >-
+        Returns list of 3rd party Software patches for a device (for which there
+        were no installation attempts)
       operationId: getDevicePendingFailedRejectedSoftwarePatches
       parameters:
       - name: id
@@ -3267,7 +3829,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/SoftwarePatch'
         '200': *id037
-  /v2/device/{id}/processors:
+  '/v2/device/{id}/processors':
     get:
       tags:
       - devices
@@ -3292,7 +3854,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Processor'
         '200': *id038
-  /v2/device/{id}/windows-services:
+  '/v2/device/{id}/windows-services':
     get:
       tags:
       - devices
@@ -3336,7 +3898,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/WindowsService'
         '200': *id039
-  /v2/device/{id}/software:
+  '/v2/device/{id}/software':
     get:
       tags:
       - devices
@@ -3361,7 +3923,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Application'
         '200': *id040
-  /v2/device/{id}/volumes:
+  '/v2/device/{id}/volumes':
     get:
       tags:
       - devices
@@ -3391,7 +3953,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Volume'
         '200': *id041
-  /v2/device/{id}/custom-fields:
+  '/v2/device/{id}/custom-fields':
     get:
       tags:
       - devices
@@ -3448,7 +4010,7 @@ paths:
           content:
             '*/*': {}
         '200': *id043
-  /v2/device/{id}/policy/overrides:
+  '/v2/device/{id}/policy/overrides':
     get:
       tags:
       - devices
@@ -3491,7 +4053,7 @@ paths:
           content:
             application/json: {}
         '200': *id045
-  /v2/device/{id}/reboot/{mode}:
+  '/v2/device/{id}/reboot/{mode}':
     post:
       tags:
       - management
@@ -3526,7 +4088,7 @@ paths:
           content:
             '*/*': {}
         '200': *id046
-  /v2/device/{id}/owner:
+  '/v2/device/{id}/owner':
     delete:
       tags:
       - management
@@ -3550,13 +4112,14 @@ paths:
       security:
       - oauth2:
         - management
-  /v2/device/{id}/scripting/options:
+  '/v2/device/{id}/scripting/options':
     get:
       tags:
       - management
       summary: Device scripting options
-      description: "Returns scripting options (built-in actions, custom scripts) available
-        for device"
+      description: >-
+        Returns scripting options (built-in actions, custom scripts) available
+        for device
       operationId: requestScriptingOptions
       parameters:
       - name: id
@@ -3579,7 +4142,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeviceScriptingOptions'
         '200': *id048
-  /v2/device/{id}/script/run:
+  '/v2/device/{id}/script/run':
     post:
       tags:
       - management
@@ -3605,7 +4168,7 @@ paths:
           content:
             '*/*': {}
         '200': *id049
-  /v2/device/{id}/owner/{ownerUid}:
+  '/v2/device/{id}/owner/{ownerUid}':
     post:
       tags:
       - management
@@ -3636,7 +4199,7 @@ paths:
       security:
       - oauth2:
         - management
-  /v2/device/{id}/windows-service/{serviceId}/configure:
+  '/v2/device/{id}/windows-service/{serviceId}/configure':
     post:
       tags:
       - management
@@ -3668,7 +4231,7 @@ paths:
           content:
             '*/*': {}
         '200': *id051
-  /v2/device/{id}/patch/os/apply:
+  '/v2/device/{id}/patch/os/apply':
     post:
       tags:
       - management
@@ -3684,11 +4247,11 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-        "400":
+        '400':
           description: Device is not applicable for os apply.
-  /v2/device/{id}/patch/os/scan:
+  '/v2/device/{id}/patch/os/scan':
     post:
       tags:
       - management
@@ -3704,11 +4267,11 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-        "400":
+        '400':
           description: Device is not applicable for os scan.
-  /v2/device/{id}/patch/software/apply:
+  '/v2/device/{id}/patch/software/apply':
     post:
       tags:
       - management
@@ -3724,11 +4287,11 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-        "400":
+        '400':
           description: Device is not applicable for software apply.
-  /v2/device/{id}/patch/software/scan:
+  '/v2/device/{id}/patch/software/scan':
     post:
       tags:
       - management
@@ -3744,11 +4307,11 @@ paths:
           type: integer
           format: int32
       responses:
-        "204":
+        '204':
           description: No Content
-        "400":
+        '400':
           description: Device is not applicable for software scan.
-  /v2/group/{id}/device-ids:
+  '/v2/group/{id}/device-ids':
     get:
       tags:
       - groups
@@ -3774,7 +4337,7 @@ paths:
                   type: integer
                   format: int32
         '200': *id052
-  /v2/organization/{id}/locations:
+  '/v2/organization/{id}/locations':
     get:
       tags:
       - organization
@@ -3825,7 +4388,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Location'
         '200': *id054
-  /v2/organization/{id}/end-users:
+  '/v2/organization/{id}/end-users':
     get:
       tags:
       - organization
@@ -3884,7 +4447,7 @@ paths:
                   locationId: 1
                   installerType: WINDOWS_MSI
                   content:
-                    nodeRoleId: "201"
+                    nodeRoleId: '201'
       responses:
         default: &id056
           description: default response
@@ -3893,12 +4456,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Link'
         '200': *id056
-  /v2/organization/{id}/location/{location_id}/installer/{installer_type}:
+  '/v2/organization/{id}/location/{location_id}/installer/{installer_type}':
     get:
       tags:
       - management
       summary: Generate installer
-      description: Generates and returns URL for installer for specified 
+      description: >-
+        Generates and returns URL for installer for specified
         organization/location
       operationId: getInstallerForLocation
       parameters:
@@ -3937,7 +4501,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Link'
         '200': *id057
-  /v2/organization/{id}/locations/{locationId}/backup/usage:
+  '/v2/organization/{id}/locations/{locationId}/backup/usage':
     get:
       tags:
       - organization
@@ -3960,13 +4524,13 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a location backup usage
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/LocationBackupUsageSummary'
-  /v2/organization/{id}/custom-fields:
+  '/v2/organization/{id}/custom-fields':
     get:
       tags:
       - organization
@@ -4017,7 +4581,7 @@ paths:
           content:
             '*/*': {}
         '200': *id059
-  /v2/organization/{id}/location/{locationId}/custom-fields:
+  '/v2/organization/{id}/location/{locationId}/custom-fields':
     get:
       tags:
       - Location
@@ -4084,12 +4648,12 @@ paths:
           content:
             '*/*': {}
         '200': *id061
-  /v2/organization/{id}:
+  '/v2/organization/{id}':
     get:
       tags:
       - organization
       summary: Organization information
-      description: "Returns organization details (policy mappings, locations)"
+      description: 'Returns organization details (policy mappings, locations)'
       operationId: getOrganization
       parameters:
       - name: id
@@ -4111,7 +4675,7 @@ paths:
       tags:
       - management
       summary: Update organization
-      description: "Change organization name, description and policy mappings"
+      description: 'Change organization name, description and policy mappings'
       operationId: updateOrganization
       parameters:
       - name: id
@@ -4132,7 +4696,7 @@ paths:
           content:
             '*/*': {}
         '200': *id063
-  /v2/organization/{id}/devices:
+  '/v2/organization/{id}/devices':
     get:
       tags:
       - organization
@@ -4169,7 +4733,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/NodeWithDetailedReferences'
         '200': *id064
-  /v2/organization/{id}/locations/backup/usage:
+  '/v2/organization/{id}/locations/backup/usage':
     get:
       tags:
       - organization
@@ -4184,7 +4748,7 @@ paths:
         schema:
           type: string
       responses:
-        "200":
+        '200':
           description: Returns list of locations backup usage
           content:
             application/json:
@@ -4192,12 +4756,12 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/LocationBackupUsageSummary'
-  /v2/organization/{id}/locations/{locationId}:
+  '/v2/organization/{id}/locations/{locationId}':
     patch:
       tags:
       - management
       summary: Update location
-      description: "Change location name, address, description, custom data"
+      description: 'Change location name, address, description, custom data'
       operationId: updateLocation
       parameters:
       - name: id
@@ -4225,13 +4789,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/Location'
         '200': *id065
-  /v2/organization/{id}/policies:
+  '/v2/organization/{id}/policies':
     put:
       tags:
       - management
       summary: Change organization policy mappings
-      description: Update policy assignment for node role(s). Returns list of 
-        affected device IDs
+      description: >-
+        Update policy assignment for node role(s). Returns list of affected
+        device IDs
       operationId: updateNodeRolePolicyAssignmentForOrganization
       parameters:
       - name: id
@@ -4385,8 +4950,9 @@ paths:
       tags:
       - queries
       summary: Custom fields detailed report
-      description: Returns Custom Fields report with additional information 
-        about each field
+      description: >-
+        Returns Custom Fields report with additional information about each
+        field
       operationId: getCustomFieldsDetailedReport
       parameters:
       - name: df
@@ -4420,8 +4986,9 @@ paths:
           type: string
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as 
-          plain text without encryption
+        description: >-
+          Flag to indicate if secure values should be returned as plain text
+          without encryption
         schema:
           type: boolean
       responses:
@@ -4471,8 +5038,9 @@ paths:
           type: string
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as 
-          plain text without encryption
+        description: >-
+          Flag to indicate if secure values should be returned as plain text
+          without encryption
         schema:
           type: boolean
       responses:
@@ -4545,7 +5113,7 @@ paths:
         schema:
           type: boolean
       responses:
-        "200":
+        '200':
           description: Returns a device backup usage report
           content:
             application/json:
@@ -4604,7 +5172,7 @@ paths:
           type: string
       - name: status
         in: query
-        description: "Patch Status filter (FAILED, INSTALLED)"
+        description: 'Patch Status filter (FAILED, INSTALLED)'
         schema:
           type: string
       - name: installedBefore
@@ -4641,7 +5209,8 @@ paths:
       tags:
       - queries
       summary: Software Patch history report
-      description: Returns 3rd party software patch installation history records
+      description: >-
+        Returns 3rd party software patch installation history records
         (successful and failed)
       operationId: getInstalledSoftwarePatches
       parameters:
@@ -4807,7 +5376,7 @@ paths:
     get:
       tags:
       - queries
-      summary: "Pending, Failed and Rejected OS patches report"
+      summary: 'Pending, Failed and Rejected OS patches report'
       description: Returns list of OS patches for which there were no 
         installation attempts
       operationId: getPendingFailedRejectedOSPatches
@@ -4860,9 +5429,10 @@ paths:
     get:
       tags:
       - queries
-      summary: "Pending, Failed and Rejected Software patches report"
-      description: Returns list of 3rd party Software patches for which there 
-        were no installation attempts
+      summary: 'Pending, Failed and Rejected Software patches report'
+      description: >-
+        Returns list of 3rd party Software patches for which there were no
+        installation attempts
       operationId: getPendingFailedRejectedSoftwarePatches
       parameters:
       - name: df
@@ -5065,8 +5635,9 @@ paths:
       tags:
       - queries
       summary: Scoped custom fields detailed report
-      description: "Returns report for Custom Fields defined at different scopes (device,
-        location, organization) with additional information about each field"
+      description: >-
+        Returns report for Custom Fields defined at different scopes (device,
+        location, organization) with additional information about each field
       operationId: getScopedCustomFieldsDetailedReport
       parameters:
       - name: cursor
@@ -5101,8 +5672,9 @@ paths:
           default: all
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as 
-          plain text without encryption
+        description: >-
+          Flag to indicate if secure values should be returned as plain text
+          without encryption
         schema:
           type: boolean
       responses:
@@ -5118,8 +5690,9 @@ paths:
       tags:
       - queries
       summary: Scoped custom fields report
-      description: "Returns report for Custom Fields defined at different scopes (device,
-        location, organization)"
+      description: >-
+        Returns report for Custom Fields defined at different scopes (device,
+        location, organization)
       operationId: getScopedCustomFieldsReport
       parameters:
       - name: cursor
@@ -5154,8 +5727,9 @@ paths:
           default: all
       - name: showSecureValues
         in: query
-        description: Flag to indicate if secure values should be returned as 
-          plain text without encryption
+        description: >-
+          Flag to indicate if secure values should be returned as plain text
+          without encryption
         schema:
           type: boolean
       responses:
@@ -5325,7 +5899,7 @@ paths:
       tags:
       - management
       summary: Creates new Policy
-      description: "Creates new policy using (New Root, Child, Copy)"
+      description: 'Creates new policy using (New Root, Child, Copy)'
       operationId: createPolicy
       parameters:
       - name: mode
@@ -5570,7 +6144,7 @@ paths:
         schema:
           type: string
           enum:
-          - "all,node,location,organization"
+          - 'all,node,location,organization'
       responses:
         default: &id096
           description: default response
@@ -5861,7 +6435,7 @@ paths:
       parameters:
       - name: q
         in: query
-        description: "Search query (name, logged on user name, IP address, etc.)"
+        description: 'Search query (name, logged on user name, IP address, etc.)'
         schema:
           type: string
       - name: limit
@@ -5933,7 +6507,7 @@ paths:
           format: int32
           default: 10000
       responses:
-        "200":
+        '200':
           description: Returns a backup job report
           content:
             application/json:
@@ -5962,7 +6536,7 @@ paths:
       - ticketing
       summary: List contacts
       description: Returns list of contacts
-      operationId: getContacts
+      operationId: getContacts_1
       responses:
         default: &id110
           description: default response
@@ -5973,7 +6547,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ContactResponseDTO'
         '200': *id110
-  /v2/ticketing/ticket-form/{id}:
+  '/v2/ticketing/ticket-form/{id}':
     get:
       tags:
       - ticketing
@@ -6046,13 +6620,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/TicketingBoardPublicApiDTO'
         '200': *id114
-  /v2/ticketing/trigger/board/{boardId}/run:
+  '/v2/ticketing/trigger/board/{boardId}/run':
     post:
       tags:
       - ticketing
       summary: List of tickets for board
-      description: Run a board. Returns list of tickets matching the board 
-        condition and filters. Allows pagination
+      description: >-
+        Run a board. Returns list of tickets matching the board condition and
+        filters. Allows pagination
       operationId: getTicketsByBoard
       parameters:
       - name: boardId
@@ -6079,7 +6654,7 @@ paths:
       tags:
       - ticketing
       summary: List of users by user type
-      description: "Returns list of users (contacts, end-user, technician)"
+      description: 'Returns list of users (contacts, end-user, technician)'
       operationId: getAllUserAndContacts
       parameters:
       - name: pageSize
@@ -6098,7 +6673,7 @@ paths:
           default: 0
       - name: searchCriteria
         in: query
-        description: "Search by first name, last name or email address"
+        description: 'Search by first name, last name or email address'
         schema:
           type: string
       - name: userType
@@ -6117,7 +6692,7 @@ paths:
           type: integer
           format: int32
       responses:
-        "200":
+        '200':
           description: Returns a list of all users and contacts
           content:
             application/json:
@@ -6125,8 +6700,509 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AppUserAndContactPublicApiDTO'
+  /v2/user/end-users:
+    get:
+      tags:
+      - system
+      summary: End user list
+      description: Get all end users
+      operationId: getEndUsers_1
+      responses:
+        '200':
+          description: End user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EndUser'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    post:
+      tags:
+      - management
+      summary: Create end user
+      description: Create an end user
+      operationId: createEndUser
+      parameters:
+      - name: sendInvitation
+        in: query
+        description: Whether to send invitation to end user during creation
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEndUserRequest'
+      responses:
+        '200':
+          description: Created end user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUser'
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  '/v2/user/end-user/{id}':
+    get:
+      tags:
+      - Users
+      summary: End user details
+      description: Get details for a specific end user identifier
+      operationId: getEndUser
+      parameters:
+      - name: id
+        in: path
+        description: End user identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: End user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUser'
+        '400':
+          description: Bad request or invalid user type
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+    delete:
+      tags:
+      - management
+      summary: Delete end user
+      description: Delete an end user
+      operationId: deleteEndUser
+      parameters:
+      - name: id
+        in: path
+        description: End user identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: Deleted end user
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+    patch:
+      tags:
+      - management
+      summary: Update a specific end user
+      description: Update a specific end user by their ID
+      operationId: patchEndUser
+      parameters:
+      - name: id
+        in: path
+        description: End user identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndUserPatchRequest'
+      responses:
+        '200':
+          description: End user updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EndUser'
+        '400':
+          description: Bad request or invalid user type
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: User not found
+  '/v2/user/end-user/{id}/custom-fields':
+    get:
+      tags:
+      - Users
+      summary: End user custom fields
+      description: Returns list of end user custom fields
+      operationId: getNodeCustomFields_3
+      parameters:
+      - name: id
+        in: path
+        description: End user identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default: &id116
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+        '200': *id116
+    patch:
+      tags:
+      - Users
+      summary: Update Field Values
+      description: Update end user custom field values
+      operationId: updateNodeAttributeValues_3
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+      responses:
+        default: &id117
+          description: default response
+          content:
+            '*/*': {}
+        '200': *id117
+  /v2/user/technicians:
+    get:
+      tags:
+      - system
+      summary: Technicians list
+      description: Get all technicians
+      operationId: getTechnicians
+      responses:
+        '200':
+          description: Technician
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Technician'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    post:
+      tags:
+      - management
+      summary: Create a technician
+      description: Create a new technician
+      operationId: createTechnician
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTechnicianRequest'
+      responses:
+        '200':
+          description: Created technician
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Must be a System Administrator
+  '/v2/user/technician/{id}':
+    get:
+      tags:
+      - Users
+      summary: Technician details
+      description: Get details for a specific technician identifier
+      operationId: getTechnician
+      parameters:
+      - name: id
+        in: path
+        description: Technician identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Technician
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Technician'
+        '400':
+          description: Bad request or invalid user type
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Technician not found
+    delete:
+      tags:
+      - management
+      summary: Delete a technician
+      description: Delete a technician by their ID
+      operationId: deleteTechnician
+      parameters:
+      - name: id
+        in: path
+        description: Technician identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '204':
+          description: Deleted technician
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Must be a System Administrator
+        '404':
+          description: Technician was not found
+    patch:
+      tags:
+      - management
+      summary: Update a technician
+      description: Update technician by their ID
+      operationId: updateTechnician
+      parameters:
+      - name: id
+        in: path
+        description: Technician identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTechnicianRequest'
+      responses:
+        '200':
+          description: Updated technician
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Must be a System Administrator
+        '404':
+          description: Technician was not found
+  '/v2/user/role/{roleId}/add-members':
+    patch:
+      tags:
+      - management
+      summary: Add user role members
+      description: Add members to user role
+      operationId: addUserRoleMembers
+      parameters:
+      - name: roleId
+        in: path
+        description: Role identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              uniqueItems: true
+              type: array
+              items:
+                type: integer
+                format: int32
+      responses:
+        '200':
+          description: User role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Role or members not found
+  /v2/user/roles:
+    get:
+      tags:
+      - system
+      summary: Get user roles
+      description: Get list of user roles
+      operationId: getUserRoles
+      parameters:
+      - name: roleType
+        in: query
+        description: User role type filter
+        schema:
+          type: string
+          enum:
+          - TECHNICIAN
+          - END_USER
+      responses:
+        '200':
+          description: User roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRole'
+        '401':
+          description: Unauthorized
+  '/v2/user/role/{roleId}/remove-members':
+    patch:
+      tags:
+      - management
+      summary: Remove users from user role
+      description: 'Remove users from user role '
+      operationId: removeUserRoleMembers
+      parameters:
+      - name: roleId
+        in: path
+        description: Role identifier
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              uniqueItems: true
+              type: array
+              items:
+                type: integer
+                format: int32
+      responses:
+        '200':
+          description: User role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRole'
+        '400':
+          description: Several possible validation errors
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Role or members not found
 components:
   schemas:
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        organizationId:
+          type: integer
+          format: int32
+        uid:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        jobTitle:
+          type: string
+    CreateContactRequest:
+      type: object
+      properties:
+        organizationId:
+          type: integer
+          description: Organization identifier
+          format: int32
+        firstName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: First name should be between 1 and 150 characters
+        lastName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: First name should be between 1 and 150 characters
+        email:
+          type: string
+          description: Email address
+        phone:
+          type: string
+          description: Contact Phone number
+        jobTitle:
+          maxLength: 150
+          type: string
+          description: Job title should be between 0 and 150 characters
+      description: Create contact request payload
+    ContactPatchRequest:
+      type: object
+      properties:
+        firstName:
+          maxLength: 150
+          type: string
+          description: First name should be between 0 and 150 characters
+        lastName:
+          maxLength: 150
+          type: string
+          description: Last name should be between 0 and 150 characters
+        email:
+          type: string
+          description: Email address
+        jobTitle:
+          maxLength: 150
+          type: string
+          description: Job title should be between 0 and 150 characters
+        organizationId:
+          type: integer
+          description: Organization identifier
+          format: int32
+        phone:
+          type: string
+          description: Phone number
+      description: Patch contact request payload
     CustomFieldPolicyConditionResponse:
       type: object
       properties:
@@ -6608,6 +7684,14 @@ components:
           description: Custom HTTP Headers (i.e. Authorization)
           items:
             $ref: '#/components/schemas/HTTPHeader'
+        organizationIds:
+          uniqueItems: true
+          type: array
+          description: List of organization id to be filtered
+          items:
+            type: integer
+            description: List of organization id to be filtered
+            format: int32
     FeatureSettings:
       type: object
       properties:
@@ -7578,6 +8662,8 @@ components:
             - NMS_PHONE
             - NMS_VIRTUAL_MACHINE
             - NMS_NETWORK_MANAGEMENT_AGENT
+            - UNMANAGED_DEVICE
+            - MANAGED_DEVICE
         ipAddressType:
           type: string
           enum:
@@ -8078,12 +9164,14 @@ components:
         assetIds:
           uniqueItems: true
           type: array
-          description: Array of asset IDs to perform bulk operations on (provide
-            the type of asset with the URL)
+          description: >-
+            Array of asset IDs to perform bulk operations on (provide the type
+            of asset with the URL)
           items:
             type: integer
-            description: Array of asset IDs to perform bulk operations on 
-              (provide the type of asset with the URL)
+            description: >-
+              Array of asset IDs to perform bulk operations on (provide the type
+              of asset with the URL)
             format: int32
         tagIdsToAdd:
           uniqueItems: true
@@ -8215,22 +9303,23 @@ components:
           - MERGE_INTO_NEW_TAG
         mergeIntoTagId:
           type: integer
-          description: "If merging into an existing tag, you must provide the target
-            tag id here"
+          description: >-
+            If merging into an existing tag, you must provide the target tag id
+            here
           format: int32
           nullable: true
         name:
           maxLength: 40
           minLength: 0
           type: string
-          description: "If creating a new tag, you must supply the new tag name here"
+          description: 'If creating a new tag, you must supply the new tag name here'
           nullable: true
         description:
           maxLength: 250
           minLength: 0
           type: string
-          description: "If creating a new tag, you can supply the new tag description
-            here"
+          description: 'If creating a new tag, you can supply the new tag description
+            here'
           nullable: true
     ItamSetAssetTagsRequestPublicApiDTO:
       type: object
@@ -8238,14 +9327,16 @@ components:
         tagIds:
           uniqueItems: true
           type: array
-          description: "Array of tag IDS to assign to asset from URL. The tags on
-            the asset will be set to exactly these tags, removing existing tags if
-            necessary"
+          description: >-
+            Array of tag IDS to assign to asset from URL. The tags on the asset
+            will be set to exactly these tags, removing existing tags if
+            necessary
           items:
             type: integer
-            description: "Array of tag IDS to assign to asset from URL. The tags on
-              the asset will be set to exactly these tags, removing existing tags
-              if necessary"
+            description: >-
+              Array of tag IDS to assign to asset from URL. The tags on the
+              asset will be set to exactly these tags, removing existing tags if
+              necessary
             format: int32
     UpdateItamTagRequest:
       type: object
@@ -8364,7 +9455,7 @@ components:
           format: int32
         destinationFolderPath:
           type: string
-          description: "Folder path, each folder name separated by '|'"
+          description: 'Folder path, each folder name separated by ''|'''
           example: Folder 1|Folder 2|Folder 3|Folder 4
         content:
           $ref: '#/components/schemas/KnowledgeBaseArticlePublicApiContent'
@@ -8395,20 +9486,23 @@ components:
           description: Indicates if this item is archived
         name:
           type: string
-          description: Article name (In the case of uploaded articles this will 
-            be the file name)
+          description: >-
+            Article name (In the case of uploaded articles this will be the file
+            name)
         fileSize:
           type: string
           description: Article file size (Only for uploaded knowledge base 
             articles)
         fileExtension:
           type: string
-          description: Article file extension (For native kb articles the 
-            extension will be 'ninja')
+          description: >-
+            Article file extension (For native kb articles the extension will be
+            'ninja')
         fileUploadStatus:
           type: string
-          description: Article file upload status (Only for uploaded knowledge 
-            base articles)
+          description: >-
+            Article file upload status (Only for uploaded knowledge base
+            articles)
           enum:
           - PROCESSING
           - SUCCESS
@@ -8484,8 +9578,9 @@ components:
           format: int32
         destinationOrganizationId:
           type: integer
-          description: Destination client. Use when the root folder of the 
-            client does not exist.
+          description: >-
+            Destination client. Use when the root folder of the client does not
+            exist.
           format: int32
     KnowledgeBaseArticleBulkUpdatePublicApiRequest:
       type: object
@@ -8617,6 +9712,91 @@ components:
         totpSecret:
           type: string
           description: TOTP Secret
+    CreateUnmanagedDevicePublicApiResponseDTO:
+      type: object
+      properties:
+        nodeId:
+          type: integer
+          format: int32
+    CreateUnmanagedDevicePublicApiRequest:
+      required:
+      - locationId
+      - name
+      - orgId
+      - roleId
+      - serialNumber
+      type: object
+      properties:
+        name:
+          maxLength: 200
+          minLength: 0
+          type: string
+          description: The display name of the device to be created
+        orgId:
+          type: integer
+          description: The id of the organization the device belongs to
+          format: int32
+        locationId:
+          type: integer
+          description: The id of the location the device belongs to
+          format: int32
+        roleId:
+          type: integer
+          description: >-
+            The id of the role to use for this device. Must be a sub-role of
+            Unmanaged Device 
+          format: int32
+        serialNumber:
+          type: string
+          description: The serial number of the device
+        assignedUserUid:
+          type: string
+          description: The UUID of the user this device is assigned to
+          format: uuid
+        warrantyStartDate:
+          type: number
+          description: 'The warranty start date for the device, in unix epoch seconds'
+          format: double
+        warrantyEndDate:
+          type: number
+          description: 'The warranty end date for the device, in unix epoch seconds'
+          format: double
+    UpdateUnmanagedDevicePublicApiRequest:
+      required:
+      - locationId
+      - name
+      - orgId
+      - serialNumber
+      type: object
+      properties:
+        name:
+          maxLength: 200
+          minLength: 0
+          type: string
+          description: The display name of the device to be updated
+        orgId:
+          type: integer
+          description: The id of the organization the device belongs to
+          format: int32
+        locationId:
+          type: integer
+          description: The id of the location the device belongs to
+          format: int32
+        serialNumber:
+          type: string
+          description: The serial number of the device
+        assignedUserUid:
+          type: string
+          description: The UUID of the user this device is assigned to
+          format: uuid
+        warrantyStartDate:
+          type: number
+          description: 'The warranty start date for the device, in unix epoch seconds'
+          format: double
+        warrantyEndDate:
+          type: number
+          description: 'The warranty end date for the device, in unix epoch seconds'
+          format: double
     LockhartIntegrityCheckJobCreationResponse:
       type: object
       properties:
@@ -8651,6 +9831,457 @@ components:
           type: string
           format: uuid
       description: Request of the Integrity Check Job creation.
+    AttributeContentPublicApiDTO:
+      type: object
+      properties:
+        customizeForEndUser:
+          type: boolean
+          description: Whether the attribute should be customized for end users
+        endUserCustomization:
+          $ref: '#/components/schemas/EndUserCustomization'
+        values:
+          type: array
+          description: 'For multi-select attributes, this is the list of values available'
+          items:
+            $ref: '#/components/schemas/AttributeContentValue'
+        required:
+          type: boolean
+          description: Boolean representing whether the attribute is required or
+            not
+        footerText:
+          type: string
+          description: Text to include after rendering the attribute
+        tooltipText:
+          type: string
+          description: Text to use as a tooltip for the attribute
+        advancedSettings:
+          $ref: '#/components/schemas/AttributeContentAdvancedSettings'
+      description: 'For multi-select attributes, these are the available content options'
+    AttributeContentValue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        active:
+          type: boolean
+        system:
+          type: boolean
+    AttributeFormContentCommonItemPublicApiDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of an attribute
+          format: int32
+        name:
+          type: string
+          description: Name of the content item
+        fieldName:
+          type: string
+          description: Field name of the attribute
+        description:
+          type: string
+          description: Description of the content item
+        entityType:
+          type: string
+          description: >-
+            If the attribute references a specific entity, its type will be
+            specified in this field
+          enum:
+          - USER
+          - NODE
+          - TICKET
+          - DOCUMENT
+        attributeType:
+          type: string
+          description: Type of the attribute
+          enum:
+          - DROPDOWN
+          - MULTI_SELECT
+          - CHECKBOX
+          - TEXT
+          - TEXT_MULTILINE
+          - TEXT_ENCRYPTED
+          - NUMERIC
+          - DECIMAL
+          - DATE
+          - DATE_TIME
+          - TIME
+          - ATTACHMENT
+          - NODE_DROPDOWN
+          - NODE_MULTI_SELECT
+          - CLIENT_DROPDOWN
+          - CLIENT_MULTI_SELECT
+          - CLIENT_LOCATION_DROPDOWN
+          - CLIENT_LOCATION_MULTI_SELECT
+          - CLIENT_DOCUMENT_DROPDOWN
+          - CLIENT_DOCUMENT_MULTI_SELECT
+          - EMAIL
+          - PHONE
+          - IP_ADDRESS
+          - WYSIWYG
+          - URL
+        attributeScope:
+          type: string
+          description: 'Scope of the attribute. NOTE: This field is being depricated'
+          enum:
+          - NODE_GLOBAL
+          - NODE_ROLE
+          - NODE_CLASS
+        definitionScope:
+          uniqueItems: true
+          type: array
+          description: Definition scopes of the attribute
+          items:
+            type: string
+            description: Definition scopes of the attribute
+            enum:
+            - NODE
+            - END_USER
+            - LOCATION
+            - ORGANIZATION
+        technicianPermission:
+          type: string
+          description: Type of technician permission on the attribute
+          enum:
+          - NONE
+          - EDITABLE
+          - READ_ONLY
+        scriptPermission:
+          type: string
+          description: Type of script permission on the attribute
+          enum:
+          - NONE
+          - READ_ONLY
+          - WRITE_ONLY
+          - READ_WRITE
+        apiPermission:
+          type: string
+          description: Type of API permission on the attribute
+          enum:
+          - NONE
+          - READ_ONLY
+          - WRITE_ONLY
+          - READ_WRITE
+        defaultValue:
+          type: string
+          description: 'For multi-select attributes, this is the id of the default
+            value'
+        content:
+          $ref: '#/components/schemas/AttributeContentPublicApiDTO'
+        active:
+          type: boolean
+          description: Whether the attribute is active or not
+        createTime:
+          type: number
+          description: The time that the attribute was created (unix epoch)
+          format: double
+        updateTime:
+          type: number
+          description: The time that the attribute was last updated (unix epoch)
+          format: double
+        uiElementUid:
+          type: string
+          description: 'For UI elements, the uuid of the element'
+          format: uuid
+        uiElementType:
+          type: string
+          description: 'For UI elements, type of the element'
+          enum:
+          - TITLE
+          - DESCRIPTION
+          - SEPARATOR
+        uiElementValue:
+          type: string
+          description: 'For UI elements, value of the element'
+        uiElementCreateTime:
+          type: number
+          description: >-
+            For UI elements, timestamp of when the element was created (unix
+            epoch)
+          format: double
+        uiElementUpdateTime:
+          type: number
+          description: >-
+            For UI elements, timestamp of when the element was last updated
+            (unix epoch)
+          format: double
+      description: >-
+        This object represents either an attribute, or a UI Element. The
+        available attributes will depend on which type it is
+    CustomTabPublicApiDTO:
+      type: object
+      properties:
+        default:
+          type: boolean
+        id:
+          type: integer
+          description: Tab ID
+          format: int32
+        name:
+          type: string
+          description: Display name of tab
+        entityType:
+          type: string
+          description: >-
+            The type of object the tab is for (ie, NODE_ROLE, ORGANIZATION,
+            END_USER, etc)
+          enum:
+          - NODE_ROLE
+          - ORGANIZATION
+          - END_USER
+        entityId:
+          type: integer
+          description: >-
+            For entity types that are bound to an ID, this will be the id of the
+            object. Otherwise, omitted
+          format: int32
+        parentTabId:
+          type: integer
+          description: >-
+            For tab extensions, this will be the id of the tab that was extended
+            (ie, the 'root tab')
+          format: int32
+        items:
+          type: array
+          description: The content of the tab
+          items:
+            $ref: '#/components/schemas/AttributeFormContentCommonItemPublicApiDTO'
+        position:
+          type: integer
+          description: >-
+            Integer representing the position of the tab. Used when ordering
+            multiple tabs
+          format: int32
+        isDefault:
+          type: boolean
+          description: 'True if this is a default tab, false otherwise'
+    EndUserCustomization:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        label:
+          type: string
+    AttributeFormContentItemPublicApiDTO:
+      type: object
+      properties:
+        itemType:
+          type: string
+          description: Specifies whether this item is an ATTRIBUTE or a 
+            UI_ELEMENT
+          enum:
+          - ATTRIBUTE
+          - UI_ELEMENT
+        id:
+          type: integer
+          description: >-
+            If the content item is an attribute, then this will be the id of
+            that attribute otherwise this should be omitted
+          format: int32
+        name:
+          type: string
+        uiElementUid:
+          type: string
+          format: uuid
+        uiElementType:
+          type: string
+          enum:
+          - TITLE
+          - DESCRIPTION
+          - SEPARATOR
+        uiElementValue:
+          type: string
+        uiElementCreateTime:
+          type: number
+          format: double
+        uiElementUpdateTime:
+          type: number
+          format: double
+    NewCustomTabPublicApiRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: The display name to use for the custom tab
+        entityType:
+          type: string
+          description: >-
+            The type to use for the custom tab. Organizations and Locations
+            share the same type of tab
+          enum:
+          - NODE_ROLE
+          - ORGANIZATION
+          - END_USER
+        entityId:
+          minimum: 1
+          type: integer
+          description: >-
+            For tab types that require an id to create (currently, only
+            NODE_ROLE types), this field is the ID of the entity
+          format: int32
+        items:
+          type: array
+          description: The initial list of content items to include in the tab
+          items:
+            $ref: '#/components/schemas/AttributeFormContentItemPublicApiDTO'
+        position:
+          type: integer
+          format: int32
+    CustomTabHierarchyPublicApiDTO:
+      type: object
+      properties:
+        tabs:
+          type: array
+          description: >-
+            list of objects representing the root tab and any tab extensions
+            added from the role hierarchy
+          items:
+            $ref: '#/components/schemas/CustomTabPublicApiDTO'
+      description: >-
+        When rendering custom tabs with extensions, multiple tab objects will be
+        returned. The first will be the root, and the rest will be 'extensions'
+    CustomTabLabelPublicApiDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Tab ID
+          format: int32
+        name:
+          type: string
+          description: Display name of tab
+        nodeRoleId:
+          type: integer
+          description: >-
+            For tabs associated with a role, this will be the roleId the tab is
+            associated with
+          format: int32
+        position:
+          type: integer
+          description: >-
+            When tabs are ordered, such as when retrieving a tab summary, this
+            is the position that the tab should be rendered in
+          format: int32
+        hiddenForRoles:
+          type: array
+          description: Array of roleIds that should not display this custom tab
+          items:
+            type: integer
+            description: Array of roleIds that should not display this custom 
+              tab
+            format: int32
+        default:
+          type: boolean
+          description: True if this tab is a 'default tab'
+      description: >-
+        Simplified view of a tab that omits the content of the tab. Used when
+        retrieving tab summaries/lists
+    CustomTabSummaryPublicApiDTO:
+      type: object
+      properties:
+        labels:
+          type: array
+          description: >-
+            Each tab will be returned as a CustomTabLabelPublicApiDTO object.
+            These will not be sorted. It is the callers responsibility to sort
+            the tabs if that is desired
+          items:
+            $ref: '#/components/schemas/CustomTabLabelPublicApiDTO'
+        roleHierarchy:
+          type: array
+          description: >-
+            When retrieving tab summaries for roles, we will return the role
+            hierarchy as a list of roleIds in order from the root node to the
+            requested roleId. This is useful for sorting tabs, since that is
+            done on a per-role basis
+          items:
+            type: integer
+            description: >-
+              When retrieving tab summaries for roles, we will return the role
+              hierarchy as a list of roleIds in order from the root node to the
+              requested roleId. This is useful for sorting tabs, since that is
+              done on a per-role basis
+            format: int32
+    UpdateTabNamePublicApiRequest:
+      required:
+      - name
+      type: object
+      properties:
+        tabId:
+          minimum: 1
+          type: integer
+          format: int32
+        name:
+          type: string
+    UpdateCustomTabPublicApiRequest:
+      type: object
+      properties:
+        roleId:
+          minimum: 1
+          type: integer
+          format: int32
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttributeFormContentItemPublicApiDTO'
+        position:
+          type: integer
+          format: int32
+    CustomTabsVisibilityPublicApiDTO:
+      type: object
+      properties:
+        tabId:
+          type: integer
+          format: int32
+        hidden:
+          type: boolean
+    CustomTabsOrderPublicApiDTO:
+      type: object
+      properties:
+        tabId:
+          type: integer
+          format: int32
+        position:
+          type: integer
+          format: int32
+    CustomTabLabelDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        nodeRoleId:
+          type: integer
+          format: int32
+        position:
+          type: integer
+          format: int32
+        hiddenForRoles:
+          type: array
+          items:
+            type: integer
+            format: int32
+        default:
+          type: boolean
+    CustomTabsOrderDTO:
+      type: object
+      properties:
+        tabId:
+          type: integer
+          format: int32
+        position:
+          type: integer
+          format: int32
     CarbonCopy:
       type: object
       properties:
@@ -8679,7 +10310,7 @@ components:
             type: string
             description: emails
             nullable: true
-            example: "[\"example1@example.com\",\"example2@example.com\"]"
+            example: '["example1@example.com","example2@example.com"]'
       nullable: true
     NewTicket:
       required:
@@ -8720,7 +10351,7 @@ components:
           $ref: '#/components/schemas/NewTicketLogEntry'
         status:
           type: string
-          default: "1000"
+          default: '1000'
         type:
           type: string
           description: Type of ticket
@@ -8774,12 +10405,25 @@ components:
           items:
             type: string
             nullable: true
-            example: "[\"tag1\",\"tag2\"]"
+            example: '["tag1","tag2"]'
         attributes:
           type: array
           nullable: true
           items:
             $ref: '#/components/schemas/TicketingAttributeValue'
+        additionalAssignedTechnicianIds:
+          uniqueItems: true
+          type: array
+          description: Additional assigned technician identifiers
+          nullable: true
+          example:
+          - 300
+          - 789
+          items:
+            type: integer
+            description: Additional assigned technician identifiers
+            format: int32
+            nullable: true
     NewTicketLogEntry:
       required:
       - public
@@ -8928,6 +10572,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AttributeValueDTO'
+        additionalAssignedTechnicianIds:
+          uniqueItems: true
+          type: array
+          items:
+            type: integer
+            format: int32
     TicketStatusPublicApiDTO:
       type: object
       properties:
@@ -8942,6 +10592,14 @@ components:
           type: integer
           format: int32
     AgreementDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    AgreementProductTimeEntryDTO:
       type: object
       properties:
         id:
@@ -9079,6 +10737,8 @@ components:
           format: int32
         agreement:
           $ref: '#/components/schemas/AgreementDTO'
+        agreementProduct:
+          $ref: '#/components/schemas/AgreementProductTimeEntryDTO'
     UpdateTicket:
       required:
       - clientId
@@ -9123,7 +10783,7 @@ components:
           example: CPU with problems
         status:
           type: string
-          default: "1000"
+          default: '1000'
         type:
           type: string
           description: Type of ticket
@@ -9177,12 +10837,25 @@ components:
           items:
             type: string
             nullable: true
-            example: "[\"tag1\",\"tag2\"]"
+            example: '["tag1","tag2"]'
         attributes:
           type: array
           nullable: true
           items:
             $ref: '#/components/schemas/TicketingAttributeValue'
+        additionalAssignedTechnicianIds:
+          uniqueItems: true
+          type: array
+          description: Additional assigned technician identifiers
+          nullable: true
+          example:
+          - 300
+          - 789
+          items:
+            type: integer
+            description: Additional assigned technician identifiers
+            format: int32
+            nullable: true
     PublicScanGroup:
       type: object
       properties:
@@ -9291,12 +10964,14 @@ components:
           format: int64
         lastSuccessfulBackupJob:
           type: number
-          description: Last successful job. This is provided when the 
+          description: >-
+            Last successful job. This is provided when the
             'includeLastBackupJobTimes' query parameter is set to 'true'
           format: double
         lastFailedBackupJob:
           type: number
-          description: Last failed job. This is provided when the 
+          description: >-
+            Last failed job. This is provided when the
             'includeLastBackupJobTimes' query parameter is set to 'true'
           format: double
         revisionsTotalSize:
@@ -9334,7 +11009,7 @@ components:
             format: int32
           target:
             type: string
-            description: "Monitoring target (hostname, IP address or URL)"
+            description: 'Monitoring target (hostname, IP address or URL)'
     CloudMonitorEmailServer:
       type: object
       allOf:
@@ -9384,7 +11059,7 @@ components:
             format: int32
           target:
             type: string
-            description: "Monitoring target (hostname, IP address or URL)"
+            description: 'Monitoring target (hostname, IP address or URL)'
     CloudMonitorPing:
       type: object
       allOf:
@@ -9404,7 +11079,7 @@ components:
             format: int32
           target:
             type: string
-            description: "Monitoring target (hostname, IP address or URL)"
+            description: 'Monitoring target (hostname, IP address or URL)'
     CloudMonitorPortScan:
       type: object
       allOf:
@@ -9424,7 +11099,7 @@ components:
             format: int32
           target:
             type: string
-            description: "Monitoring target (hostname, IP address or URL)"
+            description: 'Monitoring target (hostname, IP address or URL)'
     ComputerSystem:
       type: object
       properties:
@@ -9465,6 +11140,14 @@ components:
           type: integer
           description: Node (Device) identifier
           format: int32
+        uid:
+          type: string
+          description: Node (Device) UUID
+          format: uuid
+        assignedOwnerUid:
+          type: string
+          description: Node (Device) Owner UUID
+          format: uuid
         parentDeviceId:
           type: integer
           description: Parent Node identifier
@@ -9512,19 +11195,23 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         nodeRoleId:
           type: integer
           description: Node Role identifier
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location 
-            Policy Mapping
+          description: >-
+            Node Role policy ID based on organization and location Policy
+            Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location 
-            policy mapping)
+          description: >-
+            Assigned policy ID (overrides organization and location policy
+            mapping)
           format: int32
         approvalStatus:
           type: string
@@ -9659,6 +11346,8 @@ components:
           $ref: '#/components/schemas/BackupUsage'
         warranty:
           $ref: '#/components/schemas/WarrantyDates'
+        assignedOwner:
+          $ref: '#/components/schemas/User'
       description: Expanded entity references
     NodeRole:
       type: object
@@ -9708,6 +11397,8 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         custom:
           type: boolean
           description: Is custom node role?
@@ -9735,6 +11426,13 @@ components:
             type: object
             description: Custom Fields
           description: Custom Fields
+        nodeRoleParentId:
+          type: integer
+          description: Node Role Parent Id
+          format: int32
+        icon:
+          type: string
+          description: Icon
       description: Device Role
     Note:
       type: object
@@ -9872,6 +11570,8 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         updated:
           type: number
           description: Last update timestamp
@@ -9916,9 +11616,96 @@ components:
           format: int32
         numLogicalCores:
           type: integer
-          description: "Number of Logical Cores]"
+          description: 'Number of Logical Cores]'
           format: int32
       description: Processors
+    UnmanagedDevice:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/Device'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User identifier
+          format: int32
+        uid:
+          type: string
+          description: User universally unique identifier
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        enabled:
+          type: boolean
+        administrator:
+          type: boolean
+        permitAllClients:
+          type: boolean
+        notifyAllClients:
+          type: boolean
+        mustChangePw:
+          type: boolean
+        mfaConfigured:
+          type: boolean
+        userType:
+          type: string
+          enum:
+          - TECHNICIAN
+          - END_USER
+        invitationStatus:
+          type: string
+          enum:
+          - REGISTERED
+          - PENDING
+          - EXPIRED
+        organizationId:
+          type: integer
+          description: Identifier of organization for end-users
+          format: int32
+        deviceIds:
+          type: array
+          description: Device IDs which end-user is authorized to access
+          items:
+            type: integer
+            description: Device IDs which end-user is authorized to access
+            format: int32
+        assignedDeviceIds:
+          type: array
+          description: Device IDs which user is assigned
+          items:
+            type: integer
+            description: Device IDs which user is assigned
+            format: int32
+        tags:
+          type: array
+          description: Tags
+          items:
+            type: string
+            description: Tags
+        fields:
+          type: object
+          additionalProperties:
+            type: object
+            description: Custom Fields
+          description: Custom Fields
+        roles:
+          type: array
+          description: >-
+            A list of role names assigned to the user. This is provided when the
+            'includeRoles' query parameter is set to 'true'
+          items:
+            type: string
+            description: >-
+              A list of role names assigned to the user. This is provided when
+              the 'includeRoles' query parameter is set to 'true'
+      description: Assigned device owner
     VMGuest:
       type: object
       allOf:
@@ -10116,8 +11903,9 @@ components:
           - PENDING
         lockStatus:
           type: string
-          description: Indicates whether the contents of the volume are 
-            accessible from Windows
+          description: >-
+            Indicates whether the contents of the volume are accessible from
+            Windows
           enum:
           - UNKNOWN
           - UNLOCKED
@@ -10295,6 +12083,7 @@ components:
           - COMPLETED
           - CANCEL_REQUESTED
           - CANCELLED
+          - WAITING_FOR_USER_RESPONSE
           - TRIGGERED
           - RESET
           - ACKNOWLEDGED
@@ -10347,6 +12136,7 @@ components:
           - CLIENT_CHECKLIST
           - CHECKLIST_TEMPLATE
           - DOCUMENTATION
+          - MICROSOFT_INTUNE
     NodeWithDetailedReferences:
       type: object
       properties:
@@ -10354,6 +12144,14 @@ components:
           type: integer
           description: Node (Device) identifier
           format: int32
+        uid:
+          type: string
+          description: Node (Device) UUID
+          format: uuid
+        assignedOwnerUid:
+          type: string
+          description: Node (Device) Owner UUID
+          format: uuid
         parentDeviceId:
           type: integer
           description: Parent Node identifier
@@ -10401,19 +12199,23 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         nodeRoleId:
           type: integer
           description: Node Role identifier
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location 
-            Policy Mapping
+          description: >-
+            Node Role policy ID based on organization and location Policy
+            Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location 
-            policy mapping)
+          description: >-
+            Assigned policy ID (overrides organization and location policy
+            mapping)
           format: int32
         approvalStatus:
           type: string
@@ -10545,6 +12347,7 @@ components:
           - CLIENT_CHECKLIST
           - CHECKLIST_TEMPLATE
           - DOCUMENTATION
+          - MICROSOFT_INTUNE
         statusCode:
           type: string
           description: Activity status code
@@ -10600,8 +12403,11 @@ components:
           - APP_USER_CRITICAL_ACTION
           - APP_USER_AUDIT_FAILED_LOGIN
           - END_USER_CREATED
+          - END_USER_CREATED_API
           - END_USER_UPDATED
+          - END_USER_UPDATED_API
           - END_USER_DELETED
+          - END_USER_DELETED_API
           - END_USER_LOGGED_IN
           - END_USER_LOGGED_OUT
           - END_USER_MFA_SETUP
@@ -10609,8 +12415,11 @@ components:
           - END_USER_AUDIT_FAILED_LOGIN
           - END_USER_CRITICAL_ACTION
           - CONTACT_CREATED
+          - CONTACT_CREATED_API
           - CONTACT_UPDATED
+          - CONTACT_UPDATED_API
           - CONTACT_DELETED
+          - CONTACT_DELETED_API
           - DEVICE_GROUP_CREATED
           - DEVICE_GROUP_UPDATED
           - DEVICE_GROUP_DELETED
@@ -10821,6 +12630,7 @@ components:
           - SOFTWARE_ADDED
           - SOFTWARE_REMOVED
           - SOFTWARE_UPDATED
+          - SOFTWARE_OS_UPDATED
           - DISK_PARTITION_ADDED
           - DISK_PARTITION_REMOVED
           - DISK_VOLUME_ADDED
@@ -10916,6 +12726,7 @@ components:
           - NINJA_BACKUP_BACKUP_CONFIGURE_FAILED
           - NINJA_BACKUP_FILE_DOWNLOAD
           - NINJA_BACKUP_FOLDER_DOWNLOAD
+          - NINJA_BACKUP_UPSYNCJOB_START_REQUESTED
           - NINJA_BACKUP_UPSYNCJOB_PROCESSING
           - NINJA_BACKUP_UPSYNCJOB_IN_PROCESS
           - NINJA_BACKUP_UPSYNCJOB_STARTED
@@ -11039,6 +12850,7 @@ components:
           - GRAVITYZONE_DEVICE_MANAGED
           - GRAVITYZONE_DEVICE_UNMANAGED
           - GRAVITYZONE_COMPANY_CANNOT_BE_ACCESSED
+          - GRAVITYZONE_QUARANTINED_THREAT_DELETED_OR_RESTORED
           - ATTACHMENT_FILE_SUSPICIOUS
           - SMTP_SEND_ERROR
           - TECHNICIAN_ROLE_CREATED
@@ -11789,8 +13601,9 @@ components:
           format: int32
         policyId:
           type: integer
-          description: "Assigned policy ID (overrides organization policy mapping,
-            or reverts to organization policy if Null)"
+          description: >-
+            Assigned policy ID (overrides organization policy mapping, or
+            reverts to organization policy if Null)
           format: int32
         organizationId:
           type: integer
@@ -11819,81 +13632,12 @@ components:
             - TASKS
         start:
           type: number
-          description: "Maintenance window start (optional, defaults to now)"
+          description: 'Maintenance window start (optional, defaults to now)'
           format: double
         end:
           type: number
           description: Maintenance window end
           format: double
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: User identifier
-          format: int32
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        enabled:
-          type: boolean
-        administrator:
-          type: boolean
-        permitAllClients:
-          type: boolean
-        notifyAllClients:
-          type: boolean
-        mustChangePw:
-          type: boolean
-        mfaConfigured:
-          type: boolean
-        userType:
-          type: string
-          enum:
-          - TECHNICIAN
-          - END_USER
-        invitationStatus:
-          type: string
-          enum:
-          - REGISTERED
-          - PENDING
-          - EXPIRED
-        organizationId:
-          type: integer
-          description: Identifier of organization for end-users
-          format: int32
-        deviceIds:
-          type: array
-          description: Device IDs which end-user is authorized to access
-          items:
-            type: integer
-            description: Device IDs which end-user is authorized to access
-            format: int32
-        tags:
-          type: array
-          description: Tags
-          items:
-            type: string
-            description: Tags
-        fields:
-          type: object
-          additionalProperties:
-            type: object
-            description: Custom Fields
-          description: Custom Fields
-        roles:
-          type: array
-          description: A list of role names assigned to the user. This is 
-            provided when the 'includeRoles' query parameter is set to 'true'
-          items:
-            type: string
-            description: A list of role names assigned to the user. This is 
-              provided when the 'includeRoles' query parameter is set to 'true'
     Link:
       type: object
       properties:
@@ -11936,9 +13680,10 @@ components:
       properties:
         nodeRoleId:
           type: string
-          description: "Identifier for the nodeRole target of this installer. Acceptable
-            values include integers, 'auto', or an empty string. If the value is omitted,
-            or an empty string, it defaults to 'auto'."
+          description: >-
+            Identifier for the nodeRole target of this installer. Acceptable
+            values include integers, 'auto', or an empty string. If the value is
+            omitted, or an empty string, it defaults to 'auto'.
           default: auto
       description: content
     LocationBackupUsageSummary:
@@ -12127,7 +13872,7 @@ components:
           description: Detection source
         traceList:
           type: string
-          description: "Trace list (Files, Cookies, etc. Vendor specific)"
+          description: 'Trace list (Files, Cookies, etc. Vendor specific)'
         deviceId:
           type: integer
           description: Device identifier
@@ -12230,6 +13975,7 @@ components:
           description: Entity type
           enum:
           - NODE
+          - END_USER
           - LOCATION
           - ORGANIZATION
         fields:
@@ -12718,7 +14464,7 @@ components:
           format: int32
         numLogicalCores:
           type: integer
-          description: "Number of Logical Cores]"
+          description: 'Number of Logical Cores]'
           format: int32
         deviceId:
           type: integer
@@ -12883,11 +14629,12 @@ components:
           description: Value definition scope (entity type)
           enum:
           - NODE
+          - END_USER
           - LOCATION
           - ORGANIZATION
         entityId:
           type: integer
-          description: "Entity identifier (device, organization, location)"
+          description: 'Entity identifier (device, organization, location)'
           format: int32
         fields:
           type: array
@@ -12911,11 +14658,12 @@ components:
           description: Value definition scope (entity type)
           enum:
           - NODE
+          - END_USER
           - LOCATION
           - ORGANIZATION
         entityId:
           type: integer
-          description: "Entity identifier (device, organization, location)"
+          description: 'Entity identifier (device, organization, location)'
           format: int32
         fields:
           type: object
@@ -13131,6 +14879,8 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         enabled:
           type: boolean
           description: Policy Enabled Flag
@@ -13267,18 +15017,6 @@ components:
           type: string
         advancedSettings:
           $ref: '#/components/schemas/AttributeContentAdvancedSettings'
-    AttributeContentValue:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        active:
-          type: boolean
-        system:
-          type: boolean
     AttributePublicApiDTO:
       type: object
       properties:
@@ -13306,6 +15044,7 @@ components:
             description: Definition Scope
             enum:
             - NODE
+            - END_USER
             - LOCATION
             - ORGANIZATION
         type:
@@ -13396,15 +15135,6 @@ components:
           type: number
           description: Update Time
           format: double
-    EndUserCustomization:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type: string
-        label:
-          type: string
     NotificationChannel:
       type: object
       properties:
@@ -13459,8 +15189,9 @@ components:
           format: double
         deviceCount:
           type: integer
-          description: Estimated/Last known device count.  Can be `null` if 
-            group membership has not been evaluated recently
+          description: >-
+            Estimated/Last known device count.  Can be `null` if group
+            membership has not been evaluated recently
           format: int32
         lastEvaluated:
           type: number
@@ -13569,6 +15300,14 @@ components:
           type: integer
           description: Node (Device) identifier
           format: int32
+        uid:
+          type: string
+          description: Node (Device) UUID
+          format: uuid
+        assignedOwnerUid:
+          type: string
+          description: Node (Device) Owner UUID
+          format: uuid
         parentDeviceId:
           type: integer
           description: Parent Node identifier
@@ -13616,19 +15355,23 @@ components:
           - NMS_PHONE
           - NMS_VIRTUAL_MACHINE
           - NMS_NETWORK_MANAGEMENT_AGENT
+          - UNMANAGED_DEVICE
+          - MANAGED_DEVICE
         nodeRoleId:
           type: integer
           description: Node Role identifier
           format: int32
         rolePolicyId:
           type: integer
-          description: Node Role policy ID based on organization and location 
-            Policy Mapping
+          description: >-
+            Node Role policy ID based on organization and location Policy
+            Mapping
           format: int32
         policyId:
           type: integer
-          description: Assigned policy ID (overrides organization and location 
-            policy mapping)
+          description: >-
+            Assigned policy ID (overrides organization and location policy
+            mapping)
           format: int32
         approvalStatus:
           type: string
@@ -14069,17 +15812,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Rule'
+        allRequiredColumns:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
         allColumns:
           uniqueItems: true
           type: array
           items:
             type: string
         columnNamesForExporting:
-          uniqueItems: true
-          type: array
-          items:
-            type: string
-        allRequiredColumns:
           uniqueItems: true
           type: array
           items:
@@ -14145,6 +15888,272 @@ components:
         naturalId:
           type: string
           description: Last User Identifier
+    EndUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User identifier
+          format: int32
+        uid:
+          type: string
+          description: User universally unique identifier
+          format: uuid
+        enabled:
+          type: boolean
+          description: User access status
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        email:
+          type: string
+          description: Email address
+        phone:
+          type: string
+          description: Phone number
+        organizationId:
+          type: integer
+          description: Identifier of organization for end-users
+          format: int32
+        fullPortalAccess:
+          type: boolean
+          description: Has full portal access
+        mustChangePw:
+          type: boolean
+          description: Must change password during next login
+        mfaConfigured:
+          type: boolean
+          description: At least one MFA method is configured
+        scimUser:
+          type: boolean
+          description: User created by SCIM
+        authType:
+          type: string
+          description: 'Authentication type, NATIVE or SSO'
+        invitationStatus:
+          type: string
+          description: User invitation status
+          enum:
+          - REGISTERED
+          - PENDING
+          - EXPIRED
+        assignedDeviceIds:
+          type: array
+          description: Device IDs which user is assigned
+          items:
+            type: integer
+            description: Device IDs which user is assigned
+            format: int32
+        accessibleDeviceIds:
+          type: array
+          description: Device IDs which user has access to
+          items:
+            type: integer
+            description: Device IDs which user has access to
+            format: int32
+        roles:
+          type: array
+          description: >-
+            A list of role names assigned to the user. This is provided when the
+            'includeRoles' query parameter is set to 'true'
+          items:
+            type: string
+            description: >-
+              A list of role names assigned to the user. This is provided when
+              the 'includeRoles' query parameter is set to 'true'
+    CreateEndUserRequest:
+      type: object
+      properties:
+        firstName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: First name should be between 1 and 150 characters
+        lastName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: Last name should be between 1 and 150 characters
+        email:
+          type: string
+          description: Email address
+        phone:
+          type: string
+          description: Phone number
+        organizationId:
+          type: integer
+          description: Organization identifier
+          format: int32
+        fullPortalAccess:
+          type: boolean
+          description: Gives end user full portal access
+      description: Create end user request payload
+    EndUserPatchRequest:
+      type: object
+      properties:
+        firstName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: First name should be between 1 and 150 characters
+        lastName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: Last name should be between 1 and 150 characters
+        organizationId:
+          type: integer
+          description: Organization identifier
+          format: int32
+        fullPortalAccess:
+          type: boolean
+          description: Gives end user full portal access
+      description: Patch end user request payload
+    Technician:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User identifier
+          format: int32
+        uid:
+          type: string
+          description: User universally unique identifier
+          format: uuid
+        enabled:
+          type: boolean
+          description: User access status
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        email:
+          type: string
+          description: Email address
+        phone:
+          type: string
+          description: Phone number
+        mustChangePw:
+          type: boolean
+          description: Must change password during next login
+        mfaConfigured:
+          type: boolean
+          description: At least one MFA method is configured
+        scimUser:
+          type: boolean
+          description: User is created by SCIM?
+        authType:
+          type: string
+          description: Native or SSO authentication
+        userType:
+          type: string
+          description: User type
+          enum:
+          - TECHNICIAN
+          - END_USER
+        invitationStatus:
+          type: string
+          description: User invitation status
+          enum:
+          - REGISTERED
+          - PENDING
+          - EXPIRED
+        notifyAllClients:
+          type: boolean
+          description: Notifications for all clients
+        administrator:
+          type: boolean
+          description: Technician is a System Administrator
+        assignedDeviceIds:
+          type: array
+          description: Device IDs which user is assigned
+          items:
+            type: integer
+            description: Device IDs which user is assigned
+            format: int32
+        roles:
+          type: array
+          description: >-
+            A list of role names assigned to the technician. This is provided
+            when the 'includeRoles' query parameter is set to 'true'
+          items:
+            type: string
+            description: >-
+              A list of role names assigned to the technician. This is provided
+              when the 'includeRoles' query parameter is set to 'true'
+    CreateTechnicianRequest:
+      type: object
+      properties:
+        firstName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: First name should be between 1 and 150 characters
+        lastName:
+          maxLength: 150
+          minLength: 1
+          type: string
+          description: Last name should be between 1 and 150 characters
+        email:
+          type: string
+          description: Email address
+        phone:
+          type: string
+          description: Phone number
+      description: Create technician request payload
+    UpdateTechnicianRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+      description: Update technician request payload
+    RoleMember:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: User identifier
+          format: int32
+        email:
+          type: string
+          description: User email
+        name:
+          type: string
+          description: User full name
+        source:
+          type: string
+          description: Source of role assignment
+      description: Role members
+    UserRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Role identifier
+          format: int32
+        name:
+          type: string
+          description: Role name
+        type:
+          type: string
+          description: Role type
+        description:
+          type: string
+          description: Role description
+        members:
+          type: array
+          description: Role members
+          items:
+            $ref: '#/components/schemas/RoleMember'
   securitySchemes:
     oauth2:
       type: http

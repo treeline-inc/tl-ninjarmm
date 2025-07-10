@@ -24,6 +24,7 @@ from tl_ninjarmm.models.location import Location
 from tl_ninjarmm.models.node_role import NodeRole
 from tl_ninjarmm.models.organization import Organization
 from tl_ninjarmm.models.policy import Policy
+from tl_ninjarmm.models.user import User
 from tl_ninjarmm.models.warranty_dates import WarrantyDates
 from typing import Set
 from typing_extensions import Self
@@ -41,6 +42,7 @@ class NodeReferences(BaseModel):
     role: Optional[NodeRole] = None
     backup_usage: Optional[BackupUsage] = Field(default=None, alias="backupUsage")
     warranty: Optional[WarrantyDates] = None
+    assigned_owner: Optional[User] = Field(default=None, alias="assignedOwner")
     __properties: ClassVar[List[str]] = [
         "organization",
         "location",
@@ -49,6 +51,7 @@ class NodeReferences(BaseModel):
         "role",
         "backupUsage",
         "warranty",
+        "assignedOwner",
     ]
 
     model_config = ConfigDict(
@@ -109,6 +112,9 @@ class NodeReferences(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of warranty
         if self.warranty:
             _dict["warranty"] = self.warranty.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of assigned_owner
+        if self.assigned_owner:
+            _dict["assignedOwner"] = self.assigned_owner.to_dict()
         return _dict
 
     @classmethod
@@ -142,6 +148,9 @@ class NodeReferences(BaseModel):
                 else None,
                 "warranty": WarrantyDates.from_dict(obj["warranty"])
                 if obj.get("warranty") is not None
+                else None,
+                "assignedOwner": User.from_dict(obj["assignedOwner"])
+                if obj.get("assignedOwner") is not None
                 else None,
             }
         )
