@@ -18,7 +18,28 @@ __version__ = "1.0.0"
 
 # Define package exports
 __all__ = [
+    "AssetTagsApi",
+    "BackupApi",
+    "ChecklistTemplatesApi",
+    "CustomFieldsApi",
+    "CustomTabsApi",
+    "DocumentTemplatesApi",
+    "KnowledgeBaseArticlesApi",
+    "LocationApi",
+    "OrganizationChecklistsApi",
+    "OrganizationDocumentsApi",
+    "RelatedItemsApi",
+    "UnmanagedDevicesApi",
+    "UsersApi",
+    "VulnerabilityManagementApi",
+    "DevicesApi",
+    "GroupsApi",
+    "ManagementApi",
+    "OrganizationApi",
+    "QueriesApi",
     "SystemApi",
+    "TicketingApi",
+    "WebhooksApi",
     "ApiResponse",
     "ApiClient",
     "Configuration",
@@ -41,17 +62,35 @@ __all__ = [
     "AutomationScript",
     "BackupUsage",
     "Contact",
+    "ContactPatchRequest",
+    "CreateContactRequest",
+    "CreateEndUserRequest",
+    "CreateTechnicianRequest",
+    "CredentialReference",
+    "CustomFieldPolicyConditionResponse",
+    "CustomFieldsPolicyConditionCreateRequest",
     "Device",
+    "DeviceCredentialOptions",
+    "DeviceIDList",
+    "DeviceLink",
+    "DeviceMutableProperties",
+    "DeviceScriptingOptions",
     "DeviceSearchMatch",
     "DeviceSearchResults",
     "EndUser",
     "EndUserCustomization",
+    "EndUserPatchRequest",
     "FeatureSettings",
+    "GenerateInstallerRequestDto",
     "Group",
+    "InstallerContent",
     "Job",
+    "Link",
     "Location",
+    "LocationModel",
     "LocationWithOrganizationRef",
     "Maintenance",
+    "MaintenanceSettings",
     "NodeReferences",
     "NodeRole",
     "NodeRolePolicyAssignment",
@@ -60,20 +99,73 @@ __all__ = [
     "NotificationChannel",
     "Organization",
     "OrganizationDetailed",
+    "OrganizationModel",
     "OrganizationSettings",
+    "OrganizationWithLocationsAndPolicyAssignmentsModel",
     "Policy",
+    "PolicyConditionCustomField",
+    "PolicyConditionInheritanceStatus",
+    "PolicyConditionScript",
+    "PolicyConditionScriptVariable",
+    "PolicyInfo",
+    "RebootRequest",
     "RoleMember",
+    "RunScriptRequest",
     "ScheduledTask",
+    "Script",
+    "ScriptCategory",
     "ScriptVariable",
     "SoftwareProduct",
     "Technician",
+    "UpdateTechnicianRequest",
     "User",
     "UserRole",
     "WarrantyDates",
+    "WindowsEventPolicyConditionCreateRequest",
+    "WindowsEventPolicyConditionOccurrence",
+    "WindowsEventPolicyConditionResponse",
+    "WindowsEventPolicyConditionText",
+    "WindowsServiceConfiguration",
+    "WindowsServiceControlRequest",
 ]
 
 # import apis into sdk package
+from tl_ninjarmm.api.asset_tags_api import AssetTagsApi as AssetTagsApi
+from tl_ninjarmm.api.backup_api import BackupApi as BackupApi
+from tl_ninjarmm.api.checklist_templates_api import (
+    ChecklistTemplatesApi as ChecklistTemplatesApi,
+)
+from tl_ninjarmm.api.custom_fields_api import CustomFieldsApi as CustomFieldsApi
+from tl_ninjarmm.api.custom_tabs_api import CustomTabsApi as CustomTabsApi
+from tl_ninjarmm.api.document_templates_api import (
+    DocumentTemplatesApi as DocumentTemplatesApi,
+)
+from tl_ninjarmm.api.knowledge_base_articles_api import (
+    KnowledgeBaseArticlesApi as KnowledgeBaseArticlesApi,
+)
+from tl_ninjarmm.api.location_api import LocationApi as LocationApi
+from tl_ninjarmm.api.organization_checklists_api import (
+    OrganizationChecklistsApi as OrganizationChecklistsApi,
+)
+from tl_ninjarmm.api.organization_documents_api import (
+    OrganizationDocumentsApi as OrganizationDocumentsApi,
+)
+from tl_ninjarmm.api.related_items_api import RelatedItemsApi as RelatedItemsApi
+from tl_ninjarmm.api.unmanaged_devices_api import (
+    UnmanagedDevicesApi as UnmanagedDevicesApi,
+)
+from tl_ninjarmm.api.users_api import UsersApi as UsersApi
+from tl_ninjarmm.api.vulnerability_management_api import (
+    VulnerabilityManagementApi as VulnerabilityManagementApi,
+)
+from tl_ninjarmm.api.devices_api import DevicesApi as DevicesApi
+from tl_ninjarmm.api.groups_api import GroupsApi as GroupsApi
+from tl_ninjarmm.api.management_api import ManagementApi as ManagementApi
+from tl_ninjarmm.api.organization_api import OrganizationApi as OrganizationApi
+from tl_ninjarmm.api.queries_api import QueriesApi as QueriesApi
 from tl_ninjarmm.api.system_api import SystemApi as SystemApi
+from tl_ninjarmm.api.ticketing_api import TicketingApi as TicketingApi
+from tl_ninjarmm.api.webhooks_api import WebhooksApi as WebhooksApi
 
 # import ApiClient
 from tl_ninjarmm.api_response import ApiResponse as ApiResponse
@@ -114,7 +206,39 @@ from tl_ninjarmm.models.attribute_public_api_dto import (
 from tl_ninjarmm.models.automation_script import AutomationScript as AutomationScript
 from tl_ninjarmm.models.backup_usage import BackupUsage as BackupUsage
 from tl_ninjarmm.models.contact import Contact as Contact
+from tl_ninjarmm.models.contact_patch_request import (
+    ContactPatchRequest as ContactPatchRequest,
+)
+from tl_ninjarmm.models.create_contact_request import (
+    CreateContactRequest as CreateContactRequest,
+)
+from tl_ninjarmm.models.create_end_user_request import (
+    CreateEndUserRequest as CreateEndUserRequest,
+)
+from tl_ninjarmm.models.create_technician_request import (
+    CreateTechnicianRequest as CreateTechnicianRequest,
+)
+from tl_ninjarmm.models.credential_reference import (
+    CredentialReference as CredentialReference,
+)
+from tl_ninjarmm.models.custom_field_policy_condition_response import (
+    CustomFieldPolicyConditionResponse as CustomFieldPolicyConditionResponse,
+)
+from tl_ninjarmm.models.custom_fields_policy_condition_create_request import (
+    CustomFieldsPolicyConditionCreateRequest as CustomFieldsPolicyConditionCreateRequest,
+)
 from tl_ninjarmm.models.device import Device as Device
+from tl_ninjarmm.models.device_credential_options import (
+    DeviceCredentialOptions as DeviceCredentialOptions,
+)
+from tl_ninjarmm.models.device_id_list import DeviceIDList as DeviceIDList
+from tl_ninjarmm.models.device_link import DeviceLink as DeviceLink
+from tl_ninjarmm.models.device_mutable_properties import (
+    DeviceMutableProperties as DeviceMutableProperties,
+)
+from tl_ninjarmm.models.device_scripting_options import (
+    DeviceScriptingOptions as DeviceScriptingOptions,
+)
 from tl_ninjarmm.models.device_search_match import (
     DeviceSearchMatch as DeviceSearchMatch,
 )
@@ -125,14 +249,26 @@ from tl_ninjarmm.models.end_user import EndUser as EndUser
 from tl_ninjarmm.models.end_user_customization import (
     EndUserCustomization as EndUserCustomization,
 )
+from tl_ninjarmm.models.end_user_patch_request import (
+    EndUserPatchRequest as EndUserPatchRequest,
+)
 from tl_ninjarmm.models.feature_settings import FeatureSettings as FeatureSettings
+from tl_ninjarmm.models.generate_installer_request_dto import (
+    GenerateInstallerRequestDto as GenerateInstallerRequestDto,
+)
 from tl_ninjarmm.models.group import Group as Group
+from tl_ninjarmm.models.installer_content import InstallerContent as InstallerContent
 from tl_ninjarmm.models.job import Job as Job
+from tl_ninjarmm.models.link import Link as Link
 from tl_ninjarmm.models.location import Location as Location
+from tl_ninjarmm.models.location_model import LocationModel as LocationModel
 from tl_ninjarmm.models.location_with_organization_ref import (
     LocationWithOrganizationRef as LocationWithOrganizationRef,
 )
 from tl_ninjarmm.models.maintenance import Maintenance as Maintenance
+from tl_ninjarmm.models.maintenance_settings import (
+    MaintenanceSettings as MaintenanceSettings,
+)
 from tl_ninjarmm.models.node_references import NodeReferences as NodeReferences
 from tl_ninjarmm.models.node_role import NodeRole as NodeRole
 from tl_ninjarmm.models.node_role_policy_assignment import (
@@ -149,15 +285,57 @@ from tl_ninjarmm.models.organization import Organization as Organization
 from tl_ninjarmm.models.organization_detailed import (
     OrganizationDetailed as OrganizationDetailed,
 )
+from tl_ninjarmm.models.organization_model import OrganizationModel as OrganizationModel
 from tl_ninjarmm.models.organization_settings import (
     OrganizationSettings as OrganizationSettings,
 )
+from tl_ninjarmm.models.organization_with_locations_and_policy_assignments_model import (
+    OrganizationWithLocationsAndPolicyAssignmentsModel as OrganizationWithLocationsAndPolicyAssignmentsModel,
+)
 from tl_ninjarmm.models.policy import Policy as Policy
+from tl_ninjarmm.models.policy_condition_custom_field import (
+    PolicyConditionCustomField as PolicyConditionCustomField,
+)
+from tl_ninjarmm.models.policy_condition_inheritance_status import (
+    PolicyConditionInheritanceStatus as PolicyConditionInheritanceStatus,
+)
+from tl_ninjarmm.models.policy_condition_script import (
+    PolicyConditionScript as PolicyConditionScript,
+)
+from tl_ninjarmm.models.policy_condition_script_variable import (
+    PolicyConditionScriptVariable as PolicyConditionScriptVariable,
+)
+from tl_ninjarmm.models.policy_info import PolicyInfo as PolicyInfo
+from tl_ninjarmm.models.reboot_request import RebootRequest as RebootRequest
 from tl_ninjarmm.models.role_member import RoleMember as RoleMember
+from tl_ninjarmm.models.run_script_request import RunScriptRequest as RunScriptRequest
 from tl_ninjarmm.models.scheduled_task import ScheduledTask as ScheduledTask
+from tl_ninjarmm.models.script import Script as Script
+from tl_ninjarmm.models.script_category import ScriptCategory as ScriptCategory
 from tl_ninjarmm.models.script_variable import ScriptVariable as ScriptVariable
 from tl_ninjarmm.models.software_product import SoftwareProduct as SoftwareProduct
 from tl_ninjarmm.models.technician import Technician as Technician
+from tl_ninjarmm.models.update_technician_request import (
+    UpdateTechnicianRequest as UpdateTechnicianRequest,
+)
 from tl_ninjarmm.models.user import User as User
 from tl_ninjarmm.models.user_role import UserRole as UserRole
 from tl_ninjarmm.models.warranty_dates import WarrantyDates as WarrantyDates
+from tl_ninjarmm.models.windows_event_policy_condition_create_request import (
+    WindowsEventPolicyConditionCreateRequest as WindowsEventPolicyConditionCreateRequest,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_occurrence import (
+    WindowsEventPolicyConditionOccurrence as WindowsEventPolicyConditionOccurrence,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_response import (
+    WindowsEventPolicyConditionResponse as WindowsEventPolicyConditionResponse,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_text import (
+    WindowsEventPolicyConditionText as WindowsEventPolicyConditionText,
+)
+from tl_ninjarmm.models.windows_service_configuration import (
+    WindowsServiceConfiguration as WindowsServiceConfiguration,
+)
+from tl_ninjarmm.models.windows_service_control_request import (
+    WindowsServiceControlRequest as WindowsServiceControlRequest,
+)
