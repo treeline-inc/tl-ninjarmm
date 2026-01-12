@@ -35,19 +35,43 @@ from tl_ninjarmm.models.attribute_public_api_dto import AttributePublicApiDTO
 from tl_ninjarmm.models.automation_script import AutomationScript
 from tl_ninjarmm.models.backup_usage import BackupUsage
 from tl_ninjarmm.models.contact import Contact
+from tl_ninjarmm.models.contact_patch_request import ContactPatchRequest
+from tl_ninjarmm.models.create_contact_request import CreateContactRequest
+from tl_ninjarmm.models.create_end_user_request import CreateEndUserRequest
+from tl_ninjarmm.models.create_technician_request import CreateTechnicianRequest
+from tl_ninjarmm.models.credential_reference import CredentialReference
+from tl_ninjarmm.models.custom_field_policy_condition_response import (
+    CustomFieldPolicyConditionResponse,
+)
+from tl_ninjarmm.models.custom_fields_policy_condition_create_request import (
+    CustomFieldsPolicyConditionCreateRequest,
+)
 from tl_ninjarmm.models.device import Device
+from tl_ninjarmm.models.device_credential_options import DeviceCredentialOptions
+from tl_ninjarmm.models.device_id_list import DeviceIDList
+from tl_ninjarmm.models.device_link import DeviceLink
+from tl_ninjarmm.models.device_mutable_properties import DeviceMutableProperties
+from tl_ninjarmm.models.device_scripting_options import DeviceScriptingOptions
 from tl_ninjarmm.models.device_search_match import DeviceSearchMatch
 from tl_ninjarmm.models.device_search_results import DeviceSearchResults
 from tl_ninjarmm.models.end_user import EndUser
 from tl_ninjarmm.models.end_user_customization import EndUserCustomization
+from tl_ninjarmm.models.end_user_patch_request import EndUserPatchRequest
 from tl_ninjarmm.models.feature_settings import FeatureSettings
+from tl_ninjarmm.models.generate_installer_request_dto import (
+    GenerateInstallerRequestDto,
+)
 from tl_ninjarmm.models.group import Group
+from tl_ninjarmm.models.installer_content import InstallerContent
 from tl_ninjarmm.models.job import Job
+from tl_ninjarmm.models.link import Link
 from tl_ninjarmm.models.location import Location
+from tl_ninjarmm.models.location_model import LocationModel
 from tl_ninjarmm.models.location_with_organization_ref import (
     LocationWithOrganizationRef,
 )
 from tl_ninjarmm.models.maintenance import Maintenance
+from tl_ninjarmm.models.maintenance_settings import MaintenanceSettings
 from tl_ninjarmm.models.node_references import NodeReferences
 from tl_ninjarmm.models.node_role import NodeRole
 from tl_ninjarmm.models.node_role_policy_assignment import NodeRolePolicyAssignment
@@ -56,13 +80,47 @@ from tl_ninjarmm.models.note import Note
 from tl_ninjarmm.models.notification_channel import NotificationChannel
 from tl_ninjarmm.models.organization import Organization
 from tl_ninjarmm.models.organization_detailed import OrganizationDetailed
+from tl_ninjarmm.models.organization_model import OrganizationModel
 from tl_ninjarmm.models.organization_settings import OrganizationSettings
+from tl_ninjarmm.models.organization_with_locations_and_policy_assignments_model import (
+    OrganizationWithLocationsAndPolicyAssignmentsModel,
+)
 from tl_ninjarmm.models.policy import Policy
+from tl_ninjarmm.models.policy_condition_custom_field import PolicyConditionCustomField
+from tl_ninjarmm.models.policy_condition_inheritance_status import (
+    PolicyConditionInheritanceStatus,
+)
+from tl_ninjarmm.models.policy_condition_script import PolicyConditionScript
+from tl_ninjarmm.models.policy_condition_script_variable import (
+    PolicyConditionScriptVariable,
+)
+from tl_ninjarmm.models.policy_info import PolicyInfo
+from tl_ninjarmm.models.reboot_request import RebootRequest
 from tl_ninjarmm.models.role_member import RoleMember
+from tl_ninjarmm.models.run_script_request import RunScriptRequest
 from tl_ninjarmm.models.scheduled_task import ScheduledTask
+from tl_ninjarmm.models.script import Script
+from tl_ninjarmm.models.script_category import ScriptCategory
 from tl_ninjarmm.models.script_variable import ScriptVariable
 from tl_ninjarmm.models.software_product import SoftwareProduct
 from tl_ninjarmm.models.technician import Technician
+from tl_ninjarmm.models.update_technician_request import UpdateTechnicianRequest
 from tl_ninjarmm.models.user import User
 from tl_ninjarmm.models.user_role import UserRole
 from tl_ninjarmm.models.warranty_dates import WarrantyDates
+from tl_ninjarmm.models.windows_event_policy_condition_create_request import (
+    WindowsEventPolicyConditionCreateRequest,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_occurrence import (
+    WindowsEventPolicyConditionOccurrence,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_response import (
+    WindowsEventPolicyConditionResponse,
+)
+from tl_ninjarmm.models.windows_event_policy_condition_text import (
+    WindowsEventPolicyConditionText,
+)
+from tl_ninjarmm.models.windows_service_configuration import WindowsServiceConfiguration
+from tl_ninjarmm.models.windows_service_control_request import (
+    WindowsServiceControlRequest,
+)
