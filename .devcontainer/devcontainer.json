@@ -41,11 +41,12 @@
 	// "forwardPorts": [],
 
 	// Configure tool-specific properties.
-	"runArgs": ["--env-file",".devcontainer/.env.dev"],
+	"runArgs": [],
 	"containerEnv": {
 		"HISTFILE": "/persistent-cache/.zsh_history",
 		"_ZO_DATA_DIR": "/persistent-cache/.zoxide",
 	},
+	"initializeCommand": "mkdir -p ~/.config/graphite",
 	"postCreateCommand": "npm install -g @openapitools/openapi-generator-cli@2.17.0 @withgraphite/graphite-cli@stable",
 	"postStartCommand": "./.devcontainer/postStart.sh",
 	"customizations": {
@@ -57,7 +58,8 @@
 		}
 	},
 	"mounts": [
-		"source=ninjarmm-dev-env-cache,target=/persistent-cache,type=volume"
+		"source=ninjarmm-dev-env-cache,target=/persistent-cache,type=volume",
+		"source=${localEnv:HOME}/.config/graphite,target=/home/vscode/.config/graphite,type=bind,consistency=cached"
 	]
 
 
