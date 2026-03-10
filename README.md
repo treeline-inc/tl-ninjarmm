@@ -16,6 +16,9 @@ The library supports automatic OAuth2 token refresh using the client credentials
 3. Automatically refresh the token when it expires
 4. Update the configuration with the new token
 
+Alternatively, it is also an option to pass in an oauth2 session on instantiation, in which case it will be used in the same manner.
+Look at the [docs](https://requests-oauthlib.readthedocs.io/en/latest/oauth2_workflow.html#all-define-the-token-token-saver-and-needed-credentials) to see how to create one based on tokens.
+
 ### Example Usage
 
 ```python
