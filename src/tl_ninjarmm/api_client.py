@@ -23,8 +23,9 @@ import re
 import tempfile
 import time
 
+from collections.abc import Callable
 from urllib.parse import quote
-from typing import Tuple, Optional, List, Dict, Union
+from typing import Any, Tuple, Optional, List, Dict, Union
 
 from oauthlib.oauth2 import BackendApplicationClient
 from pydantic import SecretStr
@@ -41,6 +42,7 @@ from tl_ninjarmm.exceptions import (
 
 RequestSerialized = Tuple[str, str, Dict[str, str], Optional[str], List[str]]
 
+GetTokenFunc = Callable[[datetime.timedelta], Dict[str, Any]]
 
 class ApiClient:
     """Generic API client for OpenAPI client library builds.
@@ -79,19 +81,23 @@ class ApiClient:
         header_value: str | None = None,
         cookie: str | None = None,
         # Treeline Change
-        oauth_session: OAuth2Session | None = None,
+        get_token: GetTokenFunc | None = None
     ) -> None:
         # Treeline Change (all of the oauth logic)
-        can_do_token_exchange = (
-            configuration.client_id and configuration.client_secret) or oauth_session is not None
-        if not can_do_token_exchange:
+        can_get_tokens = (
+            configuration.client_id and configuration.client_secret) or get_token is not None
+        if not can_get_tokens:
             raise ValueError(
                 "Client ID and client secret are required or an OAuth2 session is required to refresh tokens")
         self.configuration: Configuration = configuration
 
         # Initialize OAuth2 session for token fetching (but not for requests)
         self.token_url = f"{configuration.host}/ws/oauth/token"
-        if oauth_session is None:
+        if get_token is not None:
+            self.get_token = get_token
+            self.oauth_session = None
+        else:
+            self.get_token = None
             self.oauth_session = OAuth2Session(
                 client=BackendApplicationClient(
                     client_id=configuration.client_id,
@@ -124,12 +130,16 @@ class ApiClient:
         if not self._needs_refresh():
             return
 
-        self._token = self.oauth_session.fetch_token(
-            token_url=self.token_url,
-            client_id=self.configuration.client_id,
-            client_secret=self.configuration.client_secret,
-            scope=self.configuration.token_scope or "monitoring",
-        )
+        if self.get_token is not None:
+            self._token = self.get_token(datetime.timedelta(seconds=self._TOKEN_SKEW))
+        else:
+            self._token = self.oauth_session.fetch_token(
+                token_url=self.token_url,
+                client_id=self.configuration.client_id,
+                client_secret=self.configuration.client_secret,
+                scope=self.configuration.token_scope or "monitoring",
+            )
+
         self.configuration.access_token = (
             self._token.get("access_token")
             if self._token and isinstance(self._token, dict)

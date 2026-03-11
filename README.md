@@ -16,8 +16,7 @@ The library supports automatic OAuth2 token refresh using the client credentials
 3. Automatically refresh the token when it expires
 4. Update the configuration with the new token
 
-Alternatively, it is also an option to pass in an oauth2 session on instantiation, in which case it will be used in the same manner.
-Look at the [docs](https://requests-oauthlib.readthedocs.io/en/latest/oauth2_workflow.html#all-define-the-token-token-saver-and-needed-credentials) to see how to create one based on tokens.
+Alternatively, it is also an option to pass in a function that takes in a time skew and returns a token that will be valid for at least that long to handle refreshing externally.
 
 ### Example Usage
 
@@ -37,6 +36,13 @@ config = Configuration(
 # Create API client with automatic token refresh
 api_client = ApiClient(configuration=config)
 system_api = SystemApi(api_client=api_client)
+
+# Or alternatively pass in a function of your own to handle token refresh
+def get_token(skew: timedelta):
+    if _my_token.is_expired(skew):
+        # refresh token
+    return _my_token
+api_client = ApiClient(configuration=config, get_token=get_token)
 
 # Make API calls - tokens are automatically refreshed when needed
 devices = system_api.get_devices(page_size=10)
