@@ -78,21 +78,28 @@ class ApiClient:
         header_name: str | None = None,
         header_value: str | None = None,
         cookie: str | None = None,
+        # Treeline Change
+        oauth_session: OAuth2Session | None = None,
     ) -> None:
-        if not (configuration.client_id and configuration.client_secret):
-            raise ValueError("Client ID and client secret are required")
+        # Treeline Change (all of the oauth logic)
+        can_do_token_exchange = (
+            configuration.client_id and configuration.client_secret) or oauth_session is not None
+        if not can_do_token_exchange:
+            raise ValueError(
+                "Client ID and client secret are required or an OAuth2 session is required to refresh tokens")
         self.configuration: Configuration = configuration
 
         # Initialize OAuth2 session for token fetching (but not for requests)
         self.token_url = f"{configuration.host}/ws/oauth/token"
-        self.oauth_session = OAuth2Session(
-            client=BackendApplicationClient(
-                client_id=configuration.client_id,
-                scope=configuration.token_scope
-                if configuration.token_scope is not None
-                else "monitoring",
+        if oauth_session is None:
+            self.oauth_session = OAuth2Session(
+                client=BackendApplicationClient(
+                    client_id=configuration.client_id,
+                    scope=configuration.token_scope
+                    if configuration.token_scope is not None
+                    else "monitoring",
+                )
             )
-        )
         self._token = None
 
         self.rest_client = rest.RESTClientObject(configuration)
@@ -211,6 +218,7 @@ class ApiClient:
         :return: tuple of form (path, http_method, query_params, header_params,
             body, post_params, files)
         """
+        # Treeline Change
         # Check if access token needs to be refreshed using OAuth2
         self._refresh_token_if_needed()
 
