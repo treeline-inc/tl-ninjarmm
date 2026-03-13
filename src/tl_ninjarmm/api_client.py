@@ -44,6 +44,7 @@ RequestSerialized = Tuple[str, str, Dict[str, str], Optional[str], List[str]]
 
 GetTokenFunc = Callable[[datetime.timedelta], Dict[str, Any]]
 
+
 class ApiClient:
     """Generic API client for OpenAPI client library builds.
 
@@ -81,14 +82,16 @@ class ApiClient:
         header_value: str | None = None,
         cookie: str | None = None,
         # Treeline Change
-        get_token: GetTokenFunc | None = None
+        get_token: GetTokenFunc | None = None,
     ) -> None:
         # Treeline Change (all of the oauth logic)
         can_get_tokens = (
-            configuration.client_id and configuration.client_secret) or get_token is not None
+            configuration.client_id and configuration.client_secret
+        ) or get_token is not None
         if not can_get_tokens:
             raise ValueError(
-                "Client ID and client secret are required or an OAuth2 session is required to refresh tokens")
+                "Client ID and client secret are required or an OAuth2 session is required to refresh tokens"
+            )
         self.configuration: Configuration = configuration
 
         # Initialize OAuth2 session for token fetching (but not for requests)
