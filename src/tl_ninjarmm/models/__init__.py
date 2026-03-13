@@ -17,6 +17,8 @@ Do not edit the class manually.
 from tl_ninjarmm.models.activities_response import ActivitiesResponse
 from tl_ninjarmm.models.activity import Activity
 from tl_ninjarmm.models.alert import Alert
+from tl_ninjarmm.models.antivirus_status_report import AntivirusStatusReport
+from tl_ninjarmm.models.antivirus_threats_report import AntivirusThreatsReport
 from tl_ninjarmm.models.application import Application
 from tl_ninjarmm.models.attribute_content import AttributeContent
 from tl_ninjarmm.models.attribute_content_advanced_settings import (
@@ -33,14 +35,19 @@ from tl_ninjarmm.models.attribute_content_advanced_settings_numeric_range import
 )
 from tl_ninjarmm.models.attribute_content_value import AttributeContentValue
 from tl_ninjarmm.models.attribute_public_api_dto import AttributePublicApiDTO
+from tl_ninjarmm.models.attribute_value_updated_by_info import (
+    AttributeValueUpdatedByInfo,
+)
 from tl_ninjarmm.models.automation_script import AutomationScript
 from tl_ninjarmm.models.backup_usage import BackupUsage
+from tl_ninjarmm.models.computer_systems_report import ComputerSystemsReport
 from tl_ninjarmm.models.contact import Contact
 from tl_ninjarmm.models.contact_patch_request import ContactPatchRequest
 from tl_ninjarmm.models.create_contact_request import CreateContactRequest
 from tl_ninjarmm.models.create_end_user_request import CreateEndUserRequest
 from tl_ninjarmm.models.create_technician_request import CreateTechnicianRequest
 from tl_ninjarmm.models.credential_reference import CredentialReference
+from tl_ninjarmm.models.cursor import Cursor
 from tl_ninjarmm.models.custom_field_policy_condition_response import (
     CustomFieldPolicyConditionResponse,
 )
@@ -48,14 +55,34 @@ from tl_ninjarmm.models.custom_fields_policy_condition_create_request import (
     CustomFieldsPolicyConditionCreateRequest,
 )
 from tl_ninjarmm.models.device import Device
+from tl_ninjarmm.models.device_antivirus_status import DeviceAntivirusStatus
+from tl_ninjarmm.models.device_antivirus_threat import DeviceAntivirusThreat
+from tl_ninjarmm.models.device_application import DeviceApplication
+from tl_ninjarmm.models.device_computer_system import DeviceComputerSystem
 from tl_ninjarmm.models.device_credential_options import DeviceCredentialOptions
+from tl_ninjarmm.models.device_disk_drive import DeviceDiskDrive
+from tl_ninjarmm.models.device_health_report import DeviceHealthReport
+from tl_ninjarmm.models.device_health_summary import DeviceHealthSummary
 from tl_ninjarmm.models.device_id_list import DeviceIDList
 from tl_ninjarmm.models.device_link import DeviceLink
+from tl_ninjarmm.models.device_logged_on_user import DeviceLoggedOnUser
 from tl_ninjarmm.models.device_mutable_properties import DeviceMutableProperties
+from tl_ninjarmm.models.device_network_interfaces import DeviceNetworkInterfaces
+from tl_ninjarmm.models.device_os_patch import DeviceOSPatch
+from tl_ninjarmm.models.device_operating_system import DeviceOperatingSystem
+from tl_ninjarmm.models.device_policy_overrides import DevicePolicyOverrides
+from tl_ninjarmm.models.device_processor import DeviceProcessor
+from tl_ninjarmm.models.device_raid_controller import DeviceRAIDController
+from tl_ninjarmm.models.device_raid_drive import DeviceRAIDDrive
 from tl_ninjarmm.models.device_scripting_options import DeviceScriptingOptions
 from tl_ninjarmm.models.device_search_match import DeviceSearchMatch
 from tl_ninjarmm.models.device_search_results import DeviceSearchResults
+from tl_ninjarmm.models.device_software_patch import DeviceSoftwarePatch
+from tl_ninjarmm.models.device_usage_report import DeviceUsageReport
+from tl_ninjarmm.models.device_volume import DeviceVolume
+from tl_ninjarmm.models.device_windows_service import DeviceWindowsService
 from tl_ninjarmm.models.disk_drive import DiskDrive
+from tl_ninjarmm.models.disk_drive_report import DiskDriveReport
 from tl_ninjarmm.models.end_user import EndUser
 from tl_ninjarmm.models.end_user_customization import EndUserCustomization
 from tl_ninjarmm.models.end_user_patch_request import EndUserPatchRequest
@@ -73,10 +100,19 @@ from tl_ninjarmm.models.location_with_organization_ref import (
     LocationWithOrganizationRef,
 )
 from tl_ninjarmm.models.logged_on_user import LoggedOnUser
+from tl_ninjarmm.models.logged_on_users_report import LoggedOnUsersReport
 from tl_ninjarmm.models.maintenance import Maintenance
 from tl_ninjarmm.models.maintenance_settings import MaintenanceSettings
 from tl_ninjarmm.models.network_interface import NetworkInterface
+from tl_ninjarmm.models.network_interfaces_report import NetworkInterfacesReport
 from tl_ninjarmm.models.node_activities_response import NodeActivitiesResponse
+from tl_ninjarmm.models.node_attribute_info import NodeAttributeInfo
+from tl_ninjarmm.models.node_attributes import NodeAttributes
+from tl_ninjarmm.models.node_attributes_detailed import NodeAttributesDetailed
+from tl_ninjarmm.models.node_attributes_detailed_report import (
+    NodeAttributesDetailedReport,
+)
+from tl_ninjarmm.models.node_attributes_report import NodeAttributesReport
 from tl_ninjarmm.models.node_references import NodeReferences
 from tl_ninjarmm.models.node_role import NodeRole
 from tl_ninjarmm.models.node_role_policy_assignment import NodeRolePolicyAssignment
@@ -84,6 +120,8 @@ from tl_ninjarmm.models.node_with_detailed_references import NodeWithDetailedRef
 from tl_ninjarmm.models.note import Note
 from tl_ninjarmm.models.notification_channel import NotificationChannel
 from tl_ninjarmm.models.os_patch import OSPatch
+from tl_ninjarmm.models.os_patch_report import OSPatchReport
+from tl_ninjarmm.models.operating_systems_report import OperatingSystemsReport
 from tl_ninjarmm.models.organization import Organization
 from tl_ninjarmm.models.organization_detailed import OrganizationDetailed
 from tl_ninjarmm.models.organization_model import OrganizationModel
@@ -102,22 +140,36 @@ from tl_ninjarmm.models.policy_condition_script_variable import (
 )
 from tl_ninjarmm.models.policy_info import PolicyInfo
 from tl_ninjarmm.models.policy_overrides import PolicyOverrides
+from tl_ninjarmm.models.policy_overrides_report import PolicyOverridesReport
 from tl_ninjarmm.models.processor import Processor
+from tl_ninjarmm.models.processor_report import ProcessorReport
+from tl_ninjarmm.models.raid_controller_report import RAIDControllerReport
+from tl_ninjarmm.models.raid_drive_report import RAIDDriveReport
 from tl_ninjarmm.models.reboot_request import RebootRequest
 from tl_ninjarmm.models.role_member import RoleMember
 from tl_ninjarmm.models.run_script_request import RunScriptRequest
 from tl_ninjarmm.models.scheduled_task import ScheduledTask
+from tl_ninjarmm.models.scoped_attributes import ScopedAttributes
+from tl_ninjarmm.models.scoped_attributes_detailed import ScopedAttributesDetailed
+from tl_ninjarmm.models.scoped_attributes_detailed_report import (
+    ScopedAttributesDetailedReport,
+)
+from tl_ninjarmm.models.scoped_attributes_report import ScopedAttributesReport
 from tl_ninjarmm.models.script import Script
 from tl_ninjarmm.models.script_category import ScriptCategory
 from tl_ninjarmm.models.script_variable import ScriptVariable
 from tl_ninjarmm.models.software_patch import SoftwarePatch
+from tl_ninjarmm.models.software_patch_report import SoftwarePatchReport
 from tl_ninjarmm.models.software_product import SoftwareProduct
+from tl_ninjarmm.models.software_report import SoftwareReport
 from tl_ninjarmm.models.technician import Technician
 from tl_ninjarmm.models.update_technician_request import UpdateTechnicianRequest
 from tl_ninjarmm.models.user import User
+from tl_ninjarmm.models.user_basic_info import UserBasicInfo
 from tl_ninjarmm.models.user_role import UserRole
 from tl_ninjarmm.models.volume import Volume
 from tl_ninjarmm.models.volume_bit_locker_status import VolumeBitLockerStatus
+from tl_ninjarmm.models.volumes_report import VolumesReport
 from tl_ninjarmm.models.warranty_dates import WarrantyDates
 from tl_ninjarmm.models.windows_event_policy_condition_create_request import (
     WindowsEventPolicyConditionCreateRequest,
@@ -136,3 +188,4 @@ from tl_ninjarmm.models.windows_service_configuration import WindowsServiceConfi
 from tl_ninjarmm.models.windows_service_control_request import (
     WindowsServiceControlRequest,
 )
+from tl_ninjarmm.models.windows_service_report import WindowsServiceReport
