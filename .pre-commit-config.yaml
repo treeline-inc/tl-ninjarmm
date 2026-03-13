@@ -8,3 +8,17 @@ repos:
         args: [ --fix ]
       # Run the formatter.
       - id: ruff-format
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Remove trailing whitespace
+      - id: trailing-whitespace
+        stages: [pre-commit] # Base config includes manual, but we don't want it here
+        # Apply to all text files, but commonly used for Python as well
+        # If you really want only Python files, add `files: \.py$`
+        # but trailing whitespace is often undesirable in all files.
+        files: ".*"
+      # Check that files end with a newline (good practice for all files)
+      - id: end-of-file-fixer
+        stages: [pre-commit] # Base config includes manual, but we don't want it here
+        files: ".*"

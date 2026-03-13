@@ -289,7 +289,7 @@ paths:
       tags:
       - management
       summary: Delete policy condition
-      description: Deletes specified policy condition from specified agent 
+      description: Deletes specified policy condition from specified agent
         policy
       operationId: deletePolicyCondition
       parameters:
@@ -372,7 +372,7 @@ paths:
       tags:
       - webhooks
       summary: Update API Webhook configuration
-      description: Creates or updates Webhook configuration for current 
+      description: Creates or updates Webhook configuration for current
         application/client
       operationId: configureWebhook
       requestBody:
@@ -953,7 +953,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a map of content ids and their corresponding 
+          description: Returns a map of content ids and their corresponding
             signed urls
           content:
             application/json:
@@ -1070,7 +1070,7 @@ paths:
       tags:
       - Organization Documents
       summary: Create organization document
-      description: Creates an organization document and returns the document 
+      description: Creates an organization document and returns the document
         created
       operationId: createOrganizationDocument
       parameters:
@@ -1149,7 +1149,7 @@ paths:
       tags:
       - Organization Documents
       summary: Create organization documents
-      description: Creates organization documents and returns the documents 
+      description: Creates organization documents and returns the documents
         created
       operationId: createOrganizationDocuments
       requestBody:
@@ -1162,7 +1162,7 @@ paths:
                   #/components/schemas/ClientDocumentWithAttributeValuesBulkCreatePublicApiRequest
       responses:
         '200':
-          description: Returns a list of created organization documents with 
+          description: Returns a list of created organization documents with
             field values
           content:
             application/json:
@@ -1175,7 +1175,7 @@ paths:
       tags:
       - Organization Documents
       summary: Update organization documents
-      description: Updates organization documents and returns the documents 
+      description: Updates organization documents and returns the documents
         updated
       operationId: updateOrganizationDocuments
       requestBody:
@@ -1188,7 +1188,7 @@ paths:
                   #/components/schemas/ClientDocumentWithAttributeValuesBulkUpdatePublicApiRequest
       responses:
         '200':
-          description: Returns a list of updated organization documents with 
+          description: Returns a list of updated organization documents with
             field values
           content:
             application/json:
@@ -1230,7 +1230,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a map of content ids and their corresponding 
+          description: Returns a map of content ids and their corresponding
             signed urls
           content:
             application/json:
@@ -1253,7 +1253,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a list of organization documents with field 
+          description: Returns a list of organization documents with field
             values
           content:
             application/json:
@@ -1315,7 +1315,7 @@ paths:
       tags:
       - Organization Documents
       summary: Update organization document
-      description: Updates an organization document and returns the updated 
+      description: Updates an organization document and returns the updated
         version
       operationId: updateOrganizationDocument
       parameters:
@@ -1941,7 +1941,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a map of content ids and their corresponding 
+          description: Returns a map of content ids and their corresponding
             signed urls
           content:
             application/json:
@@ -2116,7 +2116,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a map of content ids and their corresponding 
+          description: Returns a map of content ids and their corresponding
             signed urls
           content:
             application/json:
@@ -2398,7 +2398,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns a map of content ids and their corresponding 
+          description: Returns a map of content ids and their corresponding
             signed urls
           content:
             application/json:
@@ -2409,7 +2409,7 @@ paths:
       tags:
       - Related Items
       summary: List host entity related items by scope
-      description: List related items for a specific host entity filterable by 
+      description: List related items for a specific host entity filterable by
         scope
       operationId: getRelatedItemsForHostEntity
       parameters:
@@ -2442,7 +2442,7 @@ paths:
           - HOSTED_BY
       responses:
         '200':
-          description: Returns list of the related items for an entity 
+          description: Returns list of the related items for an entity
             filterable by scope
           content:
             application/json:
@@ -2483,7 +2483,7 @@ paths:
           format: int32
       responses:
         '200':
-          description: Returns list of the related items for a specific related 
+          description: Returns list of the related items for a specific related
             entity
           content:
             application/json:
@@ -2548,7 +2548,7 @@ paths:
           - END_USER
       responses:
         '200':
-          description: Returns a list of relations and references for an entity 
+          description: Returns a list of relations and references for an entity
             type
           content:
             application/json:
@@ -2600,7 +2600,7 @@ paths:
         '202':
           description: The Unmanaged Device was successfully updated
         '404':
-          description: An Unmanaged Device with the provided nodeId was not 
+          description: An Unmanaged Device with the provided nodeId was not
             found
     delete:
       tags:
@@ -2619,7 +2619,7 @@ paths:
         '200':
           description: The Unmanaged Device was successfully deleted
         '404':
-          description: An Unmanaged Device with the provided nodeId was not 
+          description: An Unmanaged Device with the provided nodeId was not
             found
   /v2/backup/integrity-check-jobs:
     get:
@@ -2656,7 +2656,7 @@ paths:
           type: string
       - name: include
         in: query
-        description: Which devices include (active|deleted|all) default value 
+        description: Which devices include (active|deleted|all) default value
           active.
         schema:
           type: string
@@ -2795,7 +2795,7 @@ paths:
       - Custom Tabs
       summary: Retrieve the requested tab along with any extensions for end-user
         tabs
-      description: Retrieve the requested tab along with any extensions for 
+      description: Retrieve the requested tab along with any extensions for
         end-user tabs
       operationId: getTabHierarchyForEndUser
       parameters:
@@ -2881,7 +2881,7 @@ paths:
     get:
       tags:
       - Custom Tabs
-      summary: Retrieve all of the custom tabs available to organizations and 
+      summary: Retrieve all of the custom tabs available to organizations and
         locations
       description: Retrieve a summary of the tabs available to organizations and
         locations
@@ -2895,7 +2895,7 @@ paths:
     get:
       tags:
       - Custom Tabs
-      summary: Retrieve all of the custom tabs that would appear for the given 
+      summary: Retrieve all of the custom tabs that would appear for the given
         role
       description: Retrieve a summary of the tabs available to a given role
       operationId: getTabSummaryForRole
@@ -3237,7 +3237,7 @@ paths:
       summary: Upload CSV
       description: >-
         Upload CSV to an existing scan group. The uploaded CSV must contain the
-        columns defined in the 
+        columns defined in the
 
         scan group which map to the Ninja machine identifier (hostname, IP
         address, or MAC address) and the CVE ID.
@@ -3448,14 +3448,14 @@ paths:
           format: int32
       - name: olderThan
         in: query
-        description: Return activities recorded that are newer than specified 
+        description: Return activities recorded that are newer than specified
           activity ID
         schema:
           type: integer
           format: int32
       - name: newerThan
         in: query
-        description: Return activities recorded that are older than specified 
+        description: Return activities recorded that are older than specified
           activity ID
         schema:
           type: integer
@@ -3507,7 +3507,7 @@ paths:
       tags:
       - devices
       summary: Device alerts (triggered conditions)
-      description: Returns list of active alerts (triggered conditions) for 
+      description: Returns list of active alerts (triggered conditions) for
         device
       operationId: getDeviceAlerts
       parameters:
@@ -3746,7 +3746,7 @@ paths:
       tags:
       - devices
       summary: OS Patches
-      description: Returns list of pending/rejected/approved OS patches for 
+      description: Returns list of pending/rejected/approved OS patches for
         device
       operationId: getDevicePendingFailedRejectedOSPatches
       parameters:
@@ -4423,7 +4423,7 @@ paths:
       tags:
       - management
       summary: Generate installer
-      description: Generates and returns URL for installer with specified 
+      description: Generates and returns URL for installer with specified
         settings
       operationId: getInstaller
       requestBody:
@@ -4828,7 +4828,7 @@ paths:
       tags:
       - queries
       summary: Antivirus status report
-      description: Returns list of statues of antivirus software installed on 
+      description: Returns list of statues of antivirus software installed on
         devices
       operationId: getAntivirusStatusReport
       parameters:
@@ -5161,7 +5161,7 @@ paths:
       tags:
       - queries
       summary: OS Patch installation report
-      description: Returns patch installation history records (successful and 
+      description: Returns patch installation history records (successful and
         failed)
       operationId: getInstalledOSPatches
       parameters:
@@ -5377,7 +5377,7 @@ paths:
       tags:
       - queries
       summary: 'Pending, Failed and Rejected OS patches report'
-      description: Returns list of OS patches for which there were no 
+      description: Returns list of OS patches for which there were no
         installation attempts
       operationId: getPendingFailedRejectedOSPatches
       parameters:
@@ -5999,14 +5999,14 @@ paths:
           type: string
       - name: olderThan
         in: query
-        description: Return activities recorded that are newer than specified 
+        description: Return activities recorded that are newer than specified
           activity ID
         schema:
           type: integer
           format: int64
       - name: newerThan
         in: query
-        description: Return activities recorded that are older than specified 
+        description: Return activities recorded that are older than specified
           activity ID
         schema:
           type: integer
@@ -6057,7 +6057,7 @@ paths:
           type: string
       - name: sourceConfigUid
         in: query
-        description: Allows users to make a request directed to a specific 
+        description: Allows users to make a request directed to a specific
           script
         schema:
           type: string
@@ -6328,7 +6328,7 @@ paths:
       tags:
       - system
       summary: List organizations (Detailed)
-      description: Returns list of organizations with locations and policy 
+      description: Returns list of organizations with locations and policy
         mappings
       operationId: getOrganizationsDetailed
       parameters:
@@ -6487,7 +6487,7 @@ paths:
           type: string
       - name: include
         in: query
-        description: Which devices include (active|deleted|all) default value 
+        description: Which devices include (active|deleted|all) default value
           active
         schema:
           type: string
@@ -8854,7 +8854,7 @@ components:
           description: Description of the template
         allowMultiple:
           type: boolean
-          description: Indicates if multiple instances of the document template 
+          description: Indicates if multiple instances of the document template
             is allowed
         mandatory:
           type: boolean
@@ -8874,7 +8874,7 @@ components:
             $ref: '#/components/schemas/DocumentItemPublicApiDTO'
         availableToAllTechnicians:
           type: boolean
-          description: Indicates if the document template is available to all 
+          description: Indicates if the document template is available to all
             technicians
         allowedTechnicianRoles:
           type: array
@@ -9018,7 +9018,7 @@ components:
           description: Description of the template
         allowMultiple:
           type: boolean
-          description: States if multiple instances of the document template is 
+          description: States if multiple instances of the document template is
             allowed
         mandatory:
           type: boolean
@@ -9030,7 +9030,7 @@ components:
             $ref: '#/components/schemas/NewDocumentItemPublicApiRequest'
         availableToAllTechnicians:
           type: boolean
-          description: States if the document template is available to all 
+          description: States if the document template is available to all
             technicians
         allowedTechnicianRoles:
           type: array
@@ -9149,7 +9149,7 @@ components:
             $ref: '#/components/schemas/UpdateDocumentItemPublicApiRequest'
         availableToAllTechnicians:
           type: boolean
-          description: States if the document template is available to all 
+          description: States if the document template is available to all
             technicians
         allowedTechnicianRoles:
           type: array
@@ -9296,7 +9296,7 @@ components:
             format: int32
         mergeMethod:
           type: string
-          description: Method to use - merge into an existing tag or create a 
+          description: Method to use - merge into an existing tag or create a
             new one
           enum:
           - MERGE_INTO_EXISTING_TAG
@@ -9491,7 +9491,7 @@ components:
             name)
         fileSize:
           type: string
-          description: Article file size (Only for uploaded knowledge base 
+          description: Article file size (Only for uploaded knowledge base
             articles)
         fileExtension:
           type: string
@@ -9650,7 +9650,7 @@ components:
           - SECURE
         value:
           type: object
-          description: Related item value (Attachment meta data / Secure 
+          description: Related item value (Attachment meta data / Secure
             information)
         createTime:
           type: number
@@ -9666,7 +9666,7 @@ components:
           format: int32
         updatedByAppUserId:
           type: integer
-          description: The identifier of the last user to update the related 
+          description: The identifier of the last user to update the related
             item
           format: int32
     NewRelatedItemEntityRequest:
@@ -9744,7 +9744,7 @@ components:
           type: integer
           description: >-
             The id of the role to use for this device. Must be a sub-role of
-            Unmanaged Device 
+            Unmanaged Device
           format: int32
         serialNumber:
           type: string
@@ -10073,7 +10073,7 @@ components:
       properties:
         itemType:
           type: string
-          description: Specifies whether this item is an ATTRIBUTE or a 
+          description: Specifies whether this item is an ATTRIBUTE or a
             UI_ELEMENT
           enum:
           - ATTRIBUTE
@@ -10175,7 +10175,7 @@ components:
           description: Array of roleIds that should not display this custom tab
           items:
             type: integer
-            description: Array of roleIds that should not display this custom 
+            description: Array of roleIds that should not display this custom
               tab
             format: int32
         default:
@@ -11591,7 +11591,7 @@ components:
             type: object
             description: Custom Fields
           description: Custom Fields
-      description: Assigned policy (overrides organization and location policy 
+      description: Assigned policy (overrides organization and location policy
         mapping)
     Processor:
       type: object
@@ -11880,7 +11880,7 @@ components:
           - UNKNOWN
         encryptionMethod:
           type: string
-          description: Indicated the encryption algorithm and key size used on 
+          description: Indicated the encryption algorithm and key size used on
             the volume
           enum:
           - NONE
@@ -13623,7 +13623,7 @@ components:
           description: List of features that will be disabled during maintenance
           items:
             type: string
-            description: List of features that will be disabled during 
+            description: List of features that will be disabled during
               maintenance
             enum:
             - ALERTS
@@ -15195,7 +15195,7 @@ components:
           format: int32
         lastEvaluated:
           type: number
-          description: Last evaluation time of group membership for nodes 
+          description: Last evaluation time of group membership for nodes
             (search)
           format: double
         tags:
