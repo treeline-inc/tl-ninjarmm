@@ -31,7 +31,8 @@
 			"version": "latest"
 		},
 		"ghcr.io/devcontainers/features/java:1": {
-			"version": "lts",
+			"version": "21",
+			"jdkDistro": "ms",
 			"installMaven": true,
 			"installGradle": true
 		}
