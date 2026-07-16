@@ -72,7 +72,7 @@ The library includes a comprehensive test suite to ensure reliability and perfor
 
 ```bash
 # Run all tests
-pytest
+uv run pytest
 ```
 
 ## Generating the library

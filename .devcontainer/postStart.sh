@@ -39,7 +39,7 @@ else
   echo "Warning: Graphite configuration setup failed (exit code: $graphite_setup_result). Continuing with other tasks."
 fi
 
-# Used for parsing the openapi_spec.yaml file
-pip install ruamel.yaml
+uv sync # Installs project + dev dependencies
+
 
 echo "Post-start setup complete!"
