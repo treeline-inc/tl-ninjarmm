@@ -8664,6 +8664,7 @@ components:
             - NMS_NETWORK_MANAGEMENT_AGENT
             - UNMANAGED_DEVICE
             - MANAGED_DEVICE
+            - AOSP
         ipAddressType:
           type: string
           enum:
@@ -11197,6 +11198,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         nodeRoleId:
           type: integer
           description: Node Role identifier
@@ -11399,6 +11401,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         custom:
           type: boolean
           description: Is custom node role?
@@ -11572,6 +11575,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         updated:
           type: number
           description: Last update timestamp
@@ -12201,6 +12205,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         nodeRoleId:
           type: integer
           description: Node Role identifier
@@ -14881,6 +14886,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         enabled:
           type: boolean
           description: Policy Enabled Flag
@@ -15357,6 +15363,7 @@ components:
           - NMS_NETWORK_MANAGEMENT_AGENT
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
+          - AOSP
         nodeRoleId:
           type: integer
           description: Node Role identifier
