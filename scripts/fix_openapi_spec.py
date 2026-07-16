@@ -1,4 +1,5 @@
-import sys
+import argparse
+from pathlib import Path
 from ruamel.yaml import YAML
 import re
 
@@ -50,6 +51,17 @@ def add_200_responses(openapi_path):
 
 
 if __name__ == "__main__":
-    openapi_path = sys.argv[1] if len(sys.argv) > 1 else "openapi_spec.yaml"
+    parser = argparse.ArgumentParser(
+        description="Add missing 200 responses to OpenAPI spec"
+    )
+    parser.add_argument(
+        "--spec",
+        default="openapi_spec.yaml",
+        type=Path,
+        help="Path to the OpenAPI spec to patch",
+    )
+
+    args = parser.parse_args()
+    openapi_path = args.spec
     add_200_responses(openapi_path)
     print(f"Added missing 200 responses to {openapi_path}")
