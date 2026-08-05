@@ -5,19 +5,16 @@ import re
 
 ANCHOR_FMT = "id{:03d}"
 
+# values Ninjarmm API returns that are not in the OpenAPI spec
+MISSING_ENUM_VALUES = {
+    "nodeClass": ["AOSP"],
+}
 
-def add_200_responses(openapi_path):
-    yaml = YAML()
-    yaml.preserve_quotes = True
-    yaml.allow_duplicate_keys = False
-    yaml.default_flow_style = False
 
-    # Load the openapi_spec.yaml file
-    with open(openapi_path, "r") as f:
-        data = yaml.load(f)
-
+def add_200_responses(data):
     paths = data.get("paths", {})
     anchor_counter = 1
+    added = 0
 
     for _, methods in paths.items():
         for _, op in methods.items():
@@ -36,6 +33,8 @@ def add_200_responses(openapi_path):
                 re.match(r"^2\\d\\d$", str(code)) for code in responses.keys()
             )
             if not has_2xx:
+                if "200" not in responses:
+                    added += 1
                 default_block = responses["default"]
                 anchor = default_block.yaml_anchor()
                 if anchor is None or anchor.value is None:
@@ -46,14 +45,85 @@ def add_200_responses(openapi_path):
 
                 responses["200"] = default_block
 
+    return added
+
+
+def add_missing_enum_values(data):
+    added = 0
+
+    def walk(node, prop_name):
+        nonlocal added
+        if isinstance(node, dict):
+            if "enum" in node and prop_name in MISSING_ENUM_VALUES:
+                for value in MISSING_ENUM_VALUES[prop_name]:
+                    if value not in node["enum"]:
+                        node["enum"].append(value)
+                        added += 1
+            for key, value in node.items():
+                # An array's `items` schema carries the parent property's name.
+                walk(value, prop_name if key == "items" else key)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, prop_name)
+
+    walk(data, None)
+    return added
+
+
+def fix_psa_ticket_id_type(data):
+    # The upstream spec types psaTicketId as a bare object, but the API
+    # returns the PSA ticket id as a plain integer (verified against
+    # ConnectWise-linked alerts in production; see TRE-3193). The generated
+    # Dict[str, Any] typing makes pydantic reject every alert that carries a
+    # ticket id.
+    fixed = 0
+
+    def walk(node):
+        nonlocal fixed
+        if isinstance(node, dict):
+            properties = node.get("properties")
+            if isinstance(properties, dict):
+                psa_ticket_id = properties.get("psaTicketId")
+                if (
+                    isinstance(psa_ticket_id, dict)
+                    and psa_ticket_id.get("type") == "object"
+                ):
+                    psa_ticket_id["type"] = "integer"
+                    psa_ticket_id["format"] = "int32"
+                    fixed += 1
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item)
+
+    walk(data)
+    return fixed
+
+
+def fix_openapi_spec(openapi_path):
+    yaml = YAML()
+    yaml.preserve_quotes = True
+    yaml.allow_duplicate_keys = False
+    yaml.default_flow_style = False
+
+    with open(openapi_path, "r") as f:
+        data = yaml.load(f)
+
+    responses_added = add_200_responses(data)
+    enum_values_added = add_missing_enum_values(data)
+    psa_ticket_ids_fixed = fix_psa_ticket_id_type(data)
+
     with open(openapi_path, "w") as f:
         yaml.dump(data, f)
 
+    print(f"Added {responses_added} missing 200 response(s)")
+    print(f"Added {enum_values_added} missing enum value(s)")
+    print(f"Fixed {psa_ticket_ids_fixed} psaTicketId type(s)")
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Add missing 200 responses to OpenAPI spec"
-    )
+    parser = argparse.ArgumentParser(description="Apply all fixes to the OpenAPI spec")
     parser.add_argument(
         "--spec",
         default="openapi_spec.yaml",
@@ -62,6 +132,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    openapi_path = args.spec
-    add_200_responses(openapi_path)
-    print(f"Added missing 200 responses to {openapi_path}")
+    fix_openapi_spec(args.spec)

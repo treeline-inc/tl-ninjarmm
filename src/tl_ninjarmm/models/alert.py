@@ -67,7 +67,7 @@ class Alert(BaseModel):
     user_id: Optional[StrictInt] = Field(
         default=None, description="User identifier", alias="userId"
     )
-    psa_ticket_id: Optional[Dict[str, Any]] = Field(
+    psa_ticket_id: Optional[StrictInt] = Field(
         default=None, description="Related PSA ticket ID", alias="psaTicketId"
     )
     ticket_template_id: Optional[StrictInt] = Field(

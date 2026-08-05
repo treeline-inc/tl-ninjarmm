@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Fixes the openapi_spec.yaml file to include response types
+# Applies all spec fixes (missing 200 responses, missing enum values,
+# psaTicketId typed as integer)
 uv run python scripts/fix_openapi_spec.py
-
-# Inserts missing enum values into the openapi_spec.yaml file
-uv run python scripts/add_missing_enum_values.py
 
 # Gets the necessary models for the APIs we want to generate
 MODELS=$(uv run python scripts/get_necessary_models.py --spec openapi_spec.yaml --apis system,management,devices,queries)
