@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Applies all spec fixes (missing 200 responses, missing enum values,
-# psaTicketId typed as integer)
+# dropped enum constraints, psaTicketId typed as integer)
 uv run python scripts/fix_openapi_spec.py
 
 # Gets the necessary models for the APIs we want to generate

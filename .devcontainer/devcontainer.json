@@ -3,7 +3,7 @@
 {
 	"name": "ninjarmm-dev-env",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+	"image": "mcr.microsoft.com/devcontainers/base:bookworm",
 	"features": {
 		"ghcr.io/devcontainers/features/python:1": {
 			"installTools": true,
@@ -31,8 +31,8 @@
 			"version": "latest"
 		},
 		"ghcr.io/devcontainers/features/java:1": {
-			"version": "21",
-			"jdkDistro": "ms",
+			"version": "21.0.8-tem",
+			"jdkDistro": "tem",
 			"installMaven": true,
 			"installGradle": true
 		}

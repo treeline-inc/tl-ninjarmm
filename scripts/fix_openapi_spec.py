@@ -10,6 +10,14 @@ MISSING_ENUM_VALUES = {
     "nodeClass": ["AOSP"],
 }
 
+# Properties whose spec enums Ninjarmm extends without publishing the new
+# values. These are vendor-extensible lists, so enumerating them is a losing
+# race (see TRE-3709: activityType=MAINTENANCE_MODE and
+# statusCode=MAINTENANCE_MODE_COMPLETED failed the whole activities page).
+# Dropping the enum removes the generated validator; the fields still generate
+# as Optional[StrictStr], so nothing else about the typing changes.
+DROPPED_ENUM_CONSTRAINTS = {"activityType", "statusCode"}
+
 
 def add_200_responses(data):
     paths = data.get("paths", {})
@@ -70,6 +78,26 @@ def add_missing_enum_values(data):
     return added
 
 
+def drop_enum_constraints(data):
+    dropped = 0
+
+    def walk(node, prop_name):
+        nonlocal dropped
+        if isinstance(node, dict):
+            if "enum" in node and prop_name in DROPPED_ENUM_CONSTRAINTS:
+                node.pop("enum")
+                dropped += 1
+            for key, value in node.items():
+                # An array's `items` schema carries the parent property's name.
+                walk(value, prop_name if key == "items" else key)
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, prop_name)
+
+    walk(data, None)
+    return dropped
+
+
 def fix_psa_ticket_id_type(data):
     # The upstream spec types psaTicketId as a bare object, but the API
     # returns the PSA ticket id as a plain integer (verified against
@@ -112,6 +140,7 @@ def fix_openapi_spec(openapi_path):
 
     responses_added = add_200_responses(data)
     enum_values_added = add_missing_enum_values(data)
+    enum_constraints_dropped = drop_enum_constraints(data)
     psa_ticket_ids_fixed = fix_psa_ticket_id_type(data)
 
     with open(openapi_path, "w") as f:
@@ -119,6 +148,7 @@ def fix_openapi_spec(openapi_path):
 
     print(f"Added {responses_added} missing 200 response(s)")
     print(f"Added {enum_values_added} missing enum value(s)")
+    print(f"Dropped {enum_constraints_dropped} enum constraint(s)")
     print(f"Fixed {psa_ticket_ids_fixed} psaTicketId type(s)")
 
 
