@@ -78,56 +78,6 @@ class AttributeContentAdvancedSettings(BaseModel):
         "expandLargeValueOnRender",
     ]
 
-    @field_validator("node_class")
-    def node_class_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        for i in value:
-            if i not in set(
-                [
-                    "WINDOWS_SERVER",
-                    "WINDOWS_WORKSTATION",
-                    "LINUX_WORKSTATION",
-                    "MAC",
-                    "ANDROID",
-                    "APPLE_IOS",
-                    "APPLE_IPADOS",
-                    "VMWARE_VM_HOST",
-                    "VMWARE_VM_GUEST",
-                    "HYPERV_VMM_HOST",
-                    "HYPERV_VMM_GUEST",
-                    "LINUX_SERVER",
-                    "MAC_SERVER",
-                    "CLOUD_MONITOR_TARGET",
-                    "NMS_SWITCH",
-                    "NMS_ROUTER",
-                    "NMS_FIREWALL",
-                    "NMS_PRIVATE_NETWORK_GATEWAY",
-                    "NMS_PRINTER",
-                    "NMS_SCANNER",
-                    "NMS_DIAL_MANAGER",
-                    "NMS_WAP",
-                    "NMS_IPSLA",
-                    "NMS_COMPUTER",
-                    "NMS_VM_HOST",
-                    "NMS_APPLIANCE",
-                    "NMS_OTHER",
-                    "NMS_SERVER",
-                    "NMS_PHONE",
-                    "NMS_VIRTUAL_MACHINE",
-                    "NMS_NETWORK_MANAGEMENT_AGENT",
-                    "UNMANAGED_DEVICE",
-                    "MANAGED_DEVICE",
-                    "AOSP",
-                ]
-            ):
-                raise ValueError(
-                    "each list item must be one of ('WINDOWS_SERVER', 'WINDOWS_WORKSTATION', 'LINUX_WORKSTATION', 'MAC', 'ANDROID', 'APPLE_IOS', 'APPLE_IPADOS', 'VMWARE_VM_HOST', 'VMWARE_VM_GUEST', 'HYPERV_VMM_HOST', 'HYPERV_VMM_GUEST', 'LINUX_SERVER', 'MAC_SERVER', 'CLOUD_MONITOR_TARGET', 'NMS_SWITCH', 'NMS_ROUTER', 'NMS_FIREWALL', 'NMS_PRIVATE_NETWORK_GATEWAY', 'NMS_PRINTER', 'NMS_SCANNER', 'NMS_DIAL_MANAGER', 'NMS_WAP', 'NMS_IPSLA', 'NMS_COMPUTER', 'NMS_VM_HOST', 'NMS_APPLIANCE', 'NMS_OTHER', 'NMS_SERVER', 'NMS_PHONE', 'NMS_VIRTUAL_MACHINE', 'NMS_NETWORK_MANAGEMENT_AGENT', 'UNMANAGED_DEVICE', 'MANAGED_DEVICE', 'AOSP')"
-                )
-        return value
-
     @field_validator("ip_address_type")
     def ip_address_type_validate_enum(cls, value):
         """Validates the enum"""

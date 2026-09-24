@@ -6,17 +6,16 @@ import re
 ANCHOR_FMT = "id{:03d}"
 
 # values Ninjarmm API returns that are not in the OpenAPI spec
-MISSING_ENUM_VALUES = {
-    "nodeClass": ["AOSP"],
-}
+MISSING_ENUM_VALUES: dict[str, list[str]] = {}
 
 # Properties whose spec enums Ninjarmm extends without publishing the new
 # values. These are vendor-extensible lists, so enumerating them is a losing
 # race (see TRE-3709: activityType=MAINTENANCE_MODE and
-# statusCode=MAINTENANCE_MODE_COMPLETED failed the whole activities page).
+# statusCode=MAINTENANCE_MODE_COMPLETED failed the whole activities page;
+# TRE-3863: nodeClass=CHROMEOS failed the whole node roles sync).
 # Dropping the enum removes the generated validator; the fields still generate
 # as Optional[StrictStr], so nothing else about the typing changes.
-DROPPED_ENUM_CONSTRAINTS = {"activityType", "statusCode"}
+DROPPED_ENUM_CONSTRAINTS = {"activityType", "statusCode", "nodeClass"}
 
 
 def add_200_responses(data):
