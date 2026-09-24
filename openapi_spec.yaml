@@ -8665,6 +8665,7 @@ components:
             - UNMANAGED_DEVICE
             - MANAGED_DEVICE
             - AOSP
+            - CHROMEOS
         ipAddressType:
           type: string
           enum:
@@ -11199,6 +11200,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         nodeRoleId:
           type: integer
           description: Node Role identifier
@@ -11402,6 +11404,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         custom:
           type: boolean
           description: Is custom node role?
@@ -11576,6 +11579,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         updated:
           type: number
           description: Last update timestamp
@@ -12207,6 +12211,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         nodeRoleId:
           type: integer
           description: Node Role identifier
@@ -14180,6 +14185,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         enabled:
           type: boolean
           description: Policy Enabled Flag
@@ -14657,6 +14663,7 @@ components:
           - UNMANAGED_DEVICE
           - MANAGED_DEVICE
           - AOSP
+          - CHROMEOS
         nodeRoleId:
           type: integer
           description: Node Role identifier
