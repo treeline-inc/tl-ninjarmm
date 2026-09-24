@@ -7,7 +7,7 @@ ANCHOR_FMT = "id{:03d}"
 
 # values Ninjarmm API returns that are not in the OpenAPI spec
 MISSING_ENUM_VALUES = {
-    "nodeClass": ["AOSP"],
+    "nodeClass": ["AOSP", "CHROMEOS"],
 }
 
 # Properties whose spec enums Ninjarmm extends without publishing the new
