@@ -11223,6 +11223,8 @@ components:
           enum:
           - PENDING
           - APPROVED
+          - STAGED
+          - DECOMMISSIONED
         offline:
           type: boolean
           description: Is Offline?
@@ -12234,6 +12236,8 @@ components:
           enum:
           - PENDING
           - APPROVED
+          - STAGED
+          - DECOMMISSIONED
         offline:
           type: boolean
           description: Is Offline?
@@ -14686,6 +14690,8 @@ components:
           enum:
           - PENDING
           - APPROVED
+          - STAGED
+          - DECOMMISSIONED
         offline:
           type: boolean
           description: Is Offline?
