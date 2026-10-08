@@ -188,8 +188,10 @@ class NodeWithDetailedReferences(BaseModel):
         if value is None:
             return value
 
-        if value not in set(["PENDING", "APPROVED"]):
-            raise ValueError("must be one of enum values ('PENDING', 'APPROVED')")
+        if value not in set(["PENDING", "APPROVED", "STAGED", "DECOMMISSIONED"]):
+            raise ValueError(
+                "must be one of enum values ('PENDING', 'APPROVED', 'STAGED', 'DECOMMISSIONED')"
+            )
         return value
 
     model_config = ConfigDict(
